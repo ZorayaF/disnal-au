@@ -2,6 +2,14 @@
 
 Plataforma web tipo catálogo diseñada para la visualización de productos y canales de contacto de la empresa distribuidora de alimentos Disnal AU.
 
+## Aclaraciones del Proyecto Académico
+
+Este proyecto se desarrolló en el marco de las asignaturas **Taller de Diseño Multimedia** y **Usabilidad y Accesibilidad** de la Universidad de Boyacá.
+
+- **Uso de la Empresa:** Según lo pactado en la carta de compromiso, la empresa Disnal AU puede hacer uso del producto entregado para su desarrollo o publicación.
+- **Responsabilidad:** Los desarrolladores no adquieren compromiso de mantenimiento, soporte técnico ni relación laboral futura con la empresa.
+- **Naturaleza:** El desarrollo es un ejercicio académico público para evidenciar procesos de aprendizaje.
+
 ## Inicialización del proyecto
 
 El proyecto utiliza Node.js y Vite como herramienta de construcción.
