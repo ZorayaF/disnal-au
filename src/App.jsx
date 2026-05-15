@@ -1,11 +1,7 @@
-import AppRouter from "./routes/AppRouter";
+import { AppRouter } from "./router/AppRouter";
 
 function App() {
-  return (
-    <div className="antialiased text-gray-900">
-      <AppRouter />
-    </div>
-  );
+  return <AppRouter />;
 }
 
 export default App;

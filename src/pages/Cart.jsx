@@ -1,7 +1,7 @@
-export const Home = () => {
+export const Cart = () => {
   return (
     <div style={{ padding: "20px", background: "#e3f2fd", minHeight: "80vh" }}>
-      <h1>🏠 Home Page</h1>
+      <h1>Lista de cotización </h1>
       <p>Sección en desarrollo para Disnal AU.</p>
     </div>
   );
