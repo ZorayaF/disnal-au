@@ -1,0 +1,226 @@
+{
+  "main": {
+    "id": "02e7a83ec822a927",
+    "type": "split",
+    "children": [
+      {
+        "id": "d29fc39a4cdb3bbd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bbc8764e1e2b9d13",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "Assembly Map.canvas",
+                "viewState": {
+                  "x": -2072.5,
+                  "y": 140,
+                  "zoom": -2.2274602204888323
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "Assembly Map"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fc0f4d63c9bfbbda",
+    "type": "split",
+    "children": [
+      {
+        "id": "bd9553b2a16cc522",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "884651e8b486adcc",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "3f6cc14ae665f42c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "2cb8fa8733b5abf4",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b36086ee7a771bcc",
+    "type": "split",
+    "children": [
+      {
+        "id": "7a3cb6eb6fece2a4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "21eb352022827f5e",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Hero.jsx.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Hero.jsx"
+            }
+          },
+          {
+            "id": "b6e9d8f67c3ea38f",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Hero.jsx.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Hero.jsx"
+            }
+          },
+          {
+            "id": "1486a3f2faab5f9c",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3617bec9e61545d4",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "b3e73c034335c7e3",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Hero.jsx.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Hero.jsx"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "884651e8b486adcc",
+  "lastOpenFiles": [
+    "plantillas/Plantilla-Atom.md",
+    "plantillas/Plantilla-Componente.md",
+    "Assembly Map.canvas",
+    "Componentes/ui/Tittle.jsx.md",
+    "Componentes/ui/Text.jsx.md",
+    "Componentes/ui/InputField.jsx.md",
+    "Componentes/ui/Image.jsx.md",
+    "Componentes/ui/Guía-Iconos.md",
+    "Componentes/ui/Button.jsx.md",
+    "Componentes/ui",
+    "Componentes/Untitled.md",
+    "Componentes/pages/fabiancito.md",
+    "Componentes/pages/AdminDashboard.jsx.md",
+    "Componentes/pages/Catalog.jsx.md",
+    "Componentes/pages/Cart.jsx.md",
+    "Componentes/pages/Home.jsx.md",
+    "Componentes/sections/CatalogToolbar.jsx.md",
+    "Componentes/sections/AdminManager.jsx.md",
+    "Componentes/sections/ProductManager.jsx.md",
+    "Componentes/sections/AdminOverview.jsx.md",
+    "Componentes/sections/LegalContent.jsx.md",
+    "Componentes/sections/LegalDirectory.jsx.md",
+    "Componentes/sections/PageHeader.jsx.md",
+    "Componentes/sections/ContactChannels.jsx.md",
+    "Componentes/sections/ConsultingForm.jsx.md",
+    "Componentes/sections/BusinessHours.jsx.md",
+    "Componentes/sections/OrderReview.jsx.md",
+    "Componentes/sections",
+    "Componentes/pages",
+    "Componentes",
+    "plantillas",
+    "Untitled 2.base",
+    "Untitled.base",
+    "Untitled 1.base"
+  ]
+}
