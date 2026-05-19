@@ -1,7 +1,7 @@
 // frontend/src/components/router/ProtectedRoute.jsx
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 export const ProtectedRoute = () => {
   const { isAuthenticated, cargando } = useContext(AuthContext);

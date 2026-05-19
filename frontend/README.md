@@ -2,7 +2,7 @@
 
 Esta es la capa del cliente de la plataforma Disnal-AU, enfocada en ofrecer una experiencia de usuario fluida, responsiva y accesible para la visualización de insumos de pastelería y panadería.
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **React** (v19.2.5): Biblioteca principal para la UI basada en Componentes Atómicos.
 - **Vite** (v8.0.10): Herramienta de construcción y entorno de desarrollo ultra rápido.

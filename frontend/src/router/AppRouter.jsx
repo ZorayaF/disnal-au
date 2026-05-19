@@ -9,7 +9,7 @@ import { Legal } from "@pages/Legal";
 import { Login } from "@pages/Login";
 import { AdminDashboard } from "@pages/AdminDashboard";
 import { TemporaryNavbar } from "@components/TemporaryNavbar";
-import { ProtectedRoute } from "../components/router/ProtectedRoute";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const AppRouter = () => {
   return (
