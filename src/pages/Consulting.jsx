@@ -1,8 +1,36 @@
+// src/pages/BusinessConsulting.jsx
+
+import { useEffect } from "react";
+import { PageHeader } from "@sections/PageHeader";
+import { ContactChannels } from "@sections/ContactChannels";
+import { ConsultingForm } from "@sections/ConsultingForm";
+import { BusinessHours } from "@sections/BusinessHours";
+
 export const Consulting = () => {
+  useEffect(() => {
+    document.title = "Disnal AU - Commercial Consulting";
+  }, []);
+
   return (
-    <div style={{ padding: "20px", background: "#e3f2fd", minHeight: "80vh" }}>
-      <h1>Asesoría comercial </h1>
-      <p>Sección en desarrollo para Disnal AU.</p>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        padding: "20px",
+      }}
+    >
+      {/* Banner superior reutilizable */}
+      <PageHeader />
+
+      {/* Canales de contacto directos (Tarjetas de Wpp, Mail, etc.) */}
+      <ContactChannels />
+
+      {/* Formulario de dudas comerciales */}
+      <ConsultingForm />
+
+      {/* Horarios de atención y tiempos de la empresa */}
+      <BusinessHours />
     </div>
   );
 };

@@ -1,8 +1,39 @@
+// src/pages/ProductView.jsx
+
+import { useEffect } from "react";
+import { ProductDetail } from "@sections/ProductDetail";
+import { ProductGrid } from "@sections/ProductGrid";
+
 export const ProductView = () => {
+  useEffect(() => {
+    document.title = "Disnal AU - Product Detail";
+  }, []);
+
   return (
-    <div style={{ padding: "20px", background: "#e3f2fd", minHeight: "80vh" }}>
-      <h1>Detalles del producto </h1>
-      <p>Sección en desarrollo para Disnal AU.</p>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "40px",
+        padding: "20px",
+      }}
+    >
+      {/* Sección principal con la información del queso seleccionado */}
+      <ProductDetail />
+
+      {/* Bloque de recomendados / productos relacionados */}
+      <div>
+        <h2
+          style={{
+            color: "#1e293b",
+            marginBottom: "15px",
+            paddingLeft: "10px",
+          }}
+        >
+          Related Products
+        </h2>
+        <ProductGrid />
+      </div>
     </div>
   );
 };

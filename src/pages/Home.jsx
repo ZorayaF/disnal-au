@@ -1,8 +1,37 @@
+// src/pages/Home.jsx
+
+import { useEffect } from "react";
+import { Hero } from "@sections/Hero";
+import { CategorySection } from "@sections/CategorySection";
+import { ProductGrid } from "@sections/ProductGrid";
+import { PartnerBrands } from "@sections/PartnerBrands";
+import { HowItWorks } from "@sections/HowItWorks";
+import { FaqSection } from "@sections/FaqSection";
+import { AboutSection } from "@sections/AboutSection";
+import { FactoryGallery } from "@sections/FactoryGallery";
+
 export const Home = () => {
+  useEffect(() => {
+    document.title = "Disnal AU - Home";
+  }, []);
+
   return (
-    <div style={{ padding: "20px", background: "#e3f2fd", minHeight: "80vh" }}>
-      <h1>🏠 Home Page</h1>
-      <p>Sección en desarrollo para Disnal AU.</p>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        padding: "10px",
+      }}
+    >
+      <Hero />
+      <CategorySection />
+      <ProductGrid />
+      <PartnerBrands />
+      <HowItWorks />
+      <FaqSection />
+      <AboutSection />
+      <FactoryGallery />
     </div>
   );
 };
