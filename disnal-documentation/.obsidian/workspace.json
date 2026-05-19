@@ -15,9 +15,9 @@
               "state": {
                 "file": "Assembly Map.canvas",
                 "viewState": {
-                  "x": -2072.5,
-                  "y": 140,
-                  "zoom": -2.2274602204888323
+                  "x": -3140.8810738661955,
+                  "y": 156.97852931261494,
+                  "zoom": -0.6274602204888325
                 }
               },
               "icon": "lucide-layout-dashboard",
@@ -81,7 +81,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "b36086ee7a771bcc",
@@ -186,7 +187,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "884651e8b486adcc",
+  "active": "bbc8764e1e2b9d13",
   "lastOpenFiles": [
     "plantillas/Plantilla-Atom.md",
     "plantillas/Plantilla-Componente.md",

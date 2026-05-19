@@ -1,13 +1,7 @@
 {
 	"nodes":[
 		{"id":"833cf55e2d7ad71e","type":"text","text":"[[Hero.jsx]]","x":-3268,"y":-240,"width":188,"height":60},
-		{"id":"3ef859d27fc2bb3b","type":"text","text":"[[CategorySection.jsx]]","x":-3268,"y":-119,"width":188,"height":50},
-		{"id":"b7bf74a5866782fe","type":"text","text":"[[ProductGrid.jsx]]","x":-3268,"y":-8,"width":188,"height":60},
-		{"id":"9cb3099575915d91","type":"text","text":"[[PartnerBrands.jsx]]","x":-3268,"y":113,"width":174,"height":67},
-		{"id":"3e02a41b3884b78d","type":"text","text":"[[HowItWorks.jsx]]","x":-3268,"y":217,"width":188,"height":60},
-		{"id":"49b28b87c676f158","type":"text","text":"[[FaqSection.jsx]]","x":-3268,"y":338,"width":188,"height":60},
-		{"id":"8a8166d29e9ff6f5","type":"text","text":"[[AboutSection.jsx]]","x":-3268,"y":459,"width":188,"height":60},
-		{"id":"2b6428a26ea463d1","type":"text","text":"[[FactoryGallery.jsx]]","x":-3268,"y":580,"width":188,"height":60},
+		{"id":"3ef859d27fc2bb3b","type":"text","text":"[[ValueProposal.jsx]]","x":-3268,"y":-145,"width":188,"height":50},
 		{"id":"7a1deda4cac3ab62","type":"text","text":"[[Catalog.jsx]]","x":-2760,"y":-360,"width":140,"height":60,"color":"3"},
 		{"id":"45345674f3e0d541","type":"text","text":"[[CatalogFilters.jsx]]","x":-2815,"y":-240,"width":250,"height":60},
 		{"id":"94a7edd834d02cc1","type":"text","text":"[[ProductView.jsx]]","x":-2400,"y":-360,"width":178,"height":60,"color":"3"},
@@ -29,7 +23,13 @@
 		{"id":"2e2ec029ae52bf3e","type":"text","text":"[[AdminManager.jsx]]","x":-875,"y":-140,"width":250,"height":60},
 		{"id":"bd7c6d6512722394","type":"text","text":"[[AdminOverview.jsx]]","x":-875,"y":-240,"width":250,"height":60},
 		{"id":"6abdb66eba70bc2b","type":"text","text":"[[AdminDashboard.jsx]]","x":-875,"y":-360,"width":250,"height":60,"color":"3"},
-		{"id":"1dcac1b3c93e43b3","type":"text","text":"[[CatalogToolbar.jsx]]","x":-2815,"y":-149,"width":250,"height":60}
+		{"id":"1dcac1b3c93e43b3","type":"text","text":"[[CatalogToolbar.jsx]]","x":-2815,"y":-149,"width":250,"height":60},
+		{"id":"2b6428a26ea463d1","type":"text","text":"[[FactoryGallery.jsx]]","x":-3268,"y":-60,"width":188,"height":60},
+		{"id":"9cb3099575915d91","type":"text","text":"[[PartnerBrands.jsx]]","x":-3268,"y":35,"width":174,"height":67},
+		{"id":"3e02a41b3884b78d","type":"text","text":"[[HowItWorks.jsx]]","x":-3268,"y":137,"width":188,"height":60},
+		{"id":"b7bf74a5866782fe","type":"text","text":"[[ProductGrid.jsx]]","x":-3268,"y":232,"width":188,"height":60},
+		{"id":"8a8166d29e9ff6f5","type":"text","text":"[[AboutSection.jsx]]","x":-3268,"y":327,"width":188,"height":60},
+		{"id":"49b28b87c676f158","type":"text","text":"[[FaqSection.jsx]]","x":-3268,"y":420,"width":188,"height":60}
 	],
 	"edges":[
 		{"id":"fefc5e38ad11a607","fromNode":"e1391757acb3d7ea","fromSide":"bottom","toNode":"3ef859d27fc2bb3b","toSide":"left"},

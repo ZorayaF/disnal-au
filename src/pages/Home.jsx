@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Hero } from "@sections/Hero";
-import { CategorySection } from "@sections/CategorySection";
+import { ValueProposal } from "@/components/sections/ValueProposal";
 import { ProductGrid } from "@sections/ProductGrid";
 import { PartnerBrands } from "@sections/PartnerBrands";
 import { HowItWorks } from "@sections/HowItWorks";
@@ -25,13 +25,13 @@ export const Home = () => {
       }}
     >
       <Hero />
-      <CategorySection />
-      <ProductGrid />
+      <ValueProposal />
+      <FactoryGallery />
       <PartnerBrands />
       <HowItWorks />
-      <FaqSection />
+      <ProductGrid />
       <AboutSection />
-      <FactoryGallery />
+      <FaqSection />
     </div>
   );
 };
