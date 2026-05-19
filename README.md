@@ -1,50 +1,45 @@
-# Disnal-AU
+# Disnal-AU — Plataforma Web Tipo Catálogo
 
-Plataforma web tipo catálogo diseñada para la visualización de productos y canales de contacto de la empresa distribuidora de alimentos Disnal AU.
+Plataforma web fullstack diseñada para la visualización de productos, gestión de inventario y canales de contacto de la empresa distribuidora de alimentos Disnal AU.
 
 ## Aclaraciones del Proyecto Académico
 
-Este proyecto se desarrolló en el marco de las asignaturas **Taller de Diseño Multimedia** y **Usabilidad y Accesibilidad** de la Universidad de Boyacá.
+Este proyecto se desarrolló en el marco de las asignaturas **Taller de Diseño Multimedia** y **Usabilidad y Accesibilidad** de la Universidad de Boyacá (2026).
 
 - **Uso de la Empresa:** Según lo pactado en la carta de compromiso, la empresa Disnal AU puede hacer uso del producto entregado para su desarrollo o publicación.
 - **Responsabilidad:** Los desarrolladores no adquieren compromiso de mantenimiento, soporte técnico ni relación laboral futura con la empresa.
 - **Naturaleza:** El desarrollo es un ejercicio académico público para evidenciar procesos de aprendizaje.
 
-## Inicialización del proyecto
+---
 
-El proyecto utiliza Node.js y Vite como herramienta de construcción.
+## Arquitectura del Proyecto
 
-1. Instalar dependencias:
+El proyecto está dividido en dos capas independientes:
+
+- **`/frontend`**: Interfaz de usuario construida en React, optimizada bajo criterios de usabilidad y accesibilidad.
+- **`/backend`**: Servidor REST en Node.js que gestiona la persistencia de datos, imágenes locales y seguridad.
+
+## Inicialización Global
+
+Para ejecutar el ecosistema completo en tu entorno local, necesitas abrir dos terminales en tu sistema y seguir estos pasos:
+
+### Paso 1: Levantar el Backend
 
 ```
-   npm install
+cd backend
+npm install
+npm run dev
 ```
 
-1. Iniciar entorno de desarrollo:
+### Paso 2: Levantar el Frontend
 
 ```
-   npm run dev
+cd frontend
+npm install
+npm run dev
 ```
 
-## Requisitos del sistema
+## Requisitos del Sistema
 
-Para ejecutar este proyecto es necesario contar con:
-
-- Node.js: v24.15.0 o superior
-- npm: v10.0.0 o superior
-
-## Tecnologías utilizadas
-
-- React: 19.2.5 (Biblioteca principal UI)
-- Vite: 8.0.10 (Herramienta de construcción)
-- Tailwind CSS: 4.2.4 (Framework de estilos)
-- ESLint: 10.2.1 (Linter para calidad de código)
-
-## Estructura de directorios
-
-- src/assets: Archivos multimedia, imágenes de productos y logotipos de marcas.
-- src/components: Componentes modulares organizados por niveles (UI, Molecules, Common, Sections).
-- src/data: Archivos de datos estáticos y configuración de catálogos (mockData.js).
-- src/pages: Componentes de alto nivel que representan las vistas o páginas del sitio.
-- src/routes: Definición y configuración de las rutas de navegación.
-- src/styles: Configuraciones globales de CSS y temas de Tailwind.
+- **Node.js:** v24.15.0 o superior
+- **npm:** v10.0.0 o superior
