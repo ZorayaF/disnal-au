@@ -7,18 +7,19 @@ Componente interactivo base. Consiste en un rectángulo con texto perfectamente 
 
 | Propiedad | Tipo | Valores posibles | Descripción | Default |
 | :--- | :--- | :--- | :--- | :--- |
-| `children` | Node | Texto / Iconos | El texto que se mostrará centrado dentro del botón | *Requerido* |
-| `variant` | String | `'primary'`, `'secondary'`, `'muted'` | Estilo visual del botón (Color sólido, contorno o gris) | `'primary'` |
-| `size` | String | `'sm'`, `'md'`, `'lg'` | El tamaño del botón (afecta al relleno/padding y la fuente) | `'md'` |
-| `onClick` | Function | Función de flecha | Evento que se ejecuta al hacer clic en el botón | `undefined` |
-| `disabled` | Boolean | `true`, `false` | Desactiva el botón, reduce su opacidad y bloquea los clics | `false` |
+| `children` | Node | Texto / Iconos | El texto o elementos que se mostrarán centrados dentro del botón. | *Requerido* |
+| `variant` | String | `'primary'`, `'secondary'`, `'muted'` | Estilo visual del botón (Color sólido, contorno o gris). | `'primary'` |
+| `size` | String | `'sm'`, `'md'`, `'lg'` | El tamaño del botón (afecta al relleno/padding y la fuente). | `'md'` |
+| `type` | String | `'button'`, `'submit'`, `'reset'` | **[ACTUALIZADO]** Define el comportamiento nativo del botón dentro de formularios HTML. | `'button'` |
+| `onClick` | Function | Función | Evento que se ejecuta al hacer clic en el botón. | `undefined` |
+| `disabled` | Boolean | `true`, `false` | Desactiva el botón, reduce su opacidad y bloquea los clics. | `false` |
 
 ## 💻 Cómo usarlo en las Secciones
 
-Utiliza este componente para cualquier acción interactiva, enlaces con forma de botón o envíos de formularios:
+Utiliza este componente para cualquier acción interactiva, enlaces con forma de botón o envíos de formularios. Recuerda importar desde la ruta correcta:
 
 ```jsx
-import { Button } from '@atoms/Button';
+import { Button } from '@components/ui/Button';
 
 // Caso 1: Acción principal (Botón sólido con color de la marca)
 <Button onClick={() => console.log('Comprar')}>
@@ -35,7 +36,12 @@ import { Button } from '@atoms/Button';
   Shop Our Selection
 </Button>
 
-// Caso 4: Estado deshabilitado (Muestra el botón opaco y con el cursor bloqueado)
+// Caso 4: Envíos de formulario (Permite procesar eventos con la tecla Enter)
+<Button type="submit" variant="primary">
+  Iniciar Sesión
+</Button>
+
+// Caso 5: Estado deshabilitado (Muestra el botón opaco y con el cursor bloqueado)
 <Button variant="muted" disabled={true}>
   Out of Stock
 </Button>

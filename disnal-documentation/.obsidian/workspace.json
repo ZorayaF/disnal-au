@@ -11,17 +11,14 @@
             "id": "bbc8764e1e2b9d13",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "Assembly Map.canvas",
-                "viewState": {
-                  "x": -2622.9693339947494,
-                  "y": 218.6107049618808,
-                  "zoom": -1.2481664698543682
-                }
+                "file": "Componentes/ui/Button.jsx.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-layout-dashboard",
-              "title": "Assembly Map"
+              "icon": "lucide-file",
+              "title": "Button.jsx"
             }
           }
         ]
@@ -188,15 +185,15 @@
   },
   "active": "bbc8764e1e2b9d13",
   "lastOpenFiles": [
-    "Componentes/ui/Text.jsx.md",
+    "Componentes/ui/Image.jsx.md",
+    "Componentes/ui/Guía-Iconos.md",
     "Componentes/ui/Button.jsx.md",
     "Assembly Map.canvas",
+    "Componentes/ui/Text.jsx.md",
     "plantillas/Plantilla-Atom.md",
     "plantillas/Plantilla-Componente.md",
     "Componentes/ui/Tittle.jsx.md",
     "Componentes/ui/InputField.jsx.md",
-    "Componentes/ui/Image.jsx.md",
-    "Componentes/ui/Guía-Iconos.md",
     "Componentes/ui",
     "Componentes/Untitled.md",
     "Componentes/pages/fabiancito.md",

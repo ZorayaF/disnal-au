@@ -6,6 +6,7 @@ export const Button = ({
   size = "md",
   onClick,
   disabled = false,
+  type = "button",
 }) => {
   // 1. CLASES BASE
   const baseClasses = `
@@ -52,7 +53,7 @@ export const Button = ({
       className={finalClasses}
       onClick={onClick}
       disabled={disabled}
-      type="button" // Default
+      type={type}
     >
       {children}
     </button>
