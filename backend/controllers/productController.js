@@ -26,8 +26,8 @@ export const crearProducto = (req, res) => {
     id: nuevoId,
     nombre,
     cantidad: Number(cantidad),
-    estado: Number(cantidad) > 0 ? "disponible" : "no disponible",
-    // 2. Si no envían imágenes, guardamos un array vacío por defecto para evitar romper el frontend
+    // Si explícitamente se manda un estado lo respeta, si no, evalúa el stock mayor a cero
+    estado: estado || (Number(cantidad) > 0 ? "disponible" : "no disponible"),
     imagenes: Array.isArray(imagenes) ? imagenes : [],
   };
 
@@ -41,7 +41,7 @@ export const crearProducto = (req, res) => {
 
 export const actualizarProducto = (req, res) => {
   const id = Number(req.params.id);
-  const { nombre, cantidad, estado, imagenes } = req.body; // 1. Añadir imagenes al body
+  const { nombre, cantidad, estado, imagenes } = req.body;
 
   const db = leerDB();
   const index = db.productos.findIndex((p) => p.id === id);
@@ -50,18 +50,38 @@ export const actualizarProducto = (req, res) => {
     return res.status(404).json({ error: "Producto no encontrado." });
   }
 
+  // 1. Actualizar textos y multimedia básicos si vienen en la petición
   if (nombre !== undefined) db.productos[index].nombre = nombre;
-  if (imagenes !== undefined) db.productos[index].imagenes = imagenes; // 2. Actualizar galería
+  if (imagenes !== undefined) db.productos[index].imagenes = imagenes;
 
+  // 2. Actualizar cantidad numérica de forma segura
   if (cantidad !== undefined) {
     db.productos[index].cantidad = Number(cantidad);
+  }
+
+  // 3. Lógica Cruzada de Estado y Disponibilidad
+  if (estado !== undefined) {
+    // Si el administrador apaga el Toggle explicitamente, el producto pasa a estar inactivo
+    if (estado === "no disponible") {
+      db.productos[index].estado = "no disponible";
+    } else {
+      // Si el Toggle está encendido, el estado final dependerá de si realmente queda stock
+      const stockActual =
+        cantidad !== undefined
+          ? Number(cantidad)
+          : db.productos[index].cantidad;
+      db.productos[index].estado =
+        stockActual > 0 ? "disponible" : "no disponible";
+    }
+  } else if (cantidad !== undefined) {
+    // Salvaguarda: Si el frontend solo envía la cantidad, calculamos el estado con base en el número
     db.productos[index].estado =
       Number(cantidad) > 0 ? "disponible" : "no disponible";
   }
-  if (estado !== undefined && cantidad === undefined)
-    db.productos[index].estado = estado;
 
+  // 4. Persistir los cambios en el archivo JSON
   escribirDB(db);
+
   res.json({
     mensaje: "Producto actualizado con éxito",
     producto: db.productos[index],

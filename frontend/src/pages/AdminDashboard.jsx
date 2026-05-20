@@ -6,8 +6,8 @@ import {
   actualizarProducto,
   eliminarProducto,
 } from "../services/productService";
-import { AdminOverview } from "../components/sections/AdminOverview";
-import { AdminManager } from "../components/sections/AdminManager";
+import { AdminOverview } from "@sections/AdminOverview";
+import { AdminManager } from "@sections/AdminManager";
 import { Title } from "@components/ui/Title";
 
 export const AdminDashboard = () => {

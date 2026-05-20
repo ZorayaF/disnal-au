@@ -16,7 +16,7 @@ Componente global para unificar la jerarquía visual de todos los títulos de la
 Importa el átomo al principio de tu archivo de sección y utilízalo según el nivel de importancia:
 
 ```jsx
-import { Title } from '@atoms/Title';
+import { Title } from '@components/ui/Title';
 
 // Caso 1: Título principal de la página (Ej: Sección Hero o título de Admin)
 <Title text="Welcome to Disnal" level={1} />

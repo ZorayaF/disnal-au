@@ -13,7 +13,7 @@ Componente de imagen controlado. Incluye optimización de carga diferida (`lazy 
 
 ## 💻 Cómo usarlo en las Secciones
 ```jsx
-import { Image } from '@atoms/Image';
+import { Image } from '@components/ui/Image';
 
 // Para tarjetas de producto (Cuadrada por defecto)
 <Image src={product.imageUrl} alt={product.name} />

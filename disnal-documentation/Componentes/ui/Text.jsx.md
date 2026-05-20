@@ -17,7 +17,7 @@ Componente global para unificar todos los textos de cuerpo, párrafos y lecturas
 A diferencia de Title, este componente usa `{children}`, por lo que se abre y se cierra envolviendo el texto de manera natural:
 
 ```jsx
-import { Text } from '@atoms/Text';
+import { Text } from '@components/ui/Text';
 
 // Caso 1: Texto destacado e introductorio (Ideal debajo del título del Hero)
 <Text variant="lead">

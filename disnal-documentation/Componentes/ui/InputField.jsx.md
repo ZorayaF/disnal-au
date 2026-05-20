@@ -14,7 +14,7 @@ Componente global para estandarizar todas las entradas de texto y formularios de
 
 ## 💻 Cómo usarlo en las Secciones
 ```jsx
-import { InputField } from '@atoms/InputField';
+import { InputField } from '@components/ui/InputField';
 
 // Uso normal en formulario
 <InputField label="Business Name" placeholder="Enter your company name" required={true} />

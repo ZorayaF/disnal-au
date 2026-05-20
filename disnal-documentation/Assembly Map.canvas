@@ -29,7 +29,8 @@
 		{"id":"3e02a41b3884b78d","type":"text","text":"[[HowItWorks.jsx]]","x":-3268,"y":137,"width":188,"height":60},
 		{"id":"b7bf74a5866782fe","type":"text","text":"[[ProductGrid.jsx]]","x":-3268,"y":232,"width":188,"height":60},
 		{"id":"8a8166d29e9ff6f5","type":"text","text":"[[AboutSection.jsx]]","x":-3268,"y":327,"width":188,"height":60},
-		{"id":"49b28b87c676f158","type":"text","text":"[[FaqSection.jsx]]","x":-3268,"y":420,"width":188,"height":60}
+		{"id":"49b28b87c676f158","type":"text","text":"[[FaqSection.jsx]]","x":-3268,"y":420,"width":188,"height":60},
+		{"id":"51f7b7fdb38bb6dc","x":-480,"y":-360,"width":250,"height":60,"color":"3","type":"text","text":"Login.jsx"}
 	],
 	"edges":[
 		{"id":"fefc5e38ad11a607","fromNode":"e1391757acb3d7ea","fromSide":"bottom","toNode":"3ef859d27fc2bb3b","toSide":"left"},
