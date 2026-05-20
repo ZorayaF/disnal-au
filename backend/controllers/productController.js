@@ -7,8 +7,7 @@ export const obtenerProductos = (req, res) => {
 };
 
 export const crearProducto = (req, res) => {
-  // 1. Recibimos 'imagenes' desde el cuerpo de la petición
-  const { nombre, cantidad, imagenes } = req.body;
+  const { nombre, cantidad, imagenes, estado } = req.body;
 
   if (!nombre || cantidad === undefined) {
     return res
@@ -26,7 +25,7 @@ export const crearProducto = (req, res) => {
     id: nuevoId,
     nombre,
     cantidad: Number(cantidad),
-    // Si explícitamente se manda un estado lo respeta, si no, evalúa el stock mayor a cero
+    // Ahora 'estado' sí está definido, por lo que esta validación funcionará a la perfección
     estado: estado || (Number(cantidad) > 0 ? "disponible" : "no disponible"),
     imagenes: Array.isArray(imagenes) ? imagenes : [],
   };
