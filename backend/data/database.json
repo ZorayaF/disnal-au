@@ -9,7 +9,7 @@
     {
       "id": 1,
       "nombre": "Harina de Trigo Especial Hojaldre (25kg)",
-      "estado": "no disponible",
+      "estado": "disponible",
       "cantidad": 44,
       "imagenes": [
         "https://images.unsplash.com/photo-1574085733277-851d9d856a3a?q=80&w=500"
@@ -18,7 +18,7 @@
     {
       "id": 2,
       "nombre": "Chocolate de Cobertura Semiamargo 55% (1kg)",
-      "estado": "disponible",
+      "estado": "no disponible",
       "cantidad": 120,
       "imagenes": [
         "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=500"
@@ -27,7 +27,7 @@
     {
       "id": 3,
       "nombre": "Mantequilla Sin Sal Bloque (5kg)",
-      "estado": "disponible",
+      "estado": "no disponible",
       "cantidad": 30,
       "imagenes": [
         "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?q=80&w=500"

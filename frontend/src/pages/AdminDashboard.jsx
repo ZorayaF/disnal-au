@@ -1,129 +1,56 @@
 // src/pages/AdminDashboard.jsx
-import { useEffect, useState } from "react";
-import {
-  obtenerProductos,
-  crearProducto,
-  actualizarProducto,
-  eliminarProducto,
-} from "../services/productService";
+import { useAdmin } from "@hooks/useAdmin";
 import { AdminOverview } from "@sections/AdminOverview";
 import { AdminManager } from "@sections/AdminManager";
 import { Title } from "@components/ui/Title";
+import { Button } from "@components/ui/Button";
 
 export const AdminDashboard = () => {
-  const [productos, setProductos] = useState([]);
-  const [productoEnEdicion, setProductoEnEdicion] = useState(null);
-
-  // Cargar datos reales del servidor al montar la pantalla
-  const cargarInventario = () => {
-    obtenerProductos()
-      .then((data) => setProductos(data))
-      .catch((err) => console.error("Error al cargar:", err));
-  };
-
-  useEffect(() => {
-    cargarInventario();
-  }, []);
-
-  // Función unificada para Crear o Editar
-  const gestionarGuardar = async (datosFormulario) => {
-    try {
-      const urlsFinales = [];
-      const archivosLocales = [];
-
-      // 1. Separar lo que ya es una URL web de lo que es un archivo local binario
-      datosFormulario.imagenes.forEach((img) => {
-        if (img instanceof File) {
-          archivosLocales.push(img);
-        } else {
-          urlsFinales.push(img); // Es una URL de internet o una imagen que ya estaba subida antes
-        }
-      });
-
-      // 2. Si el administrador subió archivos binarios, los mandamos primero al servidor en lote
-      if (archivosLocales.length > 0) {
-        const formData = new FormData();
-        archivosLocales.forEach((file) => {
-          formData.append("imagenes", file); // 'imagenes' debe coincidir con upload.array('imagenes') del backend
-        });
-
-        const respuestaImagenes = await fetch(
-          "http://localhost:4000/api/productos/upload-images",
-          {
-            method: "POST",
-            body: formData, // FormData configura automáticamente las cabeceras multipart/form-data
-          },
-        );
-
-        const resultadoImagenes = await respuestaImagenes.json();
-
-        if (!respuestaImagenes.ok) {
-          throw new Error(
-            resultadoImagenes.error ||
-              "Fallo en la carga de imágenes al servidor.",
-          );
-        }
-
-        // Sumamos las URLs devueltas por Node.js al arreglo final
-        urlsFinales.push(...resultadoImagenes.imagenes);
-      }
-
-      // 3. Estructuramos el payload limpio final que va a la base de datos JSON
-      const productoListoParaGuardar = {
-        ...datosFormulario,
-        imagenes: urlsFinales, // Ya son puros strings de URLs de internet y de tu servidor local
-      };
-
-      // 4. Guardar o actualizar de forma regular mediante tus servicios tradicionales
-      if (productoEnEdicion) {
-        await actualizarProducto(
-          productoEnEdicion.id,
-          productoListoParaGuardar,
-        );
-        setProductoEnEdicion(null);
-      } else {
-        await crearProducto(productoListoParaGuardar);
-      }
-
-      // Recargar la tabla limpia en tiempo real
-      cargarInventario();
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  const gestionarEliminar = (id) => {
-    if (confirm("¿Seguro que deseas eliminar este insumo?")) {
-      eliminarProducto(id)
-        .then(() => cargarInventario())
-        .catch((err) => alert(err.message));
-    }
-  };
+  // Extraemos toda la data y funciones del hook controlador
+  const {
+    productos,
+    productoEnEdicion,
+    manejarCerrarSesion,
+    gestionarGuardar,
+    gestionarEliminar,
+    cancelarEdicion,
+    seleccionarParaEditar,
+  } = useAdmin();
 
   return (
     <div className="min-h-screen bg-bg-main p-6 md:p-10 font-sans space-y-10">
-      <div className="border-b border-border-component pb-4">
-        <Title text="Panel de Administración General" level={1} />
-        <p className="text-text-muted text-sm">
-          Control de stock, ingresos y galerías de insumos.
-        </p>
+      {/* SECCIÓN: Cabecera e Identidad Visual */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-component pb-4">
+        <div>
+          <Title text="Panel de Administración General" level={1} />
+          <p className="text-text-muted text-sm mt-1">
+            Control de stock, ingresos y galerías de insumos de Disnal AU.
+          </p>
+        </div>
+
+        <div className="sm:self-center">
+          <Button variant="secondary" onClick={manejarCerrarSesion}>
+            Cerrar Sesión
+          </Button>
+        </div>
       </div>
 
+      {/* SECCIÓN: Distribución de Componentes Modulares */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
-        {/* Sección de Control / Formulario (AdminManager) */}
+        {/* Formulario de Registro/Edición (Izquierda) */}
         <div className="xl:col-span-1">
           <AdminManager
             productoAEditar={productoEnEdicion}
             onGuardar={gestionarGuardar}
-            onCancelar={() => setProductoEnEdicion(null)}
+            onCancelar={cancelarEdicion}
           />
         </div>
 
-        {/* Sección de Visualización de Datos (AdminOverview) */}
+        {/* Tabla / Vista del Inventario Existente (Derecha) */}
         <div className="xl:col-span-2">
           <AdminOverview
             productos={productos}
-            onEditar={(prod) => setProductoEnEdicion(prod)}
+            onEditar={seleccionarParaEditar}
             onEliminar={gestionarEliminar}
           />
         </div>

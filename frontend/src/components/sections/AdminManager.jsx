@@ -1,5 +1,5 @@
 // src/components/sections/AdminManager.jsx
-import { useState, useEffect } from "react";
+import { useAdminForm } from "@hooks/useAdminForm";
 import { Title } from "@components/ui/Title";
 import { InputField } from "@components/ui/InputField";
 import { Button } from "@components/ui/Button";
@@ -7,39 +7,20 @@ import { Toggle } from "@components/ui/Toggle";
 import { ImageManager } from "./ImageManager";
 
 export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
-  const [nombre, setNombre] = useState("");
-  const [cantidad, setCantidad] = useState("");
-  const [imagenes, setImagenes] = useState([]);
-  const [disponible, setDisponible] = useState(true);
-
-  useEffect(() => {
-    if (productoAEditar) {
-      setNombre(productoAEditar.nombre);
-      setCantidad(productoAEditar.cantidad);
-      setImagenes(productoAEditar.imagenes || []);
-      setDisponible(productoAEditar.estado === "disponible");
-    } else {
-      setNombre("");
-      setCantidad("");
-      setImagenes([]);
-      setDisponible(true);
-    }
-  }, [productoAEditar]);
-
-  const enviarFormulario = (e) => {
-    e.preventDefault();
-    if (!nombre.trim() || cantidad === "") return;
-
-    onGuardar({
-      nombre,
-      cantidad: Number(cantidad),
-      imagenes,
-      estado: disponible ? "disponible" : "no disponible",
-    });
-  };
+  const {
+    nombre,
+    setNombre,
+    cantidad,
+    setCantidad,
+    imagenes,
+    setImagenes,
+    disponible,
+    setDisponible,
+    enviarFormulario,
+  } = useAdminForm(productoAEditar, onGuardar);
 
   return (
-    <div className="bg-bg-surface border border-border-component p-6 rounded-xl space-y-4 max-w-xl">
+    <div className="bg-bg-surface border border-border-component p-6 rounded-xl space-y-4 max-w-xl font-sans">
       <Title
         text={productoAEditar ? "Modificar Insumo" : "Añadir Nuevo Insumo"}
         level={3}

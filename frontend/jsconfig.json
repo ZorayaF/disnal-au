@@ -7,7 +7,10 @@
       "@sections/*": ["src/components/sections/*"],
       "@assets/*": ["src/assets/*"],
       "@pages/*": ["src/pages/*"],
-      "@data/*": ["src/data/*"]
+      "@data/*": ["src/data/*"],
+      "@context/*": ["src/context/*"],
+      "@services/*": ["src/services/*"],
+      "@hooks/*": ["src/hooks/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

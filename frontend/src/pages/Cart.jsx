@@ -1,101 +1,73 @@
-// src/pages/Cart.jsx (o Quotation.jsx)
-
+// src/pages/Cart.jsx
 import { useEffect } from "react";
-import { useState } from "react";
+import { useCartCheckout } from "@hooks/useCartCheckout";
 import { CartList } from "@sections/CartList";
 import { CompanyForm } from "@sections/CompanyForm";
 import { OrderReview } from "@sections/OrderReview";
 import { CheckoutSuccess } from "@sections/CheckoutSuccess";
+import { Title } from "@components/ui/Title";
 
 export const Cart = () => {
+  const { notificaciones, sincronizando, step, avanzarPaso, ejecutarBarrido } =
+    useCartCheckout();
+
   useEffect(() => {
     document.title = "Disnal AU - Shopping Cart";
   }, []);
 
-  // Estado para controlar en qué paso del formulario estamos (Empieza en 1)
-  const [step, setStep] = useState(1);
-
   return (
-    <div style={{ padding: "20px" }}>
-      {/*  TABLERO TEMPORAL  */}
-      <div
-        style={{
-          background: "#f8fafc",
-          padding: "12px",
-          marginBottom: "30px",
-          borderRadius: "8px",
-          border: "1px solid #cbd5e1",
-          display: "flex",
-          gap: "10px",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <span
-          style={{ fontSize: "13px", fontWeight: "bold", color: "#475569" }}
-        >
-          Simulador de Pasos (Desarrollo):
-        </span>
-        <button
-          onClick={() => setStep(1)}
-          style={{
-            padding: "6px 12px",
-            cursor: "pointer",
-            background: step === 1 ? "#0284c7" : "#fff",
-            color: step === 1 ? "#fff" : "#475569",
-            border: "1px solid #cbd5e1",
-            borderRadius: "4px",
-          }}
-        >
-          1. Lista de Productos
-        </button>
-        <button
-          onClick={() => setStep(2)}
-          style={{
-            padding: "6px 12px",
-            cursor: "pointer",
-            background: step === 2 ? "#0284c7" : "#fff",
-            color: step === 2 ? "#fff" : "#475569",
-            border: "1px solid #cbd5e1",
-            borderRadius: "4px",
-          }}
-        >
-          2. Datos Empresa
-        </button>
-        <button
-          onClick={() => setStep(3)}
-          style={{
-            padding: "6px 12px",
-            cursor: "pointer",
-            background: step === 3 ? "#0284c7" : "#fff",
-            color: step === 3 ? "#fff" : "#475569",
-            border: "1px solid #cbd5e1",
-            borderRadius: "4px",
-          }}
-        >
-          3. Revisar Pedido
-        </button>
-        <button
-          onClick={() => setStep(4)}
-          style={{
-            padding: "6px 12px",
-            cursor: "pointer",
-            background: step === 4 ? "#0284c7" : "#fff",
-            color: step === 4 ? "#fff" : "#475569",
-            border: "1px solid #cbd5e1",
-            borderRadius: "4px",
-          }}
-        >
-          4. Éxito 🎉
-        </button>
+    <div className="p-6 bg-bg-main min-h-screen space-y-6">
+      {/* ENCABEZADO DE SECCIÓN */}
+      <div className="flex flex-col border-b border-border-component pb-4">
+        <Title text="Mi Carrito de Cotización" level={1} />
+        <p className="text-text-muted text-sm font-sans mt-1">
+          Completa los pasos para enviar la solicitud de insumos a Disnal AU.
+        </p>
       </div>
 
-      {/*  RENDERIZADO CONDICIONAL (Muestra solo la sección activa) */}
-      <div>
-        {step === 1 && <CartList />}
-        {step === 2 && <CompanyForm />}
-        {step === 3 && <OrderReview />}
-        {step === 4 && <CheckoutSuccess />}
+      {/* PANEL DE NOTIFICACIONES ACTIVO */}
+      {notificaciones.length > 0 && step === 1 && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2 animate-fade-in">
+          <span className="block font-sans text-sm font-bold text-amber-800">
+            Cambios en tu inventario detectados:
+          </span>
+          <ul className="list-disc pl-5 font-sans text-xs text-amber-700 space-y-1">
+            {notificaciones.map((nota, idx) => (
+              <li key={idx}>{nota}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* RENDERIZADO CONDICIONAL DE SECCIONES */}
+      <div className="bg-bg-surface rounded-2xl border border-border-component p-6 shadow-sm">
+        {sincronizando ? (
+          <div className="text-center py-12 font-sans text-sm text-text-muted animate-pulse">
+            Verificando disponibilidad y existencias en tiempo real...
+          </div>
+        ) : (
+          <>
+            {step === 1 && (
+              <CartList
+                nextStep={() => avanzarPaso(2)}
+                reverificar={ejecutarBarrido}
+              />
+            )}
+            {step === 2 && (
+              <CompanyForm
+                nextStep={() => avanzarPaso(3)}
+                prevStep={() => avanzarPaso(1)}
+              />
+            )}
+            {step === 3 && (
+              <OrderReview
+                nextStep={() => avanzarPaso(4)}
+                prevStep={() => avanzarPaso(2)}
+              />
+            )}
+            {step === 4 && <CheckoutSuccess />}
+          </>
+        )}
       </div>
     </div>
   );
