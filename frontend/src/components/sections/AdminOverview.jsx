@@ -1,76 +1,145 @@
 // src/components/sections/AdminOverview.jsx
-import { Title } from "@components/ui/Title";
-import { Button } from "@components/ui/Button";
 
 export const AdminOverview = ({ productos, onEditar, onEliminar }) => {
   return (
-    <div className="space-y-6">
-      <Title text="Insumos en Inventario" level={3} />
+    <div
+      style={{ padding: "10px", background: "#fff", border: "1px solid #ccc" }}
+    >
+      <h3>Insumos en Inventario (Vista de Control)</h3>
+      <hr />
 
-      <div className="overflow-x-auto border border-border-component rounded-xl bg-bg-surface">
-        <table className="w-full text-left border-collapse font-sans">
-          <thead>
-            <tr className="bg-bg-main border-b border-border-component text-text-muted text-sm font-semibold">
-              <th className="p-4">Imagen</th>
-              <th className="p-4">Producto</th>
-              <th className="p-4">Cantidad</th>
-              <th className="p-4">Estado</th>
-              <th className="p-4 text-right">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border-component text-text-body text-sm">
-            {productos.map((prod) => (
-              <tr
-                key={prod.id}
-                className="hover:bg-bg-main/50 transition-colors"
-              >
-                <td className="p-4">
-                  {prod.imagenes && prod.imagenes.length > 0 ? (
-                    <img
-                      src={prod.imagenes[0]}
-                      alt={prod.nombre}
-                      className="w-12 h-12 object-cover rounded-md border border-border-component"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-bg-main rounded-md border border-border-component flex items-center justify-center text-xs text-text-muted">
-                      Sin foto
-                    </div>
-                  )}
-                </td>
-                <td className="p-4 font-medium text-base">{prod.nombre}</td>
-                <td className="p-4">{prod.cantidad} unidades</td>
-                <td className="p-4">
-                  <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                      prod.estado === "disponible"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {prod.estado.toUpperCase()}
+      <table
+        style={{ width: "100%", borderCollapse: "collapse", marginTop: "15px" }}
+      >
+        <thead>
+          <tr style={{ background: "#eee", textAlign: "left" }}>
+            <th style={{ padding: "8px", border: "1px solid #ccc" }}>Imagen</th>
+            <th style={{ padding: "8px", border: "1px solid #ccc" }}>
+              Producto
+            </th>
+            <th style={{ padding: "8px", border: "1px solid #ccc" }}>
+              Detalles Base
+            </th>
+            <th style={{ padding: "8px", border: "1px solid #ccc" }}>
+              Cantidad / Stock
+            </th>
+            <th style={{ padding: "8px", border: "1px solid #ccc" }}>Estado</th>
+            <th
+              style={{
+                padding: "8px",
+                border: "1px solid #ccc",
+                textAlign: "right",
+              }}
+            >
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {productos.map((prod) => (
+            <tr key={prod.id} style={{ borderBottom: "1px solid #eee" }}>
+              {/* Celda de previsualizacion de imagen */}
+              <td style={{ padding: "8px", border: "1px solid #ccc" }}>
+                {prod.imagenes && prod.imagenes.length > 0 ? (
+                  <img
+                    src={prod.imagenes[0]}
+                    alt={prod.nombre}
+                    style={{
+                      width: "45px",
+                      height: "45px",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: "11px", color: "#999" }}>
+                    Sin foto
                   </span>
-                </td>
-                <td className="p-4 text-right space-x-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => onEditar(prod)}
+                )}
+              </td>
+
+              {/* Informacion de nombre e identificador */}
+              <td style={{ padding: "8px", border: "1px solid #ccc" }}>
+                <strong>{prod.nombre}</strong>
+                <br />
+                <span style={{ fontSize: "11px", color: "#666" }}>
+                  ID: #{prod.id}
+                </span>
+              </td>
+
+              {/* Atributos taxonomicos añadidos */}
+              <td
+                style={{
+                  padding: "8px",
+                  border: "1px solid #ccc",
+                  fontSize: "12px",
+                }}
+              >
+                <p style={{ margin: 0 }}>Cat: {prod.categoria}</p>
+                <p style={{ margin: 0 }}>Marca: {prod.marca}</p>
+                <p style={{ margin: 0 }}>Empaque: {prod.presentacion}</p>
+              </td>
+
+              {/* Existencias fisicas en bodega */}
+              <td style={{ padding: "8px", border: "1px solid #ccc" }}>
+                {prod.cantidad} unidades
+              </td>
+
+              {/* Estado de visibilidad y estrategia de destacado */}
+              <td
+                style={{
+                  padding: "8px",
+                  border: "1px solid #ccc",
+                  fontSize: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: prod.estado === "disponible" ? "green" : "red",
+                  }}
+                >
+                  {prod.estado.toUpperCase()}
+                </span>
+                {prod.destacado && (
+                  <p
+                    style={{
+                      margin: "4px 0 0 0",
+                      color: "purple",
+                      fontWeight: "bold",
+                      fontSize: "10px",
+                    }}
                   >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    onClick={() => onEliminar(prod.id)}
-                  >
-                    Eliminar
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                    ★ DESTACADO
+                  </p>
+                )}
+              </td>
+
+              {/* Botonera de acciones directas conectadas a los callbacks del contenedor */}
+              <td
+                style={{
+                  padding: "8px",
+                  border: "1px solid #ccc",
+                  textAlign: "right",
+                }}
+              >
+                <button
+                  onClick={() => onEditar(prod)}
+                  style={{ marginRight: "5px", padding: "4px 8px" }}
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => onEliminar(prod.id)}
+                  style={{ padding: "4px 8px", color: "red" }}
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

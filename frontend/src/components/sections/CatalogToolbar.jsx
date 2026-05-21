@@ -1,19 +1,25 @@
-export const CatalogToolbar = () => {
+// src/components/sections/CatalogToolbar.jsx
+import { SearchBar } from "@components/molecules/SearchBar";
+import { SortSelector } from "@components/molecules/SortSelector";
+
+export const CatalogToolbar = ({ onBuscar, onCambiarOrden }) => {
   return (
     <div
       style={{
-        padding: "20px",
-        border: "1px dashed #64748b",
-        margin: "10px 0",
-        borderRadius: "8px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "20px",
+        backgroundColor: "#fff",
+        padding: "12px",
+        border: "1px solid #ccc",
       }}
     >
-      <h3 style={{ margin: 0, color: "#475569" }}>
-        🧩 Sección: CatalogToolbar
-      </h3>
-      <p style={{ fontSize: "14px", color: "#94a3b8" }}>
-        Espacio listo para maquetar.
-      </p>
+      {/* Molécula encargada de la captura de texto */}
+      <SearchBar onBuscar={onBuscar} />
+
+      {/* Molécula encargada del criterio de ordenamiento */}
+      <SortSelector onCambiarOrden={onCambiarOrden} />
     </div>
   );
 };

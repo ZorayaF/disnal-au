@@ -2,6 +2,8 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "@config/api";
+import { crearEstructuraProducto } from "@models/Product"; // Importamos el modelo
 import {
   obtenerProductos,
   crearProducto,
@@ -18,7 +20,9 @@ export const useAdmin = () => {
 
   const cargarInventario = () => {
     obtenerProductos()
-      .then((data) => setProductos(data))
+      .then((data) => {
+        setProductos(data.productos || data);
+      })
       .catch((err) =>
         console.error("Error al cargar el inventario comercial:", err),
       );
@@ -53,7 +57,7 @@ export const useAdmin = () => {
         });
 
         const respuestaImagenes = await fetch(
-          "http://localhost:4000/api/productos/upload-images",
+          `${API_BASE_URL}/productos/upload-images`,
           {
             method: "POST",
             body: formData,
@@ -72,10 +76,11 @@ export const useAdmin = () => {
         urlsFinales.push(...resultadoImagenes.imagenes);
       }
 
-      const productoListoParaGuardar = {
+      // Estructuramos y limpiamos el producto final usando el modelo centralizado
+      const productoListoParaGuardar = crearEstructuraProducto({
         ...datosFormulario,
         imagenes: urlsFinales,
-      };
+      });
 
       if (productoEnEdicion) {
         await actualizarProducto(

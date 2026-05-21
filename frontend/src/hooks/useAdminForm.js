@@ -1,49 +1,45 @@
 // src/hooks/useAdminForm.js
 import { useState, useEffect } from "react";
+import {
+  DEFAULT_PRODUCT_STATE,
+  crearEstructuraProducto,
+} from "@models/Product";
 
 export const useAdminForm = (productoAEditar, onGuardar) => {
-  const [nombre, setNombre] = useState("");
-  const [cantidad, setCantidad] = useState("");
-  const [imagenes, setImagenes] = useState([]);
-  const [disponible, setDisponible] = useState(true);
+  // Manejamos un único estado controlado por nuestro molde centralizado
+  const [formValues, setFormValues] = useState(DEFAULT_PRODUCT_STATE);
 
-  // Sincroniza el estado cuando cambia el producto seleccionado en la tabla
+  // Sincroniza el formulario si el administrador selecciona un producto para editar
   useEffect(() => {
     if (productoAEditar) {
-      setNombre(productoAEditar.nombre);
-      setCantidad(productoAEditar.cantidad);
-      setImagenes(productoAEditar.imagenes || []);
-      setDisponible(productoAEditar.estado === "disponible");
+      setFormValues(crearEstructuraProducto(productoAEditar));
     } else {
-      setNombre("");
-      setCantidad("");
-      setImagenes([]);
-      setDisponible(true);
+      setFormValues(DEFAULT_PRODUCT_STATE);
     }
   }, [productoAEditar]);
 
+  // Manejador dinámico universal para cualquier tipo de input (text, number, checkbox)
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   const enviarFormulario = (e) => {
     e.preventDefault();
-    if (!nombre.trim() || cantidad === "") return;
+    if (!formValues.nombre.trim() || formValues.cantidad === "") return;
 
-    // Estructura el objeto limpio esperado por el servicio
-    onGuardar({
-      nombre,
-      cantidad: Number(cantidad),
-      imagenes,
-      estado: disponible ? "disponible" : "no disponible",
-    });
+    // Enviamos el objeto completamente estructurado a través del callback
+    onGuardar(crearEstructuraProducto(formValues));
   };
 
   return {
-    nombre,
-    setNombre,
-    cantidad,
-    setCantidad,
-    imagenes,
-    setImagenes,
-    disponible,
-    setDisponible,
+    formValues,
+    handleInputChange,
     enviarFormulario,
+    setFormValues, // Por si se necesita limpiar manualmente las imágenes externamente
   };
 };

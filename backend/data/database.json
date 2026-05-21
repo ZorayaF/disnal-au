@@ -11,6 +11,16 @@
       "nombre": "Harina de Trigo Especial Hojaldre (25kg)",
       "estado": "disponible",
       "cantidad": 44,
+      "categoria": "Harinas",
+      "marca": "Haz de Oros",
+      "presentacion": "Bulto",
+      "sku": "HAR-HOJ-25KG",
+      "descripcion": "Harina de trigo de alta fuerza, ideal para panadería y pastelería que requiera excelente laminado.",
+      "destacado": true,
+      "detallesTecnicos": {
+        "proteina": "12.5%",
+        "humedad": "14%"
+      },
       "imagenes": [
         "https://images.unsplash.com/photo-1574085733277-851d9d856a3a?q=80&w=500"
       ]
@@ -20,6 +30,16 @@
       "nombre": "Chocolate de Cobertura Semiamargo 55% (1kg)",
       "estado": "no disponible",
       "cantidad": 120,
+      "categoria": "Grasas y Mantecas",
+      "marca": "Cordillera",
+      "presentacion": "Paquete",
+      "sku": "CHO-SEM-1KG",
+      "descripcion": "Chocolate real con 55% de cacao, perfecto para moldear, cubrir y rellenar.",
+      "destacado": false,
+      "detallesTecnicos": {
+        "cacao": "55%",
+        "origen": "Nacional"
+      },
       "imagenes": [
         "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=500"
       ]
@@ -29,28 +49,18 @@
       "nombre": "Mantequilla Sin Sal Bloque (5kg)",
       "estado": "no disponible",
       "cantidad": 30,
+      "categoria": "Grasas y Mantecas",
+      "marca": "Colanta",
+      "presentacion": "Bloque",
+      "sku": "MAN-SAL-5KG",
+      "descripcion": "Mantequilla de alta pureza sin sal, ideal para masas suaves y cremas de alta repostería.",
+      "destacado": true,
+      "detallesTecnicos": {
+        "grasa": "82%",
+        "refrigeracion": "4°C"
+      },
       "imagenes": [
         "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?q=80&w=500"
-      ]
-    },
-    {
-      "id": 4,
-      "nombre": "hola",
-      "cantidad": 10,
-      "estado": "disponible",
-      "imagenes": [
-        "http://localhost:4000/uploads/imagenes-1779315858518-171504604.png"
-      ]
-    },
-    {
-      "id": 5,
-      "nombre": "hola",
-      "cantidad": 10,
-      "estado": "disponible",
-      "imagenes": [
-        "http://localhost:4000/uploads/imagenes-1779315892255-629337564.png",
-        "http://localhost:4000/uploads/imagenes-1779315892256-974924618.png",
-        "http://localhost:4000/uploads/imagenes-1779315892256-924285615.png"
       ]
     }
   ]

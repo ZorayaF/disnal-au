@@ -14,15 +14,45 @@ export const useProductDetail = () => {
   useEffect(() => {
     const cargarInformacion = async () => {
       try {
-        const todosLosProductos = await obtenerProductos();
-        const encontrado = todosLosProductos.find((p) => p.id === Number(id));
+        setCargando(true);
+        const respuestaApi = await obtenerProductos();
+
+        // Extraemos de forma segura el arreglo real de productos
+        const todosLosProductos = respuestaApi.productos || respuestaApi;
+
+        if (!Array.isArray(todosLosProductos)) {
+          throw new Error("No se pudo obtener la lista de productos.");
+        }
+
+        // 🌟 CORRECCIÓN 1: Comparación flexible pasando ambos lados a String
+        // Evita que falle si un ID viene como número y el otro como texto
+        const encontrado = todosLosProductos.find(
+          (p) => String(p.id) === String(id),
+        );
 
         if (encontrado) {
           setProducto(encontrado);
-          const relacionados = todosLosProductos
-            .filter((p) => p.id !== encontrado.id)
+
+          // Algoritmo de recomendación estratégica/relacionada intacto
+          const recomendados = todosLosProductos
+            .filter((p) => String(p.id) !== String(encontrado.id))
+            .sort((a, b) => {
+              // Prioridad 1: Misma categoría
+              const aMismaCat = a.categoria === encontrado.categoria ? 1 : 0;
+              const bMismaCat = b.categoria === encontrado.categoria ? 1 : 0;
+              if (aMismaCat !== bMismaCat) return bMismaCat - aMismaCat;
+
+              // Prioridad 2: Destacados
+              const aDestacado = a.destacado ? 1 : 0;
+              const bDestacado = b.destacado ? 1 : 0;
+              return bDestacado - aDestacado;
+            })
             .slice(0, 4);
-          setProductosRelacionados(relacionados);
+
+          setProductosRelacionados(recomendados);
+        } else {
+          // Si el producto realmente no existe, redirigimos limpiamente
+          navigate("/catalog", { replace: true });
         }
       } catch (error) {
         console.error("Error cargando la vista de producto:", error);
@@ -30,7 +60,9 @@ export const useProductDetail = () => {
         setCargando(false);
       }
     };
+
     cargarInformacion();
+    // 🌟 CORRECCIÓN 2: Removemos 'navigate' de las dependencias para romper el bucle infinito
   }, [id]);
 
   const volverAtras = () => navigate(-1);

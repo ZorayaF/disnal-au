@@ -1,47 +1,64 @@
 // src/hooks/useCompanyForm.js
 import { useState, useContext } from "react";
 import { CartContext } from "@context/CartContext";
+import { DEFAULT_COMPANY_STATE, crearEstructuraEmpresa } from "@models/Company";
+import { WHATSAPP_CONTACT_NUMBER } from "@config/api";
 
 export const useCompanyForm = (nextStep) => {
   const { carrito } = useContext(CartContext);
-  const [nombreEmpresa, setNombreEmpresa] = useState("");
-  const [telefono, setTelefono] = useState("");
+  // Consumimos el modelo centralizado
+  const [datosEmpresa, setDatosEmpresa] = useState(DEFAULT_COMPANY_STATE);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDatosEmpresa((prev) => ({ ...prev, [name]: value }));
+  };
 
   const manejarEnvioPedido = (e) => {
     e.preventDefault();
+    const infoLimpia = crearEstructuraEmpresa(datosEmpresa);
 
-    if (!nombreEmpresa.trim() || !telefono.trim()) {
-      alert("Por favor, ingresa el nombre de la empresa y tu teléfono.");
+    if (
+      !infoLimpia.nombreEmpresa.trim() ||
+      !infoLimpia.nombreContacto.trim() ||
+      !infoLimpia.telefono.trim() ||
+      !infoLimpia.ciudad.trim()
+    ) {
+      alert(
+        "Por favor, completa los campos obligatorios (Empresa, Contacto, Teléfono y Ciudad).",
+      );
       return;
     }
 
     const productosACotizar = carrito.filter((item) => !item.conflicto);
 
-    let textoMensaje = `*DISNAL-AU — NUEVA SOLICITUD DE COTIZACIÓN*\n\n`;
-    textoMensaje += `* DATOS DEL CLIENTE:*\n`;
-    textoMensaje += `• *Empresa/Panadería:* ${nombreEmpresa}\n`;
-    textoMensaje += `• *Teléfono:* ${telefono}\n\n`;
-    textoMensaje += `* INSUMOS SOLICITADOS:*\n`;
+    let m = `*DISNAL-AU — NUEVA SOLICITUD DE COTIZACIÓN B2B*\n\n`;
+    m += `*DATOS DE LA EMPRESA:*\n`;
+    m += `• *Empresa:* ${infoLimpia.nombreEmpresa}\n`;
+    if (infoLimpia.razonSocial.trim())
+      m += `• *Razón Social:* ${infoLimpia.razonSocial}\n`;
+    if (infoLimpia.nitRuc.trim()) m += `• *NIT/RUC:* ${infoLimpia.nitRuc}\n`;
+    m += `• *Ciudad:* ${infoLimpia.ciudad}\n\n`;
 
+    m += `*CONTACTO COMERCIAL:*\n`;
+    m += `• *Nombre:* ${infoLimpia.nombreContacto}\n`;
+
+    m += `• *Teléfono:* ${infoLimpia.telefono}\n`;
+
+    if (infoLimpia.correo.trim()) m += `• *Correo:* ${infoLimpia.correo}\n\n`;
+
+    if (infoLimpia.necesidadesEspecificas.trim())
+      m += `*📝 NECESIDADES ESPECÍFICAS:*\n${infoLimpia.necesidadesEspecificas}\n\n`;
+
+    m += `*INSUMOS SOLICITADOS:*\n`;
     productosACotizar.forEach((item, index) => {
-      textoMensaje += `${index + 1}. ${item.nombre} x ${item.cantidadEnCarrito} und.\n`;
+      m += `${index + 1}. ${item.nombre}${item.presentacion ? ` (${item.presentacion})` : ""} x ${item.cantidadEnCarrito} und.\n`;
     });
 
-    textoMensaje += `\n_Mensaje enviado desde el catálogo web de Disnal-AU._`;
-
-    const mensajeCodificado = encodeURIComponent(textoMensaje);
-    const numeroDisnal = "57300000000";
-    const urlWhatsApp = `https://wa.me/${numeroDisnal}?text=${mensajeCodificado}`;
-
+    const urlWhatsApp = `https://wa.me/${WHATSAPP_CONTACT_NUMBER}?text=${encodeURIComponent(m)}`;
     window.open(urlWhatsApp, "_blank");
     nextStep();
   };
 
-  return {
-    nombreEmpresa,
-    setNombreEmpresa,
-    telefono,
-    setTelefono,
-    manejarEnvioPedido,
-  };
+  return { datosEmpresa, handleInputChange, manejarEnvioPedido };
 };

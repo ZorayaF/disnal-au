@@ -1,11 +1,10 @@
-// frontend/src/context/AuthContext.jsx
+// src/context/AuthContext.jsx
 import { createContext, useState, useEffect } from "react";
 
-// Crear el contexto nativo de React
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Inicializar el estado buscando si ya existe una sesión guardada en el navegador
+  // Inicializar estados de manera segura leyendo el disco una sola vez al arrancar
   const [token, setToken] = useState(() => {
     return localStorage.getItem("disnal_token") || null;
   });
@@ -17,30 +16,31 @@ export const AuthProvider = ({ children }) => {
 
   const [cargando, setCargando] = useState(true);
 
+  // El useEffect ahora SOLO sirve para apagar la pantalla de carga inicial al montar el componente por primera vez
   useEffect(() => {
-    // Verificar si los datos locales son válidos al arrancar la app
-    if (token) {
-      localStorage.setItem("disnal_token", token);
-      localStorage.setItem("disnal_user", JSON.stringify(usuario));
-    } else {
-      localStorage.removeItem("disnal_token");
-      localStorage.removeItem("disnal_user");
-    }
     setCargando(false);
-  }, [token, usuario]);
+  }, []);
 
-  // Función para iniciar sesión globalmente tras la respuesta exitosa del backend
+  // Función para iniciar sesión de forma controlada
   const loginGlobal = (dataAuth) => {
+    // 1. Guardamos de inmediato en el almacenamiento físico
+    localStorage.setItem("disnal_token", dataAuth.token);
+    localStorage.setItem("disnal_user", JSON.stringify(dataAuth.user));
+
+    // 2. Modificamos el estado para notificar a la aplicacion de forma limpia
     setToken(dataAuth.token);
     setUsuario(dataAuth.user);
   };
 
-  // Función para limpiar la sesión (Logout)
+  // Función para limpiar la sesión (Logout) de forma controlada
   const logoutGlobal = () => {
-    setToken(null);
-    setUsuario(null);
+    // 1. Limpiamos el almacenamiento físico
     localStorage.removeItem("disnal_token");
     localStorage.removeItem("disnal_user");
+
+    // 2. Reseteamos los estados del contexto
+    setToken(null);
+    setUsuario(null);
   };
 
   return (
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         cargando,
         loginGlobal,
         logoutGlobal,
-        isAuthenticated: !!token,
+        isAuthenticated: !!token, // Retorna true si hay token, false si es null
       }}
     >
       {children}
