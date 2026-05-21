@@ -1,7 +1,5 @@
 // src/components/sections/ProductDetail.jsx
 import { useProductDetailSection } from "@hooks/useProductDetailSection";
-import { Button } from "@components/ui/Button";
-import { Title } from "@components/ui/Title";
 
 export const ProductDetail = ({ producto }) => {
   const {
@@ -9,96 +7,137 @@ export const ProductDetail = ({ producto }) => {
     esInactivo,
     sinStock,
     limiteAlcanzado,
+    presentacionSeleccionada,
+    setPresentacionSeleccionada,
     manejarAgregar,
   } = useProductDetailSection(producto);
 
+  if (!producto) return <p>No hay información del producto.</p>;
+
   return (
-    <div className="bg-bg-surface border border-border-component p-6 rounded-2xl shadow-sm grid grid-cols-1 md:grid-cols-2 gap-8 font-sans">
-      {/* LADO IZQUIERDO: Galería de fotos del servidor */}
-      <div className="space-y-4">
-        <div className="aspect-video w-full bg-bg-main rounded-xl overflow-hidden border border-border-component flex items-center justify-center text-text-muted text-sm">
+    <div
+      style={{
+        display: "flex",
+        gap: "40px",
+        padding: "20px",
+        border: "1px solid #ccc",
+        background: "#fff",
+      }}
+    >
+      {/* Lado izquierdo: Galeria basica de imagenes */}
+      <div style={{ width: "40%" }}>
+        <div
+          style={{
+            width: "100%",
+            height: "200px",
+            border: "1px solid #eee",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {producto.imagenes && producto.imagenes.length > 0 ? (
             <img
               src={producto.imagenes[0]}
               alt={producto.nombre}
-              className="w-full h-full object-cover"
+              style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
           ) : (
-            <span>Insumo sin imágenes cargadas</span>
+            <span>Sin imágenes</span>
           )}
         </div>
 
-        {/* Miniaturas */}
-        <div className="grid grid-cols-5 gap-2">
+        {/* Listado plano de miniaturas alternativas */}
+        <div style={{ display: "flex", gap: "5px", marginTop: "10px" }}>
           {producto.imagenes?.map((url, idx) => (
-            <div
+            <img
               key={idx}
-              className="aspect-square border border-border-component rounded-lg overflow-hidden bg-bg-main"
-            >
-              <img
-                src={url}
-                alt={`Miniatura ${idx + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
+              src={url}
+              alt="Miniatura"
+              style={{
+                width: "50px",
+                height: "50px",
+                border: "1px solid #ccc",
+              }}
+            />
           ))}
         </div>
       </div>
 
-      {/* LADO DERECHO: Ficha Técnico e Interacción */}
-      <div className="flex flex-col justify-between">
-        <div className="space-y-4">
-          <div>
-            <span
-              className={`inline-block px-2 py-1 rounded-md text-xs font-bold ${
-                esInactivo || sinStock
-                  ? "bg-red-50 text-red-700"
-                  : "bg-green-50 text-green-700"
-              }`}
-            >
-              {esInactivo || sinStock
-                ? "NO DISPONIBLE EN BODEGA"
-                : "DISPONIBLE"}
-            </span>
-            <div className="mt-2">
-              <Title text={producto.nombre} level={1} />
-            </div>
-          </div>
+      {/* Lado derecho: Datos tecnicos e interaccion del formulario */}
+      <div style={{ width: "60%" }}>
+        <h1>{producto.nombre}</h1>
+        <p>
+          Estado:{" "}
+          <strong>
+            {esInactivo || sinStock ? "NO DISPONIBLE" : "DISPONIBLE"}
+          </strong>
+        </p>
+        <p>ID Insumo: #{producto.id}</p>
+        <p>Stock General: {producto.cantidad} unidades</p>
+        <p>Categoría: {producto.categoria}</p>
+        <p>Marca: {producto.marca}</p>
+        <div>
+          <strong>Especificaciones Técnicas:</strong>
 
-          <div className="border-t border-border-component pt-4 space-y-2 text-sm text-text-body">
-            <p>
-              • <strong>Identificador de Insumo:</strong> #{producto.id}
+          {producto?.detallesTecnicos &&
+          Object.keys(producto.detallesTecnicos).length > 0 ? (
+            <ul
+              style={{
+                margin: "5px 0",
+                paddingLeft: "20px",
+                listStyleType: "disc",
+              }}
+            >
+              {Object.entries(producto.detallesTecnicos).map(
+                ([atributo, valor], idx) => (
+                  <li key={idx} style={{ margin: "4px 0" }}>
+                    <span style={{ textTransform: "capitalize" }}>
+                      {atributo}
+                    </span>
+                    : <strong>{valor}</strong>
+                  </li>
+                ),
+              )}
+            </ul>
+          ) : (
+            <p style={{ margin: "5px 0", color: "#666", italic: "true" }}>
+              No registradas para este lote comercial.
             </p>
-            <p>
-              • <strong>Existencias Reales:</strong> {producto.cantidad}{" "}
-              unidades disponibles
-            </p>
-            {cantidadActual > 0 && (
-              <p className="text-action-primary font-bold">
-                • <strong>Estado de Reserva:</strong> Tienes {cantidadActual}{" "}
-                unidades separadas en tu carrito.
-              </p>
-            )}
-          </div>
+          )}
         </div>
 
-        {/* Botón de acción */}
-        <div className="pt-6 border-t border-border-component mt-6">
+        {cantidadActual > 0 && (
+          <p style={{ color: "blue", fontWeight: "bold" }}>
+            Tienes {cantidadActual} unidades agregadas al carrito.
+          </p>
+        )}
+
+        <p>
+          <strong>Presentación de Despacho:</strong>{" "}
+          {producto?.presentacion || "Empaque original de fábrica"}
+        </p>
+
+        {/* Control de accion para agregar */}
+        <div style={{ marginTop: "20px" }}>
           {esInactivo || sinStock ? (
-            <Button variant="muted" disabled={true} fullWidth={true}>
-              Insumo Fuera de Stock Temporal
-            </Button>
+            <button disabled={true} style={{ width: "100%", padding: "10px" }}>
+              Insumo sin stock
+            </button>
           ) : (
-            <Button
-              variant={limiteAlcanzado ? "muted" : "primary"}
+            <button
               disabled={limiteAlcanzado}
-              fullWidth={true}
               onClick={manejarAgregar}
+              style={{
+                width: "100%",
+                padding: "10px",
+                cursor: limiteAlcanzado ? "not-allowed" : "pointer",
+              }}
             >
               {limiteAlcanzado
-                ? "Cantidad Máxima en Carrito"
-                : "Añadir a la Orden de Cotización"}
-            </Button>
+                ? "Límite máximo alcanzado"
+                : "Añadir a la cotización"}
+            </button>
           )}
         </div>
       </div>

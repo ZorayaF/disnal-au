@@ -3,9 +3,6 @@ import { useEffect } from "react";
 import { useCartCheckout } from "@hooks/useCartCheckout";
 import { CartList } from "@sections/CartList";
 import { CompanyForm } from "@sections/CompanyForm";
-import { OrderReview } from "@sections/OrderReview";
-import { CheckoutSuccess } from "@sections/CheckoutSuccess";
-import { Title } from "@components/ui/Title";
 
 export const Cart = () => {
   const { notificaciones, sincronizando, step, avanzarPaso, ejecutarBarrido } =
@@ -16,22 +13,31 @@ export const Cart = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-bg-main min-h-screen space-y-6">
-      {/* ENCABEZADO DE SECCIÓN */}
-      <div className="flex flex-col border-b border-border-component pb-4">
-        <Title text="Mi Carrito de Cotización" level={1} />
-        <p className="text-text-muted text-sm font-sans mt-1">
-          Completa los pasos para enviar la solicitud de insumos a Disnal AU.
-        </p>
+    <div
+      style={{
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+      }}
+    >
+      <div>
+        <h1>Mi Carrito de Cotización</h1>
+        <p>Completa los pasos para enviar la solicitud de insumos.</p>
       </div>
 
-      {/* PANEL DE NOTIFICACIONES ACTIVO */}
+      {/* Alertas simplificadas en texto plano */}
       {notificaciones.length > 0 && step === 1 && (
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2 animate-fade-in">
-          <span className="block font-sans text-sm font-bold text-amber-800">
-            Cambios en tu inventario detectados:
-          </span>
-          <ul className="list-disc pl-5 font-sans text-xs text-amber-700 space-y-1">
+        <div
+          style={{
+            border: "1px solid orange",
+            padding: "10px",
+            background: "#fff9e6",
+            color: "brown",
+          }}
+        >
+          <strong>Cambios en tu inventario detectados:</strong>
+          <ul>
             {notificaciones.map((nota, idx) => (
               <li key={idx}>{nota}</li>
             ))}
@@ -39,12 +45,16 @@ export const Cart = () => {
         </div>
       )}
 
-      {/* RENDERIZADO CONDICIONAL DE SECCIONES */}
-      <div className="bg-bg-surface rounded-2xl border border-border-component p-6 shadow-sm">
+      {/* Flujo de secciones condicionales sin animaciones ni dependencias complejas */}
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "20px",
+          background: "#fff",
+        }}
+      >
         {sincronizando ? (
-          <div className="text-center py-12 font-sans text-sm text-text-muted animate-pulse">
-            Verificando disponibilidad y existencias en tiempo real...
-          </div>
+          <p>Verificando disponibilidad y existencias en tiempo real...</p>
         ) : (
           <>
             {step === 1 && (
@@ -53,19 +63,39 @@ export const Cart = () => {
                 reverificar={ejecutarBarrido}
               />
             )}
+
             {step === 2 && (
               <CompanyForm
                 nextStep={() => avanzarPaso(3)}
                 prevStep={() => avanzarPaso(1)}
               />
             )}
+
             {step === 3 && (
-              <OrderReview
-                nextStep={() => avanzarPaso(4)}
-                prevStep={() => avanzarPaso(2)}
-              />
+              <div style={{ textAlign: "center" }}>
+                <h3>Paso 3: Revisión Final Completa</h3>
+                <p>Tus datos y productos están listos.</p>
+                <button onClick={() => avanzarPaso(4)}>
+                  Enviar a WhatsApp
+                </button>
+                <button
+                  onClick={() => avanzarPaso(2)}
+                  style={{ marginLeft: "10px" }}
+                >
+                  Atrás
+                </button>
+              </div>
             )}
-            {step === 4 && <CheckoutSuccess />}
+
+            {step === 4 && (
+              <div style={{ textAlign: "center", color: "green" }}>
+                <h3>¡Solicitud Enviada Exitosamente!</h3>
+                <p>
+                  Tu mensaje ha sido empaquetado y despachado hacia el canal de
+                  atención.
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>

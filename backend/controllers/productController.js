@@ -1,13 +1,27 @@
 // backend/controllers/productController.js
 import { leerDB, escribirDB } from "../data/database.js";
 
+// Obtener todos los productos (Sincronizado con la estructura del JSON)
 export const obtenerProductos = (req, res) => {
   const db = leerDB();
-  res.json(db.productos);
+  res.json({ productos: db.productos });
 };
 
+// Crear un nuevo producto con la taxonomía completa de Figma
 export const crearProducto = (req, res) => {
-  const { nombre, cantidad, imagenes, estado } = req.body;
+  const {
+    nombre,
+    cantidad,
+    imagenes,
+    estado,
+    categoria,
+    marca,
+    presentacion,
+    sku,
+    descripcion,
+    destacado,
+    detallesTecnicos,
+  } = req.body;
 
   if (!nombre || cantidad === undefined) {
     return res
@@ -25,8 +39,14 @@ export const crearProducto = (req, res) => {
     id: nuevoId,
     nombre,
     cantidad: Number(cantidad),
-    // Ahora 'estado' sí está definido, por lo que esta validación funcionará a la perfección
     estado: estado || (Number(cantidad) > 0 ? "disponible" : "no disponible"),
+    categoria: categoria ? categoria.trim().toLowerCase() : "sin-categoria",
+    marca: marca || "Genérico",
+    presentacion: presentacion || "Unidad",
+    sku: sku || `SKU-${nuevoId}`,
+    descripcion: descripcion || "",
+    destacado: destacado === "true" || destacado === true,
+    detallesTecnicos: detallesTecnicos || {},
     imagenes: Array.isArray(imagenes) ? imagenes : [],
   };
 
@@ -38,9 +58,22 @@ export const crearProducto = (req, res) => {
     .json({ mensaje: "Producto creado con éxito", producto: nuevoProducto });
 };
 
+// Actualizar un producto existente (Soporta edición parcial de campos nuevos)
 export const actualizarProducto = (req, res) => {
   const id = Number(req.params.id);
-  const { nombre, cantidad, estado, imagenes } = req.body;
+  const {
+    nombre,
+    cantidad,
+    estado,
+    imagenes,
+    categoria,
+    marca,
+    presentacion,
+    sku,
+    descripcion,
+    destacado,
+    detallesTecnicos,
+  } = req.body;
 
   const db = leerDB();
   const index = db.productos.findIndex((p) => p.id === id);
@@ -49,9 +82,26 @@ export const actualizarProducto = (req, res) => {
     return res.status(404).json({ error: "Producto no encontrado." });
   }
 
-  // 1. Actualizar textos y multimedia básicos si vienen en la petición
+  // 1. Actualizar textos, multimedia y atributos nuevos si vienen en la petición
   if (nombre !== undefined) db.productos[index].nombre = nombre;
   if (imagenes !== undefined) db.productos[index].imagenes = imagenes;
+  if (marca !== undefined) db.productos[index].marca = marca;
+  if (presentacion !== undefined)
+    db.productos[index].presentacion = presentacion;
+  if (sku !== undefined) db.productos[index].sku = sku;
+  if (descripcion !== undefined) db.productos[index].descripcion = descripcion;
+  if (detallesTecnicos !== undefined)
+    db.productos[index].detallesTecnicos = detallesTecnicos;
+
+  if (categoria !== undefined) {
+    db.productos[index].categoria = categoria
+      ? categoria.trim().toLowerCase()
+      : "sin-categoria";
+  }
+
+  if (destacado !== undefined) {
+    db.productos[index].destacado = destacado === "true" || destacado === true;
+  }
 
   // 2. Actualizar cantidad numérica de forma segura
   if (cantidad !== undefined) {
@@ -60,11 +110,9 @@ export const actualizarProducto = (req, res) => {
 
   // 3. Lógica Cruzada de Estado y Disponibilidad
   if (estado !== undefined) {
-    // Si el administrador apaga el Toggle explicitamente, el producto pasa a estar inactivo
     if (estado === "no disponible") {
       db.productos[index].estado = "no disponible";
     } else {
-      // Si el Toggle está encendido, el estado final dependerá de si realmente queda stock
       const stockActual =
         cantidad !== undefined
           ? Number(cantidad)
@@ -73,7 +121,6 @@ export const actualizarProducto = (req, res) => {
         stockActual > 0 ? "disponible" : "no disponible";
     }
   } else if (cantidad !== undefined) {
-    // Salvaguarda: Si el frontend solo envía la cantidad, calculamos el estado con base en el número
     db.productos[index].estado =
       Number(cantidad) > 0 ? "disponible" : "no disponible";
   }
@@ -87,6 +134,7 @@ export const actualizarProducto = (req, res) => {
   });
 };
 
+// Eliminar producto
 export const eliminarProducto = (req, res) => {
   const id = Number(req.params.id);
 

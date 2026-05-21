@@ -10,7 +10,9 @@
       "@data/*": ["src/data/*"],
       "@context/*": ["src/context/*"],
       "@services/*": ["src/services/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@models/*": ["src/models/*"],
+      "@config/*": ["src/config/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

@@ -1,71 +1,99 @@
 // src/pages/Login.jsx
 import { useAuthLogin } from "@hooks/useAuthLogin";
-import { Title } from "@components/ui/Title";
-import { InputField } from "@components/ui/InputField";
-import { Button } from "@components/ui/Button";
 
 export const Login = () => {
-  const {
-    usuario,
-    setUsuario,
-    contrasena,
-    setContrasena,
-    error,
-    cargando,
-    handleSubmit,
-  } = useAuthLogin();
+  const { credenciales, handleInputChange, error, cargando, handleSubmit } =
+    useAuthLogin();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-main p-4">
-      <div className="w-full max-w-md bg-bg-surface p-8 rounded-2xl border border-border-component shadow-sm">
+    <div
+      style={{
+        padding: "40px 20px",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "20px",
+          background: "#fff",
+          width: "100%",
+          maxWidth: "400px",
+        }}
+      >
         {/* Encabezado */}
-        <div className="text-center mb-6">
-          <Title text="Acceso Administrativo" level={2} />
-          <p className="text-text-muted text-sm mt-1">
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <h2>Acceso Administrativo</h2>
+          <p style={{ fontSize: "14px", color: "#666" }}>
             Insumos de Pastelería y Panadería
           </p>
         </div>
 
         {/* Alerta de Error Dinámica */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg font-medium">
+          <div
+            style={{
+              marginBottom: "15px",
+              padding: "10px",
+              background: "#fff5f5",
+              border: "1px solid red",
+              color: "red",
+              fontSize: "14px",
+            }}
+          >
             {error}
           </div>
         )}
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+        >
+          {/* El atributo name debe coincidir exactamente con la propiedad del estado de tu hook */}
           <div>
-            <InputField
-              label="Usuario"
+            <label style={{ display: "block", marginBottom: "4px" }}>
+              Usuario
+            </label>
+            <input
               type="text"
+              name="usuario"
               placeholder="Ej: admin"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
+              value={credenciales.usuario}
+              onChange={handleInputChange}
               disabled={cargando}
+              style={{ width: "100%", padding: "6px" }}
             />
           </div>
 
           <div>
-            <InputField
-              label="Contraseña"
+            <label style={{ display: "block", marginBottom: "4px" }}>
+              Contraseña
+            </label>
+            <input
               type="password"
+              name="contrasena"
               placeholder="••••••••"
-              value={contrasena}
-              onChange={(e) => setContrasena(e.target.value)}
+              value={credenciales.contrasena}
+              onChange={handleInputChange}
               disabled={cargando}
+              style={{ width: "100%", padding: "6px" }}
             />
           </div>
 
-          <div className="pt-2">
-            <Button
+          <div style={{ marginTop: "10px" }}>
+            <button
               type="submit"
-              variant="primary"
-              fullWidth={true}
               disabled={cargando}
+              style={{
+                width: "100%",
+                padding: "10px",
+                cursor: cargando ? "not-allowed" : "pointer",
+              }}
             >
               {cargando ? "Verificando..." : "Iniciar Sesión"}
-            </Button>
+            </button>
           </div>
         </form>
       </div>

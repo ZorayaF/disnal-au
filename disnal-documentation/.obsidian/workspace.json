@@ -11,14 +11,17 @@
             "id": "bbc8764e1e2b9d13",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "canvas",
               "state": {
-                "file": "Componentes/ui/Toggle.jsx.md",
-                "mode": "source",
-                "source": false
+                "file": "Assembly Map.canvas",
+                "viewState": {
+                  "x": -2513.805512922443,
+                  "y": -78.34719262907754,
+                  "zoom": -5.551115123125783e-16
+                }
               },
-              "icon": "lucide-file",
-              "title": "Toggle.jsx"
+              "icon": "lucide-layout-dashboard",
+              "title": "Assembly Map"
             }
           }
         ]
@@ -78,7 +81,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "b36086ee7a771bcc",
@@ -185,8 +189,8 @@
   },
   "active": "bbc8764e1e2b9d13",
   "lastOpenFiles": [
-    "Componentes/ui/Tittle.jsx.md",
     "Componentes/ui/Toggle.jsx.md",
+    "Componentes/ui/Tittle.jsx.md",
     "Componentes/ui/Text.jsx.md",
     "Componentes/ui/InputField.jsx.md",
     "Componentes/ui/Image.jsx.md",

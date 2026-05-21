@@ -2,8 +2,6 @@
 import { useEffect } from "react";
 import { useProductDetail } from "@hooks/useProductDetail";
 import { ProductDetail } from "@sections/ProductDetail";
-import { ProductGrid } from "@sections/ProductGrid";
-import { Button } from "@components/ui/Button";
 
 export const ProductView = () => {
   const {
@@ -20,41 +18,67 @@ export const ProductView = () => {
 
   if (cargando) {
     return (
-      <div className="text-center py-12 font-sans text-sm text-text-muted">
-        Cargando specifications técnicas...
-      </div>
+      <p style={{ padding: "20px" }}>Cargando especificaciones técnicas...</p>
     );
   }
 
   if (!producto) {
     return (
-      <div className="text-center py-12 font-sans space-y-4">
-        <p className="text-text-body font-semibold">
-          El insumo solicitado no existe en el sistema.
-        </p>
-        <Button onClick={irAlCatalogo}>Volver al Catálogo</Button>
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <p>El insumo solicitado no existe en el sistema.</p>
+        <button onClick={irAlCatalogo}>Volver al Catálogo</button>
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-bg-main min-h-screen flex flex-col gap-10">
-      {/* Botón de escape */}
+    <div
+      style={{
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "30px",
+      }}
+    >
+      {/* Botón de escape nativo */}
       <div>
-        <Button variant="secondary" onClick={volverAtras}>
-          Volver atrás
-        </Button>
+        <button onClick={volverAtras}>Volver atrás</button>
       </div>
 
-      {/* 1. Sección de la Ficha Técnica */}
+      {/* 1. Sección de la Ficha Técnica Simplificada */}
       <ProductDetail producto={producto} />
 
-      {/* 2. Bloque de recomendados */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold font-sans text-text-body px-2">
-          Productos Relacionados
-        </h2>
-        <ProductGrid productos={productosRelacionados} />
+      {/* 2. Bloque de recomendados independiente (Sin romper contratos con el catálogo) */}
+      <div>
+        <h2>Productos Relacionados</h2>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "15px",
+            marginTop: "10px",
+          }}
+        >
+          {productosRelacionados.map((rel) => (
+            <div
+              key={rel.id}
+              style={{
+                border: "1px solid #ccc",
+                padding: "10px",
+                width: "180px",
+                background: "#fff",
+              }}
+            >
+              <h4>{rel.nombre}</h4>
+              <p style={{ fontSize: "12px", color: "#666" }}>
+                Marca: {rel.marca}
+              </p>
+              <p style={{ fontSize: "12px", color: "#666" }}>
+                Empaque: {rel.presentacion}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

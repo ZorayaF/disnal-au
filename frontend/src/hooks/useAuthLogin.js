@@ -4,12 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@context/AuthContext";
 import { loginAdmin } from "@services/authService";
 
+const CREDENCIALES_INICIALES = {
+  usuario: "",
+  contrasena: "",
+};
+
 export const useAuthLogin = () => {
   const { loginGlobal, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] = useState("");
-  const [contrasena, setContrasena] = useState("");
+  // 1. Agrupamos los campos en un objeto para seguir el mismo patrón de useAdminForm
+  const [credenciales, setCredenciales] = useState(CREDENCIALES_INICIALES);
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(false);
 
@@ -19,10 +24,21 @@ export const useAuthLogin = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // 2. Manejador dinámico universal para los inputs de inicio de sesión
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredenciales((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setCargando(true);
+
+    const { usuario, contrasena } = credenciales;
 
     if (!usuario.trim() || !contrasena.trim()) {
       setError("Por favor, completa todos los campos.");
@@ -42,10 +58,8 @@ export const useAuthLogin = () => {
   };
 
   return {
-    usuario,
-    setUsuario,
-    contrasena,
-    setContrasena,
+    credenciales,
+    handleInputChange,
     error,
     cargando,
     handleSubmit,

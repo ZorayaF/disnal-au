@@ -20,6 +20,8 @@ export default defineConfig({
       "@context": fileURLToPath(new URL("./src/context", import.meta.url)),
       "@services": fileURLToPath(new URL("./src/services", import.meta.url)),
       "@hooks": fileURLToPath(new URL("./src/hooks", import.meta.url)),
+      "@models": fileURLToPath(new URL("./src/models", import.meta.url)),
+      "@config": fileURLToPath(new URL("./src/config", import.meta.url)),
     },
   },
 });
