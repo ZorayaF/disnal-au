@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import { CartContext } from "@context/CartContext";
 import { useCartList } from "@hooks/useCartList";
-// 🌟 Importamos la nueva molécula modular
+// Importamos la nueva molécula modular
 import { CartItemRow } from "@components/molecules/CartItemRow";
 
 export const CartList = ({ nextStep, reverificar }) => {
@@ -69,7 +69,7 @@ export const CartList = ({ nextStep, reverificar }) => {
               marginTop: "10px",
             }}
           >
-            {/* 🌟 REEMPLAZO POR MOLÉCULA CLEAN */}
+            {/*  REEMPLAZO POR MOLÉCULA CLEAN */}
             {productosDisponibles.map((item) => (
               <CartItemRow
                 key={item.id}

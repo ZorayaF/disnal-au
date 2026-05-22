@@ -31,7 +31,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="text"
           name="nombreEmpresa"
           placeholder="Ej: Panadería El Maná"
-          value={datosEmpresa.nombreEmpresa || ""} // 🌟 Blindado
+          value={datosEmpresa.nombreEmpresa || ""} // Blindado
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -46,7 +46,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="text"
           name="razonSocial"
           placeholder="Ej: Distribuidores El Maná S.A.S."
-          value={datosEmpresa.razonSocial || ""} // 🌟 Blindado
+          value={datosEmpresa.razonSocial || ""} 
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -61,7 +61,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="text"
           name="nitRuc"
           placeholder="Ej: 900123456-1"
-          value={datosEmpresa.nitRuc || ""} // 🌟 Blindado
+          value={datosEmpresa.nitRuc || ""}
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -76,7 +76,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="text"
           name="nombreContacto"
           placeholder="Ej: Carlos Pérez"
-          value={datosEmpresa.nombreContacto || ""} // 🌟 Blindado
+          value={datosEmpresa.nombreContacto || ""}
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -91,7 +91,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="email"
           name="correo"
           placeholder="Ej: contacto@empresa.com"
-          value={datosEmpresa.correo || ""} // 🌟 Blindado
+          value={datosEmpresa.correo || ""}
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -106,7 +106,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="text"
           name="telefono"
           placeholder="Ej: 3123456789"
-          value={datosEmpresa.telefono || ""} // 🌟 Blindado
+          value={datosEmpresa.telefono || ""}
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -121,7 +121,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
           type="text"
           name="ciudad"
           placeholder="Ej: Bogotá"
-          value={datosEmpresa.ciudad || ""} // 🌟 Blindado
+          value={datosEmpresa.ciudad || ""}
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px" }}
         />
@@ -135,7 +135,7 @@ export const CompanyForm = ({ nextStep, prevStep }) => {
         <textarea
           name="necesidadesEspecificas"
           placeholder="Observaciones o solicitudes sobre empaque, despacho, etc."
-          value={datosEmpresa.necesidadesEspecificas || ""} // 🌟 Blindado
+          value={datosEmpresa.necesidadesEspecificas || ""} 
           onChange={handleInputChange}
           style={{ width: "100%", padding: "6px", minHeight: "60px" }}
         />
