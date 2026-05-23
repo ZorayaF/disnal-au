@@ -1,6 +1,6 @@
 // src/components/sections/AdminManager.jsx
 import { useAdminForm } from "@hooks/useAdminForm";
-import { ImageManager } from "./ImageManager";
+import { ImageManager } from "@sections/ImageManager";
 
 export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
   const { formValues, setFormValues, handleInputChange, enviarFormulario } =
