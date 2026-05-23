@@ -10,6 +10,7 @@ import { Login } from "@pages/Login";
 import { AdminDashboard } from "@pages/AdminDashboard";
 import { TemporaryNavbar } from "@components/TemporaryNavbar";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { ChatWidget } from "@components/molecules/ChatWidget";
 
 export const AppRouter = () => {
   return (
@@ -34,6 +35,7 @@ export const AppRouter = () => {
           {/* Si en el futuro creas más vistas de admin (como /admin/historial), van aquí dentro */}
         </Route>
       </Routes>
+      <ChatWidget />
     </BrowserRouter>
   );
 };
