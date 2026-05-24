@@ -1,0 +1,29 @@
+.partner-brands {
+  width: min(820px, calc(100% - 2rem));
+  margin: 42px auto 50px;
+  text-align: center;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.partner-brands h2 {
+  margin: 0 0 30px;
+  color: #111;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.34em;
+}
+
+.partner-brands__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: clamp(28px, 7vw, 78px);
+  align-items: center;
+}
+
+.partner-brands img {
+  width: 100%;
+  max-height: 82px;
+  object-fit: contain;
+  border-radius: 18px;
+  filter: drop-shadow(0 15px 22px rgba(0, 0, 0, 0.18));
+}

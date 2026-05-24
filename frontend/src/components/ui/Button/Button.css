@@ -1,0 +1,70 @@
+.disnal-button {
+  border: 0;
+  border-radius: 999px 999px 999px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease, background 160ms ease;
+  white-space: nowrap;
+}
+
+.disnal-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.disnal-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.disnal-button--primary,
+.disnal-button--red {
+  background: #e30613;
+  color: #fff;
+  box-shadow: 0 13px 28px rgba(227, 6, 19, 0.24);
+}
+
+.disnal-button--dark,
+.disnal-button--secondary {
+  background: #050505;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.disnal-button--outline {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: #fff;
+}
+
+.disnal-button--ghost {
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.disnal-button--sm {
+  min-height: 1.7rem;
+  padding: 0.48rem 0.95rem;
+  font-size: 0.5rem;
+}
+
+.disnal-button--md {
+  min-height: 2.55rem;
+  padding: 0.78rem 1.7rem;
+  font-size: 0.66rem;
+}
+
+.disnal-button--lg {
+  min-height: 3.2rem;
+  padding: 0.95rem 2.4rem;
+  font-size: 0.88rem;
+}

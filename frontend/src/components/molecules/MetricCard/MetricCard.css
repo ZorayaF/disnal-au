@@ -1,0 +1,29 @@
+.metric-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.metric-card .disnal-line-icon {
+  width: 72px;
+  height: 72px;
+  font-size: 2rem;
+  color: #111;
+  box-shadow: none;
+}
+
+.metric-card strong {
+  display: block;
+  font-size: 1.06rem;
+  font-weight: 900;
+}
+
+.metric-card span {
+  display: block;
+  max-width: 9rem;
+  font-size: 0.66rem;
+  line-height: 1.25;
+}

@@ -9,7 +9,7 @@ export const useCartCheckout = () => {
   const [sincronizando, setSincronizando] = useState(true);
   const [step, setStep] = useState(1);
 
-  // Quitamos 'carrito' de las dependencias usando un enfoque funcional
+  // 🚀 OPTIMIZACIÓN: Quitamos 'carrito' de las dependencias usando un enfoque funcional
   const ejecutarBarrido = useCallback(async () => {
     setSincronizando(true);
     try {

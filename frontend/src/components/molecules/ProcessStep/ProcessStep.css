@@ -1,0 +1,33 @@
+.process-step {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 13px;
+  position: relative;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.process-step span {
+  width: 66px;
+  height: 66px;
+  border-radius: 999px;
+  background: #df0000;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.process-step h3 {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+.process-step p {
+  margin: 0;
+  color: #555;
+  font-size: 0.72rem;
+  line-height: 1.38;
+}

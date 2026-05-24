@@ -1,0 +1,59 @@
+.disnal-field {
+  display: grid;
+  gap: 0.58rem;
+  width: 100%;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.disnal-field__label {
+  color: inherit;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.disnal-field__control {
+  width: 100%;
+  min-height: 2.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 5px;
+  background: #f8f8f8;
+  color: #111;
+  font: inherit;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  padding: 0.78rem 1rem;
+  outline: none;
+  transition: border 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+select.disnal-field__control {
+  cursor: pointer;
+}
+
+textarea.disnal-field__control {
+  min-height: 8.8rem;
+  resize: vertical;
+}
+
+.disnal-field__control::placeholder {
+  color: #9b9b9b;
+  letter-spacing: 0.12em;
+}
+
+.disnal-field__control:focus {
+  background: #ffffff;
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.16);
+}
+
+.disnal-field__control[aria-invalid='true'] {
+  border-color: #e30613;
+}
+
+.disnal-field__error {
+  color: #ffb3b3;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}

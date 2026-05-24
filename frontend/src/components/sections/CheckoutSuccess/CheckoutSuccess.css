@@ -1,0 +1,103 @@
+.checkout-success-section {
+  min-height: calc(100vh - 70px);
+  padding: 58px 1rem 78px;
+  background: #fff;
+  text-align: center;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.checkout-success-section > h1 {
+  margin: 0 0 2.25rem;
+  color: #111;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+
+.checkout-success-card {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  background: #171717;
+  color: #fff;
+  padding: clamp(34px, 5vw, 62px);
+  border-radius: 7px;
+  box-shadow: 0 0 0 1px rgba(227, 6, 19, 0.4), 0 18px 38px rgba(0,0,0,.24);
+}
+
+.checkout-success-card .disnal-line-icon {
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 1.3rem;
+  background: transparent;
+  color: #00ac3c;
+  border: 0.35rem solid #00ac3c;
+  font-size: 3rem;
+  box-shadow: none;
+}
+
+.checkout-success-card h2 {
+  margin: 0;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.checkout-success-card p {
+  color: #e0e0e0;
+  font-size: 0.62rem;
+  line-height: 1.9;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.checkout-success-card dl {
+  margin: 1.7rem auto;
+  width: min(360px, 100%);
+  display: grid;
+  gap: 1rem;
+}
+
+.checkout-success-card dl div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.checkout-success-card dt,
+.checkout-success-card dd {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.checkout-success-card > a {
+  display: inline-flex;
+  margin: 1.3rem 0;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.checkout-success-card__channels {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.checkout-success-card__channels a {
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #ef3434;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.54rem;
+  text-transform: uppercase;
+}

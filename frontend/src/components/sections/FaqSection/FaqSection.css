@@ -1,0 +1,38 @@
+.faq-section {
+  margin-top: 58px;
+  padding: 56px 1rem 70px;
+  background: #f3f3f3;
+  text-align: center;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.faq-section > p {
+  margin: 0;
+  color: #df0000;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+}
+
+.faq-section h2 {
+  margin: 8px 0 6px;
+  color: #111;
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+
+.faq-section > span {
+  display: block;
+  color: #555;
+  font-size: 0.62rem;
+  margin-bottom: 32px;
+}
+
+.faq-section__list {
+  width: min(1060px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}

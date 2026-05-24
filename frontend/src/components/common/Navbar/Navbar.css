@@ -1,0 +1,111 @@
+.main-navbar {
+  width: 100%;
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: minmax(250px, 320px) 1fr;
+  align-items: stretch;
+  background: #151515;
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.main-navbar__brand {
+  display: grid;
+  place-items: center;
+  background: #f7f7f7;
+  padding: 9px 28px;
+  text-decoration: none;
+}
+
+.main-navbar__brand img {
+  width: min(210px, 100%);
+  height: auto;
+  display: block;
+}
+
+.main-navbar__nav {
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(8px, 1.8vw, 30px);
+  padding: 0 clamp(18px, 3vw, 42px);
+  background: #151515;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.main-navbar__nav::-webkit-scrollbar {
+  display: none;
+}
+
+.main-navbar__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 70px;
+  flex: 0 0 auto;
+  color: #ffffff;
+  font-size: clamp(0.66rem, 0.95vw, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.main-navbar__link::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 18px;
+  height: 2px;
+  background: #ffffff;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.main-navbar__link:hover::after,
+.main-navbar__link:focus-visible::after,
+.main-navbar__link.active::after {
+  transform: scaleX(1);
+}
+
+.main-navbar__cart-badge {
+  min-width: 19px;
+  height: 19px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #e30613;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .main-navbar {
+    grid-template-columns: 1fr;
+  }
+
+  .main-navbar__brand {
+    min-height: 62px;
+  }
+
+  .main-navbar__nav {
+    justify-content: flex-start;
+  }
+
+  .main-navbar__link {
+    min-height: 52px;
+  }
+}

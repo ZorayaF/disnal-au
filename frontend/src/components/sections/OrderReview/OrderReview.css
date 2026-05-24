@@ -1,0 +1,123 @@
+.order-review-section {
+  min-height: calc(100vh - 70px);
+  padding: 58px 1rem 72px;
+  background: #fff;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.order-review {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  background: #171717;
+  color: #fff;
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: 7px;
+  box-shadow: 0 0 0 1px rgba(227, 6, 19, 0.4), 0 16px 32px rgba(0, 0, 0, 0.25);
+}
+
+.order-review h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.24rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.order-review > p {
+  text-align: center;
+  color: #d7d7d7;
+  font-size: 0.6rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.order-review__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.8fr;
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.order-review article {
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 1rem;
+}
+
+.order-review h2 {
+  margin: 0 0 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.order-review dl {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.order-review dl div {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 1rem;
+}
+
+.order-review dt {
+  color: #bbb;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.order-review dd {
+  margin: 0;
+  font-size: 0.72rem;
+  word-break: break-word;
+}
+
+.order-review__comments,
+.order-review__products {
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: left !important;
+}
+
+.order-review__products {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+}
+
+.order-review__actions {
+  margin-top: 1.8rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.order-review__actions button {
+  min-height: 2.8rem;
+  border: 0;
+  border-radius: 999px 999px 999px 0;
+  padding: 0.8rem 1.8rem;
+  background: #df0000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.order-review__actions button:first-child {
+  background: transparent;
+  border: 1px solid #fff;
+}
+
+@media (max-width: 700px) {
+  .order-review__grid,
+  .order-review dl div {
+    grid-template-columns: 1fr;
+  }
+}

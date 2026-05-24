@@ -1,0 +1,106 @@
+.admin-image-manager {
+  display: grid;
+  gap: 1rem;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.admin-image-manager__url label {
+  display: block;
+  color: #cfcfcf;
+  margin-bottom: 0.55rem;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.admin-image-manager__url div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.7rem;
+}
+
+.admin-image-manager input[type='url'] {
+  min-height: 2.3rem;
+  border: 1px solid #707070;
+  background: #2c2c2c;
+  color: #fff;
+  border-radius: 0.25rem;
+  padding: 0.6rem;
+  outline: none;
+}
+
+.admin-image-manager__url button {
+  border: 1px solid #707070;
+  background: #2c2c2c;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.admin-image-manager__url span {
+  display: block;
+  color: #df0000;
+  margin-top: 0.4rem;
+  text-align: right;
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.admin-image-manager__slots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(54px, 1fr));
+  gap: 0.8rem;
+}
+
+.admin-image-manager__preview,
+.admin-image-manager__drop {
+  aspect-ratio: 1;
+  border: 1px solid #777;
+  background: #3c3c3c;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-image-manager__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.admin-image-manager__preview button {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(223,0,0,.9);
+  color: #fff;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.admin-image-manager__preview:hover button {
+  opacity: 1;
+}
+
+.admin-image-manager__drop input {
+  display: none;
+}
+
+.admin-image-manager__drop span {
+  color: #ddd;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+}
+
+.admin-image-manager__drop--active {
+  cursor: pointer;
+  border-color: #df0000;
+}
