@@ -1,13 +1,8 @@
-// src/components/molecules/SearchBar.jsx
-export const SearchBar = ({ onBuscar }) => {
-  return (
-    <div>
-      <input
-        type="text"
-        placeholder="Buscar producto..."
-        onChange={(e) => onBuscar(e.target.value)}
-        style={{ padding: "6px", width: "250px" }}
-      />
-    </div>
-  );
-};
+import './SearchBar.css';
+
+export const SearchBar = ({ onBuscar }) => (
+  <label className="catalog-search">
+    <span className="catalog-search__sr">Buscar producto</span>
+    <input type="search" placeholder="Buscar producto..." onChange={(event) => onBuscar(event.target.value)} />
+  </label>
+);

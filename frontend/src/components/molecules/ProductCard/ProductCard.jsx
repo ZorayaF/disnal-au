@@ -1,50 +1,61 @@
-// src/components/molecules/ProductCard.jsx
+import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { CartContext } from '@context/CartContext';
+import { Button } from '@components/ui/Button';
+import './ProductCard.css';
 
-export const ProductCard = ({ producto }) => {
-  // Desestructuramos tus atributos exactos del backend
-  const { nombre, cantidad, estado, categoria, imagenes } = producto;
+const fallbackImage = '/assets/images/harina de trigo.png';
+
+export const ProductCard = ({ producto, compact = false }) => {
+  const { agregarProducto } = useContext(CartContext);
+  const [wasAdded, setWasAdded] = useState(false);
+
+  const image = Array.isArray(producto?.imagenes) && producto.imagenes[0]
+    ? producto.imagenes[0]
+    : fallbackImage;
+
+  const disponible = producto?.estado === 'disponible' && Number(producto?.cantidad) > 0;
+
+  useEffect(() => {
+    if (!wasAdded) return undefined;
+
+    const timer = window.setTimeout(() => setWasAdded(false), 1400);
+    return () => window.clearTimeout(timer);
+  }, [wasAdded]);
+
+  const handleAddProduct = () => {
+    const added = agregarProducto(producto);
+    if (added !== false) setWasAdded(true);
+  };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      {/* Contenedor de la Imagen */}
-      <div className="h-48 bg-gray-100 relative">
-        <img
-          src={imagenes[0] || "https://via.placeholder.com/500"}
-          alt={nombre}
-          className="w-full h-full object-cover"
-        />
-        {/* Badge dinámico según tu estado de texto ("disponible" / "no disponible") */}
-        <span
-          className={`absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full ${
-            estado === "disponible"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
+    <article className={`product-card ${compact ? 'product-card--compact' : ''}`}>
+      {producto?.destacado && <span className="product-card__badge">Más vendido</span>}
+
+      <Link
+        to={`/product/${producto.id}`}
+        className="product-card__image-link"
+        aria-label={`Ver ${producto.nombre}`}
+      >
+        <img src={image} alt={producto.nombre} loading="lazy" />
+      </Link>
+
+      <div className="product-card__body">
+        <p className="product-card__brand">{producto.marca || producto.categoria || 'Disnal'}</p>
+        <h3>{producto.nombre}</h3>
+        <p className="product-card__status">{disponible ? 'Disponible' : 'No disponible'}</p>
+        <p className="product-card__detail">{producto.presentacion || 'Presentación comercial'}</p>
+
+        <Button
+          size="sm"
+          variant={wasAdded ? 'primary' : 'dark'}
+          onClick={handleAddProduct}
+          disabled={!disponible}
+          aria-live="polite"
         >
-          {estado}
-        </span>
+          {wasAdded ? 'Agregado ✓' : 'Agregar'}
+        </Button>
       </div>
-
-      {/* Contenido de la Tarjeta */}
-      <div className="p-4 flex flex-col gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-amber-600">
-          {categoria}
-        </span>
-
-        <h4 className="font-semibold text-gray-800 line-clamp-2 h-12">
-          {nombre}
-        </h4>
-
-        <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-50">
-          <span className="text-sm text-gray-500">
-            Stock: <strong className="text-gray-700">{cantidad} uds</strong>
-          </span>
-
-          <button className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors">
-            Añadir
-          </button>
-        </div>
-      </div>
-    </div>
+    </article>
   );
 };

@@ -1,0 +1,20 @@
+.contact-channels {
+  background: #ef3434;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(118px, 1fr));
+  gap: clamp(0.75rem, 2.5vw, 1.4rem);
+  padding: 17px clamp(1rem, 8vw, 7rem) 15px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .contact-channels {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .contact-channels {
+    grid-template-columns: 1fr;
+  }
+}

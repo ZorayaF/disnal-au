@@ -1,4 +1,4 @@
-// src/components/sections/ProductDetail.jsx
+// src/components/sections/ProductDetail/ProductDetail.jsx
 import { useProductDetailSection } from "@hooks/useProductDetailSection";
 
 export const ProductDetail = ({ producto }) => {
@@ -7,8 +7,6 @@ export const ProductDetail = ({ producto }) => {
     esInactivo,
     sinStock,
     limiteAlcanzado,
-    presentacionSeleccionada,
-    setPresentacionSeleccionada,
     manejarAgregar,
   } = useProductDetailSection(producto);
 
@@ -24,7 +22,6 @@ export const ProductDetail = ({ producto }) => {
         background: "#fff",
       }}
     >
-      {/* Lado izquierdo: Galeria basica de imagenes */}
       <div style={{ width: "40%" }}>
         <div
           style={{
@@ -47,7 +44,6 @@ export const ProductDetail = ({ producto }) => {
           )}
         </div>
 
-        {/* Listado plano de miniaturas alternativas */}
         <div style={{ display: "flex", gap: "5px", marginTop: "10px" }}>
           {producto.imagenes?.map((url, idx) => (
             <img
@@ -64,24 +60,20 @@ export const ProductDetail = ({ producto }) => {
         </div>
       </div>
 
-      {/* Lado derecho: Datos tecnicos e interaccion del formulario */}
       <div style={{ width: "60%" }}>
         <h1>{producto.nombre}</h1>
         <p>
-          Estado:{" "}
-          <strong>
-            {esInactivo || sinStock ? "NO DISPONIBLE" : "DISPONIBLE"}
-          </strong>
+          Estado: <strong>{esInactivo || sinStock ? "NO DISPONIBLE" : "DISPONIBLE"}</strong>
         </p>
         <p>ID Insumo: #{producto.id}</p>
         <p>Stock General: {producto.cantidad} unidades</p>
         <p>Categoría: {producto.categoria}</p>
         <p>Marca: {producto.marca}</p>
+
         <div>
           <strong>Especificaciones Técnicas:</strong>
 
-          {producto?.detallesTecnicos &&
-          Object.keys(producto.detallesTecnicos).length > 0 ? (
+          {producto?.detallesTecnicos && Object.keys(producto.detallesTecnicos).length > 0 ? (
             <ul
               style={{
                 margin: "5px 0",
@@ -89,19 +81,14 @@ export const ProductDetail = ({ producto }) => {
                 listStyleType: "disc",
               }}
             >
-              {Object.entries(producto.detallesTecnicos).map(
-                ([atributo, valor], idx) => (
-                  <li key={idx} style={{ margin: "4px 0" }}>
-                    <span style={{ textTransform: "capitalize" }}>
-                      {atributo}
-                    </span>
-                    : <strong>{valor}</strong>
-                  </li>
-                ),
-              )}
+              {Object.entries(producto.detallesTecnicos).map(([atributo, valor], idx) => (
+                <li key={idx} style={{ margin: "4px 0" }}>
+                  <span style={{ textTransform: "capitalize" }}>{atributo}</span>: <strong>{valor}</strong>
+                </li>
+              ))}
             </ul>
           ) : (
-            <p style={{ margin: "5px 0", color: "#666", italic: "true" }}>
+            <p style={{ margin: "5px 0", color: "#666" }}>
               No registradas para este lote comercial.
             </p>
           )}
@@ -114,11 +101,9 @@ export const ProductDetail = ({ producto }) => {
         )}
 
         <p>
-          <strong>Presentación de Despacho:</strong>{" "}
-          {producto?.presentacion || "Empaque original de fábrica"}
+          <strong>Presentación de Despacho:</strong> {producto?.presentacion || "Empaque original de fábrica"}
         </p>
 
-        {/* Control de accion para agregar */}
         <div style={{ marginTop: "20px" }}>
           {esInactivo || sinStock ? (
             <button disabled={true} style={{ width: "100%", padding: "10px" }}>
@@ -134,9 +119,7 @@ export const ProductDetail = ({ producto }) => {
                 cursor: limiteAlcanzado ? "not-allowed" : "pointer",
               }}
             >
-              {limiteAlcanzado
-                ? "Límite máximo alcanzado"
-                : "Añadir a la cotización"}
+              {limiteAlcanzado ? "Límite máximo alcanzado" : "Añadir a la cotización"}
             </button>
           )}
         </div>

@@ -1,347 +1,169 @@
-// src/components/sections/AdminManager.jsx
-import { useAdminForm } from "@hooks/useAdminForm";
-import { ImageManager } from "@sections/ImageManager";
+import { useAdminForm } from '@hooks/useAdminForm';
+import { ImageManager } from '@sections/ImageManager';
+import './AdminManager.css';
+
+const categorias = [
+  'Harinas',
+  'Azúcares y Endulzantes',
+  'Grasas y Mantecas',
+  'Levaduras y Leudantes',
+  'Esencias y Sabores',
+  'Lácteos',
+  'Otros',
+];
 
 export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
-  const { formValues, setFormValues, handleInputChange, enviarFormulario } =
-    useAdminForm(productoAEditar, onGuardar);
+  const {
+    formValues,
+    setFormValues,
+    handleInputChange,
+    enviarFormulario,
+    resetForm,
+    error,
+    successMessage,
+    guardando,
+  } = useAdminForm(productoAEditar, onGuardar);
+
+  const cancelar = () => {
+    resetForm();
+    onCancelar?.();
+  };
+
+  const setImagenes = (nextImages) => {
+    if (typeof nextImages === 'function') {
+      setFormValues((prev) => ({ ...prev, imagenes: nextImages(prev.imagenes) }));
+      return;
+    }
+
+    setFormValues((prev) => ({ ...prev, imagenes: nextImages }));
+  };
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: "20px",
-        background: "#fff",
-        maxWidth: "500px",
-      }}
-    >
-      <h3>{productoAEditar ? "Modificar Insumo" : "Añadir Nuevo Insumo"}</h3>
-      <hr />
+    <section className="admin-manager" aria-labelledby="admin-manager-title">
+      <header className="admin-manager__header">
+        <span aria-hidden="true">＋</span>
+        <h2 id="admin-manager-title">
+          {productoAEditar ? 'Modificar insumo' : 'Añadir nuevo insumo'}
+        </h2>
+      </header>
 
-      <form
-        onSubmit={enviarFormulario}
-        style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-      >
-        <div>
-          <label style={{ display: "block", marginBottom: "4px" }}>
-            Nombre del Producto *
-          </label>
-          <input
-            type="text"
-            name="nombre"
-            value={formValues.nombre}
-            onChange={handleInputChange}
-            style={{ width: "100%", padding: "6px" }}
-          />
-        </div>
+      <form className="admin-manager__form" onSubmit={enviarFormulario} noValidate>
+        {error && <p className="admin-manager__error" role="alert">{error}</p>}
+        {successMessage && <p className="admin-manager__success" role="status">{successMessage}</p>}
 
-        <div>
-          <label style={{ display: "block", marginBottom: "4px" }}>
-            Descripción Comercial
-          </label>
-          <textarea
-            name="descripcion"
-            value={formValues.descripcion}
-            onChange={handleInputChange}
-            style={{ width: "100%", padding: "6px", minHeight: "50px" }}
-          />
-        </div>
-
-        <div>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              fontWeight: "bold",
-            }}
-          >
-            Especificaciones Técnicas (Atributo / Valor)
+        <div className="admin-manager__grid">
+          <label>
+            <span>Nombre del producto</span>
+            <input
+              name="nombre"
+              value={formValues.nombre}
+              onChange={handleInputChange}
+              placeholder="Ej: Harina"
+              disabled={guardando}
+              required
+            />
           </label>
 
-          {/* 1. RENDERIZAR LAS FILAS QUE YA EXISTEN EN EL OBJETO */}
-          {formValues.detallesTecnicos &&
-          typeof formValues.detallesTecnicos === "object"
-            ? Object.entries(formValues.detallesTecnicos).map(
-                ([llave, valor], index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <input
-                      type="text"
-                      placeholder="Ej: Cacao"
-                      value={llave}
-                      disabled={
-                        true
-                      } /* Mantiene la llave fija al editar, o puedes remover disabled si quieres renombrarla */
-                      style={{ padding: "6px", flex: "1" }}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Ej: 55%"
-                      value={valor || ""}
-                      onChange={(e) => {
-                        // Actualiza dinámicamente el valor de esa llave específica
-                        const copiaDetalles = {
-                          ...formValues.detallesTecnicos,
-                          [llave]: e.target.value,
-                        };
-                        setFormValues({
-                          ...formValues,
-                          detallesTecnicos: copiaDetalles,
-                        });
-                      }}
-                      style={{ padding: "6px", flex: "1" }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        // Elimina el atributo del objeto si el usuario ya no lo quiere
-                        const copiaDetalles = {
-                          ...formValues.detallesTecnicos,
-                        };
-                        delete copiaDetalles[llave];
-                        setFormValues({
-                          ...formValues,
-                          detallesTecnicos: copiaDetalles,
-                        });
-                      }}
-                      style={{
-                        padding: "6px 12px",
-                        background: "#fee2e2",
-                        color: "#b91c1c",
-                        border: "1px solid #fca5a5",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                ),
-              )
-            : null}
-
-          {/* 2. BOTÓN DE (+) PARA AÑADIR NUEVOS ATRIBUTOS DINÁMICAMENTE */}
-          <button
-            type="button"
-            onClick={() => {
-              const nuevaLlave = prompt(
-                "Escribe el nombre del atributo técnico (ej: Origen, Humedad, Proteína):",
-              );
-              if (!nuevaLlave) return;
-
-              // Aseguramos que detallesTecnicos sea un objeto antes de esparcirlo
-              const estructuraActual =
-                typeof formValues.detallesTecnicos === "object" &&
-                formValues.detallesTecnicos !== null
-                  ? formValues.detallesTecnicos
-                  : {};
-
-              setFormValues({
-                ...formValues,
-                detallesTecnicos: {
-                  ...estructuraActual,
-                  [nuevaLlave]: "", // Lo inicializamos vacío listo para que el usuario escriba el valor
-                },
-              });
-            }}
-            style={{
-              marginTop: "5px",
-              padding: "6px 12px",
-              background: "#f3f4f6",
-              border: "1px solid #d1d5db",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontWeight: "500",
-            }}
-          >
-            + Añadir Especificación Técnica
-          </button>
-        </div>
-
-        <div>
-          <label style={{ display: "block", marginBottom: "4px" }}>
-            Cantidad en Stock *
+          <label>
+            <span>Categoría</span>
+            <select
+              name="categoria"
+              value={formValues.categoria}
+              onChange={handleInputChange}
+              disabled={guardando}
+            >
+              <option value="">Seleccionar</option>
+              {categorias.map((categoria) => (
+                <option key={categoria} value={categoria}>{categoria}</option>
+              ))}
+            </select>
           </label>
-          <input
-            type="number"
-            name="cantidad"
-            value={formValues.cantidad}
-            onChange={handleInputChange}
-            disabled={formValues.estado === "no disponible"}
-            style={{ width: "100%", padding: "6px" }}
-          />
-        </div>
 
-        <select
-          name="categoria"
-          value={
-            // Evaluamos directamente contra los strings reales y limpios de la base de datos
-            [
-              "Harinas",
-              "Azúcares y Endulzantes",
-              "Grasas y Mantecas",
-              "Levaduras y Leudantes",
-              "Esencias y Sabores",
-              "",
-            ].includes(formValues.categoria)
-              ? formValues.categoria
-              : "otra"
-          }
-          onChange={(e) => {
-            const valorSeleccionado = e.target.value;
-            if (valorSeleccionado === "otra") {
-              const nuevaCat = prompt(
-                "Escribe el nombre de la nueva categoría (Ej: Chocolates y Coberturas):",
-              );
-              if (nuevaCat) {
-                // Guardamos el texto exactamente como lo escribió el usuario
-                setFormValues({ ...formValues, categoria: nuevaCat.trim() });
-              }
-            } else {
-              handleInputChange(e);
-            }
-          }}
-          style={{ width: "100%", padding: "6px" }}
-        >
-          <option value="">-- Seleccionar Categoría --</option>
-          <option value="Harinas">Harinas</option>
-          <option value="Azúcares y Endulzantes">Azúcares y Endulzantes</option>
-          <option value="Grasas y Mantecas">Grasas y Mantecas</option>
-          <option value="Levaduras y Leudantes">Levaduras y Leudantes</option>
-          <option value="Esencias y Sabores">Esencias y Sabores</option>
-
-          <option value="otra" style={{ fontWeight: "bold", color: "blue" }}>
-            ➕ Añadir nueva categoría...
-          </option>
-        </select>
-
-        {/* Validador de respaldo limpio */}
-        {![
-          "Harinas",
-          "Azúcares y Endulzantes",
-          "Grasas y Mantecas",
-          "Levaduras y Leudantes",
-          "Esencias y Sabores",
-          "",
-        ].includes(formValues.categoria) && (
-          <p
-            style={{ margin: "5px 0 0 0", fontSize: "12px", color: "#2563eb" }}
-          >
-            Categoría personalizada activa:{" "}
-            <strong>{formValues.categoria}</strong>
-          </p>
-        )}
-
-        <div>
-          <label style={{ display: "block", marginBottom: "4px" }}>
-            Marca *
+          <label>
+            <span>Cantidad en stock</span>
+            <input
+              type="number"
+              min="0"
+              name="cantidad"
+              value={formValues.cantidad}
+              onChange={handleInputChange}
+              disabled={guardando || formValues.estado === 'no disponible'}
+              placeholder="#"
+              required
+            />
           </label>
-          <input
-            type="text"
-            name="marca"
-            value={formValues.marca}
-            onChange={handleInputChange}
-            placeholder="Ej: Haz de Oros"
-            style={{ width: "100%", padding: "6px" }}
-          />
-        </div>
 
-        <div>
-          <label style={{ display: "block", marginBottom: "4px" }}>
-            Presentación de Fábrica *
+          <label>
+            <span>Disponibilidad</span>
+            <select
+              name="estado"
+              value={formValues.estado}
+              onChange={handleInputChange}
+              disabled={guardando}
+            >
+              <option value="disponible">Disponible</option>
+              <option value="no disponible">No disponible</option>
+            </select>
           </label>
-          <input
-            type="text"
-            name="presentacion"
-            value={formValues.presentacion}
-            onChange={handleInputChange}
-            placeholder="Ej: Bulto de 50 kg, Bloque de 1 kg, Caja x 12 und"
-            style={{ width: "100%", padding: "6px" }}
-          />
-        </div>
 
-        <div>
-          <label style={{ display: "block", marginBottom: "4px" }}>
-            Visibilidad / Estado
+          <label>
+            <span>Marca</span>
+            <input
+              name="marca"
+              value={formValues.marca}
+              onChange={handleInputChange}
+              placeholder="Ej: Haz de Oros"
+              disabled={guardando}
+            />
           </label>
-          <select
-            name="estado"
-            value={formValues.estado}
-            onChange={handleInputChange}
-            style={{ width: "100%", padding: "6px" }}
-          >
-            <option value="disponible">Disponible (Visible)</option>
-            <option value="no disponible">No Disponible (Oculto)</option>
-          </select>
-        </div>
 
-        <div>
-          <label
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              cursor: "pointer",
-            }}
-          >
+          <label>
+            <span>Presentación</span>
+            <input
+              name="presentacion"
+              value={formValues.presentacion}
+              onChange={handleInputChange}
+              placeholder="Ej: 500g"
+              disabled={guardando}
+            />
+          </label>
+
+          <label className="admin-manager__full">
+            <span>Descripción comercial</span>
+            <textarea
+              name="descripcion"
+              value={formValues.descripcion}
+              onChange={handleInputChange}
+              placeholder="Descripción breve del insumo"
+              disabled={guardando}
+            />
+          </label>
+
+          <label className="admin-manager__check admin-manager__full">
             <input
               type="checkbox"
               name="destacado"
-              checked={formValues.destacado}
-              onChange={(e) =>
-                setFormValues((prev) => ({
-                  ...prev,
-                  _destacado: e.target.checked,
-                }))
-              }
+              checked={Boolean(formValues.destacado)}
+              onChange={handleInputChange}
+              disabled={guardando}
             />
-            Marcar como Producto Destacado en Inicio
+            <span>Marcar como producto destacado en inicio</span>
           </label>
         </div>
 
-        <div
-          style={{
-            margin: "10px 0",
-            border: "1px dashed #aaa",
-            padding: "10px",
-          }}
-        >
-          <ImageManager
-            imagenes={formValues.imagenes}
-            setImagenes={(nuevasImagenes) => {
-              if (typeof nuevasImagenes === "function") {
-                setFormValues((prev) => ({
-                  ...prev,
-                  imagenes: nuevasImagenes(prev.imagenes),
-                }));
-              } else {
-                setFormValues((prev) => ({
-                  ...prev,
-                  imagenes: nuevasImagenes,
-                }));
-              }
-            }}
-          />
-        </div>
+        <ImageManager imagenes={formValues.imagenes} setImagenes={setImagenes} />
 
-        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-          <button type="submit" style={{ padding: "8px 16px", width: "100%" }}>
-            {productoAEditar ? "Guardar Cambios" : "Registrar Insumo"}
+        <div className="admin-manager__actions">
+          <button type="submit" disabled={guardando}>
+            {guardando
+              ? 'Guardando...'
+              : productoAEditar
+                ? 'Guardar cambios'
+                : 'Registrar insumo'}
           </button>
-          <button
-            type="button"
-            onClick={onCancelar}
-            style={{ padding: "8px 16px" }}
-          >
-            Cancelar
-          </button>
+          <button type="button" onClick={cancelar} disabled={guardando}>Limpiar</button>
         </div>
       </form>
-    </div>
+    </section>
   );
 };

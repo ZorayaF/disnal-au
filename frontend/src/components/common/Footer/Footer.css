@@ -1,0 +1,96 @@
+.site-footer {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) 1fr;
+  background: #050505;
+  color: #ffffff;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  margin-top: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.site-footer__logo-panel {
+  min-height: 128px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  padding: 18px 26px;
+}
+
+.site-footer__logo-panel img {
+  width: min(252px, 94%);
+  height: auto;
+}
+
+.site-footer__content {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(140px, 1fr));
+  gap: clamp(24px, 5vw, 68px);
+  align-items: start;
+  padding: 28px clamp(28px, 6vw, 74px);
+}
+
+.site-footer h2 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.site-footer a {
+  display: block;
+  width: fit-content;
+  color: #ffffff;
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.9;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #ef3434;
+}
+
+.site-footer__legal {
+  display: grid;
+  justify-items: end;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.site-footer__admin-link {
+  width: fit-content;
+  margin-top: 0.7rem;
+  padding: 0.42rem 0.72rem;
+  border: 1px solid rgba(239, 52, 52, 0.72);
+  border-radius: 999px;
+  color: #ffffff !important;
+  font-size: 0.56rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em;
+  line-height: 1.2 !important;
+  text-transform: uppercase;
+}
+
+.site-footer__admin-link:hover {
+  background: #df0000;
+  border-color: #df0000;
+  color: #ffffff !important;
+}
+
+@media (max-width: 760px) {
+  .site-footer,
+  .site-footer__content {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer__content {
+    padding: 28px 24px 34px;
+  }
+
+  .site-footer__legal {
+    justify-items: start;
+    text-align: left;
+  }
+}

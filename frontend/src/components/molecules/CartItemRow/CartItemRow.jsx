@@ -1,90 +1,31 @@
-// src/components/molecules/CartItemRow.jsx
-export const CartItemRow = ({
-  item,
-  restarProducto,
-  agregarProducto,
-  eliminarProducto,
-  disabled,
-}) => {
+import { Button } from '@components/ui/Button';
+import { LineIcon } from '@components/ui/LineIcon';
+import './CartItemRow.css'; //acá con líneas de importaciones
+
+const fallbackImage = '/assets/images/harina de trigo.png'; //imagen
+
+export const CartItemRow = ({ item, onIncrement, onDecrement, onRemove }) => {
+  const image = Array.isArray(item.imagenes) && item.imagenes[0] ? item.imagenes[0] : fallbackImage; //función incrementar, decrementar para CardItemRow
+
   return (
-    <div
-      style={{
-        border: "1px solid #eee",
-        padding: "10px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: "15px",
-      }}
-    >
-      {/* Grupo Izquierdo: Imagen + Información del Insumo */}
-      <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-        {/* Atomo Imagen con contenedor neutro */}
-        <div
-          style={{
-            width: "60px",
-            height: "60px",
-            border: "1px solid #eee",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden",
-            background: "#f9fafb",
-          }}
-        >
-          {item.imagenes && item.imagenes.length > 0 ? (
-            <img
-              src={item.imagenes[0]}
-              alt={item.nombre}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          ) : (
-            <span
-              style={{ fontSize: "10px", color: "#999", textAlign: "center" }}
-            >
-              Sin foto
-            </span>
-          )}
-        </div>
-
-        {/* Textos informativos */}
+    <article className={`cart-item-row ${item.conflicto ? 'cart-item-row--conflict' : ''}`}>
+      <div className="cart-item-row__product">
+        <img src={image} alt={item.nombre} loading="lazy" />
         <div>
-          <strong style={{ display: "block" }}>{item.nombre}</strong>
-          <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
-            Stock actual: {item.cantidad} und. ({item.presentacion || "Unidad"})
-          </p>
+          <h3>{item.nombre}</h3>
+          <p>{item.presentacion || item.categoria || 'Insumo comercial'}</p>
+          {item.conflicto && <strong>{item.motivo || 'Producto con conflicto'}</strong>}
         </div>
+      </div> 
+      <div className="cart-item-row__quantity" aria-label={`Cantidad de ${item.nombre}`}>
+        <button type="button" onClick={() => onDecrement(item.id)} aria-label="Restar cantidad">−</button>
+        <span>{item.cantidadEnCarrito}</span>
+        <button type="button" onClick={() => onIncrement(item.id)} aria-label="Sumar cantidad">+</button>
       </div>
 
-      {/* Grupo Derecho: Controles de cantidad químicos y eliminación */}
-      <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
-        <div>
-          <button onClick={() => restarProducto(item.id)} disabled={disabled}>
-            -
-          </button>
-          <span style={{ margin: "0 10px", fontWeight: "bold" }}>
-            {item.cantidadEnCarrito}
-          </span>
-          <button
-            onClick={() => agregarProducto(item)}
-            disabled={item.cantidadEnCarrito >= item.cantidad || disabled}
-          >
-            +
-          </button>
-        </div>
-        <button
-          onClick={() => eliminarProducto(item.id)}
-          disabled={disabled}
-          style={{
-            color: "gray",
-            cursor: "pointer",
-            background: "none",
-            border: "none",
-          }}
-        >
-          Quitar
-        </button>
-      </div>
-    </div>
-  );
+      <Button className="cart-item-row__delete" variant="ghost" size="sm" onClick={() => onRemove(item.id)} aria-label={`Eliminar ${item.nombre}`}>
+        <LineIcon name="trash" />
+      </Button>
+    </article>
+  ); //todo lo que devuelve la función de cartItemRow
 };

@@ -1,0 +1,26 @@
+.catalog-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.catalog-sort span {
+  color: #333;
+}
+
+.catalog-sort select {
+  min-height: 2rem;
+  border: 0;
+  border-radius: 2px;
+  background: #111;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

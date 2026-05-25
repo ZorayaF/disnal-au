@@ -4,7 +4,7 @@ import { CartContext } from "@context/CartContext";
 import { DEFAULT_COMPANY_STATE, crearEstructuraEmpresa } from "@models/Company";
 import { WHATSAPP_CONTACT_NUMBER } from "@config/api";
 
-export const useCompanyForm = (nextStep) => {
+export const useCompanyForm = ({ onSubmit }) => {
   const { carrito } = useContext(CartContext);
   // Consumimos el modelo centralizado
   const [datosEmpresa, setDatosEmpresa] = useState(DEFAULT_COMPANY_STATE);
@@ -21,34 +21,32 @@ export const useCompanyForm = (nextStep) => {
     if (
       !infoLimpia.nombreEmpresa.trim() ||
       !infoLimpia.nombreContacto.trim() ||
-      !infoLimpia.telefono.trim() ||
-      !infoLimpia.ciudad.trim()
+      !infoLimpia.telefono.trim()
     ) {
       alert(
-        "Por favor, completa los campos obligatorios (Empresa, Contacto, Teléfono y Ciudad).",
+        "Por favor, completa los campos obligatorios (Nombre de la empresa, Nombre de contacto y Telefono).",
       );
       return;
     }
 
     const productosACotizar = carrito.filter((item) => !item.conflicto);
 
-    let m = `*DISNAL-AU — NUEVA SOLICITUD DE COTIZACIÓN B2B*\n\n`;
+    let m = `*DISNAL-AU — NUEVA SOLICITUD DE COTIZACIÓN*\n\n`;
     m += `*DATOS DE LA EMPRESA:*\n`;
     m += `• *Empresa:* ${infoLimpia.nombreEmpresa}\n`;
     if (infoLimpia.razonSocial.trim())
-      m += `• *Razón Social:* ${infoLimpia.razonSocial}\n`;
+      m += `• *Razon Social:* ${infoLimpia.razonSocial}\n`;
     if (infoLimpia.nitRuc.trim()) m += `• *NIT/RUC:* ${infoLimpia.nitRuc}\n`;
     m += `• *Ciudad:* ${infoLimpia.ciudad}\n\n`;
 
     m += `*CONTACTO COMERCIAL:*\n`;
     m += `• *Nombre:* ${infoLimpia.nombreContacto}\n`;
-
-    m += `• *Teléfono:* ${infoLimpia.telefono}\n`;
-
+    m += `• *Telefono:* ${infoLimpia.telefono}\n`;
     if (infoLimpia.correo.trim()) m += `• *Correo:* ${infoLimpia.correo}\n\n`;
 
-    if (infoLimpia.necesidadesEspecificas.trim())
-      m += `*📝 NECESIDADES ESPECÍFICAS:*\n${infoLimpia.necesidadesEspecificas}\n\n`;
+    if (infoLimpia.necesidadesEspecificas.trim()) {
+      m += `*NECESIDADES ESPECIFICAS:*\n${infoLimpia.necesidadesEspecificas}\n\n`;
+    }
 
     m += `*INSUMOS SOLICITADOS:*\n`;
     productosACotizar.forEach((item, index) => {
@@ -57,7 +55,9 @@ export const useCompanyForm = (nextStep) => {
 
     const urlWhatsApp = `https://wa.me/${WHATSAPP_CONTACT_NUMBER}?text=${encodeURIComponent(m)}`;
     window.open(urlWhatsApp, "_blank");
-    nextStep();
+
+    // Ejecución segura del callback para avanzar el stepper del checkout
+    if (onSubmit) onSubmit();
   };
 
   return { datosEmpresa, handleInputChange, manejarEnvioPedido };

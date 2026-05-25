@@ -1,0 +1,39 @@
+.faq-item {
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  box-shadow: 0 8px 20px rgba(0,0,0,.035);
+}
+
+.faq-item button {
+  width: 100%;
+  background: #fff;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 13px 20px;
+  text-align: left;
+  color: #111;
+  font-size: 1.02rem;
+  font-weight: 500;
+}
+
+.faq-item strong {
+  color: #df0000;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.faq-item p {
+  margin: 0;
+  padding: 0 20px 16px;
+  color: #555;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  text-align: left;
+}

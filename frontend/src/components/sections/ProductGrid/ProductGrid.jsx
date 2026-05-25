@@ -1,73 +1,32 @@
-// src/components/sections/ProductGrid.jsx
-import { useProductGrid } from "@hooks/useProductGrid";
+import { ProductCard } from '@components/molecules/ProductCard';
+import { useProductGrid } from '@hooks/useProductGrid';
+import './ProductGrid.css';
 
-// Actualizado para recibir el objeto de filtros completo
 export const ProductGrid = ({ filtros, terminoBusqueda, criterioOrden }) => {
-  const {
-    productos,
-    paginaActual,
-    totalPaginas,
-    setPaginaActual,
-    cargando,
-    error,
-  } = useProductGrid(filtros, terminoBusqueda, criterioOrden);
+  const { productos, paginaActual, totalPaginas, setPaginaActual, cargando, error } = useProductGrid(filtros, terminoBusqueda, criterioOrden);
 
-  if (cargando) return <p style={{ padding: "20px" }}>Cargando catálogo...</p>;
-  if (error)
-    return <p style={{ padding: "20px", color: "red" }}>Error: {error}</p>;
+  if (cargando) return <p className="product-grid-state">Cargando catálogo...</p>;
+  if (error) return <p className="product-grid-state product-grid-state--error">Error: {error}</p>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <section className="product-grid" aria-label="Productos del catálogo">
       {productos.length === 0 ? (
-        <p style={{ padding: "20px" }}>No se encontraron insumos.</p>
+        <p className="product-grid-state">No se encontraron insumos.</p>
       ) : (
-        /* Cuadrícula simple con el contenido crudo inyectado en línea */
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
-          {productos.map((producto) => (
-            <div
-              key={producto.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                width: "200px",
-                background: "#fff",
-              }}
-            >
-              <h4>{producto.nombre}</h4>
-              <p>Cantidad: {producto.cantidad}</p>
-              <p>Marca: {producto.marca}</p>
-              <p>Presentación: {producto.presentacion}</p>
-              <p>Estado: {producto.estado}</p>
-              {producto.destacado && (
-                <p style={{ color: "green", fontWeight: "bold" }}>Destacado</p>
-              )}
-            </div>
-          ))}
+        <div className="product-grid__list">
+          {productos.map((producto) => <ProductCard key={producto.id} producto={producto} />)}
         </div>
       )}
 
-      {/* Controles básicos de navegación de páginas */}
       {totalPaginas > 1 && (
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <button
-            disabled={paginaActual === 1}
-            onClick={() => setPaginaActual((p) => p - 1)}
-          >
-            Anterior
-          </button>
-
-          <span>
-            Página {paginaActual} de {totalPaginas}
-          </span>
-
-          <button
-            disabled={paginaActual === totalPaginas}
-            onClick={() => setPaginaActual((p) => p + 1)}
-          >
-            Siguiente
-          </button>
-        </div>
+        <nav className="product-grid__pagination" aria-label="Paginación del catálogo">
+          <button type="button" disabled={paginaActual === 1} onClick={() => setPaginaActual((page) => page - 1)}>Anterior</button>
+          {Array.from({ length: totalPaginas }).map((_, index) => (
+            <button key={index + 1} type="button" className={paginaActual === index + 1 ? 'is-active' : ''} onClick={() => setPaginaActual(index + 1)}>{index + 1}</button>
+          ))}
+          <button type="button" disabled={paginaActual === totalPaginas} onClick={() => setPaginaActual((page) => page + 1)}>Siguiente</button>
+        </nav>
       )}
-    </div>
+    </section>
   );
 };

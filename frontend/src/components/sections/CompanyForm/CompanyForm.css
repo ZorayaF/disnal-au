@@ -1,0 +1,79 @@
+.company-form-section {
+  min-height: calc(100vh - 70px);
+  padding: 62px 1rem 72px;
+  background: #fff;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.company-form {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  background: #171717;
+  color: #fff;
+  padding: clamp(32px, 4.8vw, 48px);
+  border-radius: 7px;
+  box-shadow: 0 0 0 1px rgba(227, 6, 19, 0.45), 0 16px 34px rgba(0, 0, 0, 0.25);
+}
+
+.company-form h1 {
+  margin: 0 0 36px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(227, 6, 19, 0.45);
+  text-align: center;
+  font-size: 1.22rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+
+.company-form__error {
+  margin: 0 0 1.25rem;
+  color: #ffb3b3;
+  text-align: center;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.company-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 24px;
+}
+
+.company-form__full {
+  grid-column: 1 / -1;
+}
+
+.company-form__actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+.company-form__actions button {
+  min-height: 3rem;
+  min-width: 240px;
+  border: 0;
+  border-radius: 999px 999px 999px 0;
+  padding: 0.88rem 2.4rem;
+  background: #df0000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.company-form__actions button:first-child {
+  background: transparent;
+  border: 1px solid #fff;
+}
+
+@media (max-width: 700px) {
+  .company-form__grid {
+    grid-template-columns: 1fr;
+  }
+}

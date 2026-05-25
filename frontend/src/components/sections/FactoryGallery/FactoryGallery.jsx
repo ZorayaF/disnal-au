@@ -1,8 +1,19 @@
-export const FactoryGallery = () => {
-  return (
-    <div style={{ padding: '20px', border: '1px dashed #64748b', margin: '10px 0', borderRadius: '8px' }}>
-      <h3 style={{ margin: 0, color: '#475569' }}>🧩 Sección: FactoryGallery</h3>
-      <p style={{ fontSize: '14px', color: '#94a3b8' }}>Espacio listo para maquetar.</p>
+import './FactoryGallery.css';
+
+const spaces = [
+  '/assets/images/proceso.jpg',
+  '/assets/images/panaderia.jpg',
+  '/assets/images/proceso pan.jpg',
+  '/assets/images/senor en fabrica.jpg',
+];
+
+export const FactoryGallery = () => (
+  <section className="factory-gallery" aria-labelledby="factory-gallery-title">
+    <h2 id="factory-gallery-title">Nuestros Espacios</h2>
+    <div className="factory-gallery__grid">
+      {spaces.map((src, index) => (
+        <img src={src} alt={`Espacio operativo Disnal ${index + 1}`} key={src} loading="lazy" />
+      ))}
     </div>
-  );
-};
+  </section>
+);

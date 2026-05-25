@@ -11,6 +11,7 @@ import { AdminDashboard } from "@pages/AdminDashboard";
 import { TemporaryNavbar } from "@components/TemporaryNavbar";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ChatWidget } from "@components/molecules/ChatWidget";
+import { Footer } from "@components/common/Footer";
 
 const RouterContent = () => {
   const location = useLocation();
@@ -18,13 +19,17 @@ const RouterContent = () => {
   // Evaluamos si la ruta actual es del panel de administración
   const esRutaAdmin = location.pathname.startsWith("/admin");
 
+  //  REGLA GLOBAL DE INTERFAZ: Ocultar elementos invasivos en Admin y Login
+  const ocultarElementosGlobales =
+    esRutaAdmin || location.pathname.startsWith("/login");
+
   return (
     <>
       {/* La barra se renderiza en todas las pantallas */}
       <TemporaryNavbar />
 
       <Routes>
-        {/* 1. RUTAS PÚBLICAS (Cualquier usuario puede entrar) */}
+        {/* 1. RUTAS PÚBLICAS */}
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/product/:id" element={<ProductView />} />
@@ -33,16 +38,17 @@ const RouterContent = () => {
         <Route path="/legal" element={<Legal />} />
         <Route path="/login" element={<Login />} />
 
-        {/* 2. RUTAS PRIVADAS (Solo accesibles con sesión iniciada) */}
+        {/* 2. RUTAS PRIVADAS */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<AdminDashboard />} />
-          {/* Si en el futuro creas más vistas de admin (como /admin/historial), van aquí dentro */}
         </Route>
       </Routes>
 
-      {/*  RENDERIZADO CONDICIONAL DE LA BURBUJA GLOBAL */}
-      {/* Si NO es ruta de administración, pintamos el Widget del chat */}
-      {!esRutaAdmin && <ChatWidget />}
+      {/*  RENDERIZADO CONDICIONAL DEL FOOTER */}
+      {!ocultarElementosGlobales && <Footer />}
+
+      {/*  RENDERIZADO CONDICIONAL DE LA BURBUJA GLOBAL DE CHAT */}
+      {!ocultarElementosGlobales && <ChatWidget />}
     </>
   );
 };
@@ -50,7 +56,6 @@ const RouterContent = () => {
 export const AppRouter = () => {
   return (
     <BrowserRouter>
-      {/* Envolvemos todo en RouterContent para que useLocation funcione perfectamente */}
       <RouterContent />
     </BrowserRouter>
   );

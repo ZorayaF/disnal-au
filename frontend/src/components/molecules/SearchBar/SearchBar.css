@@ -1,0 +1,42 @@
+.catalog-search {
+  flex: 1;
+  display: block;
+}
+
+.catalog-search__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.catalog-search input {
+  width: 100%;
+  min-height: 2.1rem;
+  border: 1px solid #111;
+  border-radius: 0;
+  padding: 0.48rem 2.2rem 0.48rem 0.85rem;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-size: 0.68rem;
+  outline: none;
+  letter-spacing: 0.02em;
+  background-image: linear-gradient(45deg, transparent 50%, #111 50%), linear-gradient(135deg, #111 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.catalog-search input::placeholder {
+  color: #555;
+}
+
+.catalog-search input:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.12);
+}

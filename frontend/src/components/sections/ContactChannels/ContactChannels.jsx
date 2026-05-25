@@ -1,8 +1,16 @@
-export const ContactChannels = () => {
-  return (
-    <div style={{ padding: '20px', border: '1px dashed #64748b', margin: '10px 0', borderRadius: '8px' }}>
-      <h3 style={{ margin: 0, color: '#475569' }}>🧩 Sección: ContactChannels</h3>
-      <p style={{ fontSize: '14px', color: '#94a3b8' }}>Espacio listo para maquetar.</p>
-    </div>
-  );
-};
+import { ContactChannelCard } from '@components/molecules/ContactChannelCard';
+import './ContactChannels.css';
+
+const channels = [
+  { icon: 'whatsapp', title: 'WhatsApp', href: 'https://wa.me/573118572322' },
+  { icon: 'mail', title: 'Correo', href: 'mailto:comercial@disnalau.com' },
+  { icon: 'phone', title: 'Teléfono', href: 'tel:+573118572322' },
+  { icon: 'form', title: 'Formulario' },
+  { icon: 'clock', title: 'Lunes a viernes', description: '8:00am - 5:00pm' },
+];
+
+export const ContactChannels = () => (
+  <section className="contact-channels" aria-label="Canales de contacto">
+    {channels.map((channel) => <ContactChannelCard key={channel.title} {...channel} />)}
+  </section>
+);

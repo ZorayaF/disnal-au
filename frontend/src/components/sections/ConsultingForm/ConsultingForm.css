@@ -1,0 +1,75 @@
+.consulting-form-section {
+  width: 100%;
+  margin: 0;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+}
+
+.consulting-form {
+  width: 100%;
+  background: #171717;
+  color: #fff;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+}
+
+.consulting-form header {
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+
+.consulting-form header::after {
+  content: "▤";
+  position: absolute;
+  right: 0;
+  top: -0.15rem;
+  width: 2.15rem;
+  height: 2.15rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.consulting-form h2 {
+  margin: 0;
+  font-size: 0.92rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+
+.consulting-form p {
+  margin: 0.65rem 0 0;
+  color: #d6d6d6;
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.consulting-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+.consulting-form__full {
+  grid-column: 1 / -1;
+}
+
+.consulting-form .disnal-button {
+  margin: 1.6rem 0 0 auto;
+  display: flex;
+  min-width: 154px;
+}
+
+@media (max-width: 680px) {
+  .consulting-form__grid {
+    grid-template-columns: 1fr;
+  }
+}

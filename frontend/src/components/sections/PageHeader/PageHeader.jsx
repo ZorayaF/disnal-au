@@ -1,8 +1,9 @@
-export const PageHeader = () => {
-  return (
-    <div style={{ padding: '20px', border: '1px dashed #64748b', margin: '10px 0', borderRadius: '8px' }}>
-      <h3 style={{ margin: 0, color: '#475569' }}>🧩 Sección: PageHeader</h3>
-      <p style={{ fontSize: '14px', color: '#94a3b8' }}>Espacio listo para maquetar.</p>
-    </div>
-  );
-};
+import './PageHeader.css';
+
+export const PageHeader = ({ title, subtitle, eyebrow }) => (
+  <section className="page-header" aria-labelledby="page-header-title">
+    <h1 id="page-header-title">{title}</h1>
+    {subtitle && <p>{subtitle}</p>}
+    {eyebrow && <span>{eyebrow}</span>}
+  </section>
+);

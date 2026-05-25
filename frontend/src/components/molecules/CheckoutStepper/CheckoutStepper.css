@@ -1,0 +1,53 @@
+.checkout-stepper {
+  width: min(720px, 92vw);
+  margin: 0 auto 34px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: 0;
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  position: relative;
+}
+
+.checkout-stepper::before {
+  content: '';
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  top: 1.42rem;
+  border-top: 1px dashed #d7d7d7;
+}
+
+.checkout-stepper__item {
+  display: grid;
+  justify-items: center;
+  gap: 0.82rem;
+  position: relative;
+  z-index: 1;
+}
+
+.checkout-stepper__bubble {
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.checkout-stepper__bubble--active {
+  background: #ef3434;
+}
+
+.checkout-stepper__label {
+  color: #8a8a8a;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+}

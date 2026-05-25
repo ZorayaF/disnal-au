@@ -1,8 +1,11 @@
-export const BusinessHours = () => {
-  return (
-    <div style={{ padding: '20px', border: '1px dashed #64748b', margin: '10px 0', borderRadius: '8px' }}>
-      <h3 style={{ margin: 0, color: '#475569' }}>🧩 Sección: BusinessHours</h3>
-      <p style={{ fontSize: '14px', color: '#94a3b8' }}>Espacio listo para maquetar.</p>
-    </div>
-  );
-};
+import { LineIcon } from '@components/ui/LineIcon';
+import './BusinessHours.css';
+
+export const BusinessHours = () => (
+  <aside className="business-hours" aria-labelledby="business-hours-title">
+    <h2 id="business-hours-title">Información y notificaciones</h2>
+    <article><LineIcon name="clock" /><div><h3>Respuesta rápida</h3><p>Recibimos solicitudes y respondemos durante horario comercial.</p></div></article>
+    <article><LineIcon name="support" /><div><h3>Asesoría personalizada</h3><p>Un asesor revisa productos, cantidades y requerimientos.</p></div></article>
+    <article><LineIcon name="document" /><div><h3>Atención segura</h3><p>Validamos los datos para una cotización más precisa.</p></div></article>
+  </aside>
+);
