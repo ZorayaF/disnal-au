@@ -1,29 +1,43 @@
+/* ── MetricCard — dentro de la barra roja ── */
 .metric-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   align-items: center;
-  gap: 12px;
-  color: #fff;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  gap: 14px;
 }
 
-.metric-card .disnal-line-icon {
-  width: 72px;
-  height: 72px;
-  font-size: 2rem;
-  color: #111;
-  box-shadow: none;
+.metric-card__icon-wrap {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  flex-shrink: 0;
 }
 
-.metric-card strong {
-  display: block;
-  font-size: 1.06rem;
+.metric-card__icon-wrap svg {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.metric-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric-card__value {
+  color: #ffffff;
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
   font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.metric-card span {
-  display: block;
-  max-width: 9rem;
-  font-size: 0.66rem;
-  line-height: 1.25;
+.metric-card__label {
+  color: rgba(255,255,255,0.80);
+  font-size: clamp(0.68rem, 1.2vw, 0.76rem);
+  font-weight: 400;
+  line-height: 1.3;
 }

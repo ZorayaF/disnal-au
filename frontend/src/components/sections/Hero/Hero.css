@@ -1,31 +1,35 @@
 /* ================================================================
-   HERO — Hero.css
-   Imagen de referencia: card blanca con sombra fuerte, grid 2 col,
-   texto negro grande a la izquierda, foto a la derecha.
+   HERO — Hero.css  |  Rediseño v2 — Referencia imagen 1
    ================================================================ */
 
-/* Variables globales compartidas (importar en index.css o App.css) */
 :root {
-  --color-rojo:    #e30613;
-  --color-negro:   #0b0b0b;
-  --color-blanco:  #ffffff;
+  --color-rojo:       #e30613;
+  --color-negro:      #0b0b0b;
+  --color-blanco:     #ffffff;
   --color-gris-texto: #444444;
-  --font-principal: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
-  --radio-card:    4px;
-  --sombra-card:   0 18px 44px rgba(0, 0, 0, 0.22);
-  --ancho-max:     1120px;
+  --font-principal:   "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  --radio-card:       12px;
+  --sombra-card:      0 8px 32px rgba(0,0,0,0.10);
+  --ancho-max:        1120px;
 }
 
-/* ── Contenedor principal ── */
+/* ── Wrapper externo con fondo gris muy claro ── */
+.home-hero-wrapper {
+  background: #f7f7f7;
+  padding: clamp(28px, 4vw, 48px) clamp(16px, 5vw, 40px);
+}
+
+/* ── Card principal ── */
 .home-hero {
-  width: min(var(--ancho-max), calc(100% - 80px));
-  margin: 38px auto 52px;
-  padding: clamp(28px, 4vw, 46px) clamp(30px, 5vw, 54px);
+  width: min(var(--ancho-max), 100%);
+  margin: 0 auto;
+  padding: clamp(32px, 4vw, 52px) clamp(32px, 5vw, 56px);
+  position: relative;
+  overflow: hidden;
 
   display: grid;
-  /* columna de texto más angosta, columna de imagen más ancha */
-  grid-template-columns: minmax(280px, 0.92fr) minmax(360px, 1.22fr);
-  gap: clamp(28px, 5vw, 66px);
+  grid-template-columns: minmax(300px, 1fr) minmax(320px, 1.15fr);
+  gap: clamp(32px, 5vw, 72px);
   align-items: center;
 
   background: var(--color-blanco);
@@ -34,85 +38,143 @@
   font-family: var(--font-principal);
 }
 
-/* ── Columna de texto ── */
-.home-hero__copy h1 {
-  margin: 0 0 28px;
-  color: var(--color-negro);
-  font-size: clamp(2rem, 4.4vw, 3.1rem);
-  font-weight: 900;
-  line-height: 1.02;
-  letter-spacing: -0.045em;
+/* Decoración roja esquina superior derecha */
+.home-hero::after {
+  content: '';
+  position: absolute;
+  top: -28px;
+  right: -28px;
+  width: 90px;
+  height: 90px;
+  background: var(--color-rojo);
+  border-radius: 50%;
+  opacity: 0.92;
+  pointer-events: none;
 }
 
-/* Palabra "negocio" y "calidad" en rojo */
-.home-hero__copy h1 span,
-.home-hero__copy p span {
+/* ── Columna texto ── */
+.home-hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Badge "DISTRIBUIMOS" */
+.home-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 5px 14px;
+  background: var(--color-rojo);
+  border-radius: 999px;
+  color: var(--color-blanco);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+/* Título */
+.home-hero__copy h1 {
+  margin: 0 0 18px;
+  color: var(--color-negro);
+  font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.home-hero__copy h1 .hero-accent {
   color: var(--color-rojo);
 }
 
+/* Subtexto */
 .home-hero__copy p {
-  margin: 0 0 22px;
-  max-width: 450px;
-  color: var(--color-negro);
-  font-size: clamp(1.05rem, 2.1vw, 1.2rem);
-  line-height: 1.4;
+  margin: 0 0 28px;
+  max-width: 420px;
+  color: #555;
+  font-size: clamp(0.88rem, 1.6vw, 0.98rem);
+  line-height: 1.55;
 }
 
-.home-hero__copy strong {
-  font-weight: 900;
-}
+.home-hero__copy p strong { font-weight: 800; color: var(--color-negro); }
+.home-hero__copy p .hero-accent { color: var(--color-rojo); font-weight: 700; }
 
 /* ── Botones ── */
 .home-hero__actions {
   display: flex;
-  gap: 18px;
+  gap: 14px;
   flex-wrap: wrap;
-  margin-top: 16px;
+  align-items: center;
 }
 
-.home-hero__button-link {
-  min-height: 2.3rem;
-  min-width: 124px;
-  padding: 0.7rem 1.5rem;
-  border-radius: 999px;        /* píldora completa como en la referencia */
-  background: var(--color-negro);
-  color: var(--color-blanco);
+/* Botón primario rojo sólido */
+.home-hero__btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 0.62rem;
-  font-weight: 900;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-family: var(--font-principal);
+  font-size: 0.72rem;
+  font-weight: 800;
   letter-spacing: 0.08em;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: opacity 0.18s ease, transform 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
-.home-hero__button-link:hover {
-  opacity: 0.82;
+.home-hero__btn--primary {
+  background: var(--color-rojo);
+  color: var(--color-blanco);
+  border-color: var(--color-rojo);
+  box-shadow: 0 6px 20px rgba(227,6,19,0.30);
+}
+
+.home-hero__btn--primary:hover {
+  opacity: 0.88;
   transform: translateY(-1px);
 }
 
-/* Segundo botón con borde rojo (VER CATÁLOGO en la referencia) */
-.home-hero__button-link--dark {
+/* Ícono avión dentro del botón */
+.home-hero__btn-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Botón secundario outline */
+.home-hero__btn--outline {
   background: transparent;
   color: var(--color-negro);
-  border: 2px solid var(--color-negro);
-  box-shadow: none;
+  border-color: rgba(0,0,0,0.25);
 }
 
-.home-hero__button-link--dark:hover {
+.home-hero__btn--outline:hover {
   background: var(--color-negro);
   color: var(--color-blanco);
+  border-color: var(--color-negro);
 }
 
-/* ── Columna de imagen ── */
+/* Ícono catálogo */
+.home-hero__btn--outline .home-hero__btn-icon {
+  opacity: 0.6;
+}
+
+/* ── Columna imagen ── */
 .home-hero__media {
+  position: relative;
   margin: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   overflow: hidden;
-  height: clamp(250px, 28vw, 350px);
+  height: clamp(240px, 26vw, 340px);
+  z-index: 1;
 }
 
 .home-hero__media img {
@@ -125,43 +187,47 @@
 /* ================================================================
    RESPONSIVE
    ================================================================ */
-
-/* Tablet: apila columnas */
-@media (max-width: 820px) {
+@media (max-width: 860px) {
   .home-hero {
-    /* Quita los márgenes laterales grandes en tablet */
-    width: min(100% - 32px, 720px);
-    grid-template-columns: 1fr;   /* una sola columna */
-    padding: clamp(24px, 4vw, 36px);
-    gap: 24px;
+    grid-template-columns: 1fr;
+    padding: 32px 28px;
+    gap: 28px;
   }
 
-  /* La imagen pasa a estar debajo del texto */
   .home-hero__media {
-    height: clamp(200px, 42vw, 300px);
+    height: clamp(200px, 50vw, 320px);
+    order: -1; /* imagen arriba en tablet si se desea, o quitar */
+  }
+
+  .home-hero::after {
+    width: 64px;
+    height: 64px;
   }
 }
 
-/* Móvil pequeño */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
+  .home-hero-wrapper {
+    padding: 16px;
+  }
+
   .home-hero {
-    width: calc(100% - 24px);
-    margin: 16px auto 32px;
-    padding: 20px 18px;
+    padding: 24px 18px;
+    gap: 20px;
+    border-radius: 8px;
   }
 
   .home-hero__copy h1 {
-    font-size: clamp(1.7rem, 8vw, 2.2rem);
+    font-size: clamp(1.6rem, 7vw, 2rem);
   }
 
-  /* Botones apilados verticalmente en pantallas muy pequeñas */
   .home-hero__actions {
     flex-direction: column;
+    align-items: stretch;
     gap: 10px;
   }
 
-  .home-hero__button-link {
-    width: 100%;
+  .home-hero__btn {
     justify-content: center;
+    width: 100%;
   }
 }
