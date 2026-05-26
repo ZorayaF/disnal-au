@@ -19,25 +19,17 @@ export const Navbar = () => {
 
   return (
     <header className="main-navbar" role="banner">
+
+      {/* Logo — columna 1 */}
       <NavLink
         className="main-navbar__brand"
         to="/"
-        aria-label="Ir al inicio de Disnal AU"
+        aria-label="Ir al inicio de Disnal"
       >
-        <img src={LOGO_SRC} alt="Disnal AU" />
+        <img src={LOGO_SRC} alt="Disnal" />
       </NavLink>
 
-      {/* Hamburger — solo visible en tablet/móvil */}
-      <button
-        className="main-navbar__toggle"
-        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-        aria-expanded={isOpen}
-        aria-controls="main-nav"
-        onClick={() => setIsOpen((v) => !v)}
-      >
-        <span /><span /><span />
-      </button>
-
+      {/* Links de navegación — columna 2 */}
       <nav
         id="main-nav"
         className={`main-navbar__nav${isOpen ? ' is-open' : ''}`}
@@ -50,7 +42,7 @@ export const Navbar = () => {
             end={item.end}
             onClick={() => setIsOpen(false)}
             className={({ isActive }) =>
-              ['main-navbar__link', item.isCart ? 'main-navbar__cart-link' : '', isActive ? 'active' : '']
+              ['main-navbar__link', isActive ? 'active' : '']
                 .filter(Boolean)
                 .join(' ')
             }
@@ -67,6 +59,35 @@ export const Navbar = () => {
           </NavLink>
         ))}
       </nav>
+
+      {/* CTA + Hamburger — columna 3 */}
+      <NavLink
+        className="main-navbar__cta"
+        to="/cart"
+        aria-label="Cotizar ahora"
+      >
+        {/* Ícono carrito */}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+          aria-hidden="true">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span>Cotizar ahora</span>
+      </NavLink>
+
+      {/* Hamburger — solo visible en tablet/móvil */}
+      <button
+        className="main-navbar__toggle"
+        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+        aria-expanded={isOpen}
+        aria-controls="main-nav"
+        onClick={() => setIsOpen((v) => !v)}
+      >
+        <span /><span /><span />
+      </button>
+
     </header>
   );
 };

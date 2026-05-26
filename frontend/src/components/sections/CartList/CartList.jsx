@@ -5,7 +5,6 @@ import { CartItemRow } from '@components/molecules/CartItemRow';
 import { useCartList } from '@hooks/useCartList';
 import './CartList.css';
 
-/* Ícono avión (send) */
 const SendIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
     strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -45,17 +44,37 @@ export const CartList = ({ nextStep, reverificar }) => {
         )}
       </div>
 
+      {/* Acciones */}
       <div className="cart-list-section__actions">
         <span>¿Deseas agregar más productos?</span>
         <Link to="/catalog">Seguir comprando</Link>
       </div>
 
+      <hr className="cart-list-section__divider" />
+
+      {/* Submit */}
       <footer className="cart-list-section__submit">
+        {/* ← Ícono avión en círculo rosa */}
+        <div className="cart-list-section__submit-icon">
+          <SendIcon />
+        </div>
+
         <h2>Enviar solicitud de cotización</h2>
         <p>Completa tus datos para enviar la solicitud a un asesor</p>
-        {errorContinuar && <small className="cart-list-section__error" role="alert">{errorContinuar}</small>}
-        <button type="button" onClick={manejarContinuar} disabled={validandoStock || carrito.length === 0}>
-          {validandoStock ? 'Validando' : 'Enviar solicitud'}
+
+        {errorContinuar && (
+          <small className="cart-list-section__error" role="alert">
+            {errorContinuar}
+          </small>
+        )}
+
+        <button
+          type="button"
+          onClick={manejarContinuar}
+          disabled={validandoStock || carrito.length === 0}
+        >
+          <SendIcon />   {/* ← Ícono dentro del botón */}
+          {validandoStock ? 'Validando...' : 'Enviar solicitud'}
         </button>
       </footer>
     </section>

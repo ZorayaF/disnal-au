@@ -8,7 +8,7 @@ import { Consulting } from "@pages/Consulting";
 import { Legal } from "@pages/Legal";
 import { Login } from "@pages/Login";
 import { AdminDashboard } from "@pages/AdminDashboard";
-import { TemporaryNavbar } from "@components/TemporaryNavbar";
+import { Navbar } from "@components/common/Navbar";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ChatWidget } from "@components/molecules/ChatWidget";
 import { Footer } from "@components/common/Footer";
@@ -26,7 +26,7 @@ const RouterContent = () => {
   return (
     <>
       {/* La barra se renderiza en todas las pantallas */}
-      <TemporaryNavbar />
+      <Navbar />
 
       <Routes>
         {/* 1. RUTAS PÚBLICAS */}

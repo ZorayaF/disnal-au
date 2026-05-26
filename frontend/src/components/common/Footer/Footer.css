@@ -1,8 +1,8 @@
 /* ── Footer principal ─────────────────────────────────────── */
 .site-footer {
   display: grid;
-  grid-template-columns: minmax(200px, 280px) 1fr;
-  background: #0d0d0d;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  background: #111111;
   color: #ffffff;
   font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
@@ -12,13 +12,13 @@
 .site-footer__logo-panel {
   display: grid;
   place-items: center;
-  background: #f7f7f7;
-  padding: 28px 30px;
+  background: #f0f0f0;
+  padding: 40px 36px;
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .site-footer__logo-panel img {
-  width: min(200px, 90%);
+  width: min(220px, 90%);
   height: auto;
   display: block;
 }
@@ -26,19 +26,19 @@
 /* ── Área de contenido (columnas) ─────────────────────────── */
 .site-footer__content {
   display: grid;
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
-  gap: clamp(20px, 4vw, 52px);
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: clamp(24px, 4vw, 56px);
   align-items: start;
-  padding: 32px clamp(24px, 5vw, 60px);
+  padding: 44px clamp(32px, 5vw, 64px);
 }
 
 /* ── Títulos de sección ───────────────────────────────────── */
 .site-footer__section-title {
-  margin: 0 0 14px;
+  margin: 0 0 18px;
   color: #ffffff;
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   font-weight: 900;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -46,13 +46,13 @@
 .site-footer a {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   width: fit-content;
-  color: #b0b0b0;
-  font-size: 0.68rem;
-  font-weight: 500;
+  color: #b8b8b8;
+  font-size: 0.82rem;
+  font-weight: 400;
   line-height: 1;
-  padding: 5px 0;
+  padding: 6px 0;
   text-decoration: none;
   transition: color 0.18s ease;
 }
@@ -64,27 +64,29 @@
 /* ── Columna: Menú rápido ─────────────────────────────────── */
 .site-footer__menu a {
   color: #c8c8c8;
+  font-size: 0.82rem;
 }
 
 /* ── Columna: Contáctanos ─────────────────────────────────── */
 .site-footer__contact p {
   margin: 0;
-  color: #b0b0b0;
-  font-size: 0.68rem;
-  font-weight: 500;
+  color: #b8b8b8;
+  font-size: 0.82rem;
+  font-weight: 400;
   line-height: 1;
-  padding: 5px 0;
+  padding: 6px 0;
 }
 
 /* ── Columna: Síguenos (iconos sociales) ──────────────────── */
 .site-footer__social a {
   color: #c8c8c8;
+  font-size: 0.82rem;
 }
 
 .site-footer__social-icon {
-  width: 14px;
-  height: 14px;
-  opacity: 0.7;
+  width: 16px;
+  height: 16px;
+  opacity: 0.85;
   flex-shrink: 0;
 }
 
@@ -96,22 +98,22 @@
 }
 
 .site-footer__legal-tagline {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   color: #ffffff;
-  font-size: 0.6rem;
+  font-size: 0.78rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   line-height: 1.5;
   text-transform: uppercase;
 }
 
 .site-footer__legal a {
   color: #888;
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 4px 0;
+  padding: 5px 0;
 }
 
 .site-footer__legal a:hover {
@@ -120,12 +122,12 @@
 
 /* ── Link admin ───────────────────────────────────────────── */
 .site-footer__admin-link {
-  margin-top: 14px !important;
-  padding: 5px 12px !important;
-  border: 1px solid rgba(239, 52, 52, 0.6) !important;
+  margin-top: 18px !important;
+  padding: 6px 16px !important;
+  border: 1.5px solid rgba(227, 6, 19, 0.7) !important;
   border-radius: 999px !important;
-  color: #ff5555 !important;
-  font-size: 0.55rem !important;
+  color: #e30613 !important;
+  font-size: 0.62rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.13em !important;
   text-transform: uppercase !important;
@@ -133,8 +135,8 @@
 }
 
 .site-footer__admin-link:hover {
-  background: #df0000 !important;
-  border-color: #df0000 !important;
+  background: #e30613 !important;
+  border-color: #e30613 !important;
   color: #ffffff !important;
 }
 
@@ -144,13 +146,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
+  padding: 14px 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: #080808;
-  color: #ffffff;
-  font-size: 0.58rem;
+  color: #aaaaaa;
+  font-size: 0.65rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -161,7 +163,7 @@
   }
 
   .site-footer__logo-panel {
-    padding: 24px 28px;
+    padding: 28px 32px;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     justify-items: start;
@@ -169,8 +171,8 @@
 
   .site-footer__content {
     grid-template-columns: repeat(2, 1fr);
-    gap: 28px 32px;
-    padding: 28px 24px 32px;
+    gap: 32px 36px;
+    padding: 32px 28px 36px;
   }
 
   .site-footer__legal {
@@ -182,11 +184,11 @@
 @media (max-width: 520px) {
   .site-footer__content {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 24px 20px 28px;
+    gap: 28px;
+    padding: 28px 20px 32px;
   }
 
   .site-footer__legal-tagline {
-    font-size: 0.58rem;
+    font-size: 0.72rem;
   }
 }
