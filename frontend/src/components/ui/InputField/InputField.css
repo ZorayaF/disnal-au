@@ -57,3 +57,31 @@ textarea.disnal-field__control {
   font-size: 0.62rem;
   letter-spacing: 0.08em;
 }
+/* Wrapper para ícono */
+.disnal-field__input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.disnal-field__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #e30613;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* Textarea: ícono alineado arriba */
+.disnal-field__input-wrapper--textarea .disnal-field__icon {
+  top: 14px;
+  transform: none;
+}
+
+/* Padding extra cuando hay ícono */
+.disnal-field__input-wrapper .disnal-field__control {
+  padding-left: 2.4rem;
+}

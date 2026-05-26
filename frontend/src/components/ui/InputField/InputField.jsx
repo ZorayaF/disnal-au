@@ -8,6 +8,7 @@ export const InputField = ({
   as = 'input',
   className = '',
   required,
+  icon,
   ...props
 }) => {
   const fieldId = id || name;
@@ -22,14 +23,21 @@ export const InputField = ({
         </span>
       )}
 
-      <Control
-        id={fieldId}
-        name={name}
-        className="disnal-field__control"
-        aria-invalid={Boolean(error)}
-        required={required}
-        {...props}
-      />
+      <div className={`disnal-field__input-wrapper${as === 'textarea' ? ' disnal-field__input-wrapper--textarea' : ''}`}>
+        {icon && (
+          <span className="disnal-field__icon" aria-hidden="true">
+            {icon}
+          </span>
+        )}
+        <Control
+          id={fieldId}
+          name={name}
+          className="disnal-field__control"
+          aria-invalid={Boolean(error)}
+          required={required}
+          {...props}
+        />
+      </div>
 
       {error && <small className="disnal-field__error">{error}</small>}
     </label>

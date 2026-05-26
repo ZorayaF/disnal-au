@@ -1,38 +1,153 @@
+/* ================================================================
+   FAQ SECTION — FaqSection.css
+   Referencia: fondo gris claro (#f3f3f3), "SOPORTE" en rojo,
+   "Preguntas frecuentes" en negro, acordeón con línea + ícono +.
+   ================================================================ */
+
 .faq-section {
   margin-top: 58px;
-  padding: 56px 1rem 70px;
+  padding: clamp(48px, 7vw, 70px) clamp(1rem, 6vw, 2rem);
   background: #f3f3f3;
   text-align: center;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-principal);
 }
 
-.faq-section > p {
+/* "SOPORTE" — rojo, pequeño, uppercase, espaciado */
+.faq-section > p:first-child {
   margin: 0;
-  color: #df0000;
+  color: var(--color-rojo);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.45em;
   text-transform: uppercase;
 }
 
+/* "Preguntas frecuentes" */
 .faq-section h2 {
   margin: 8px 0 6px;
-  color: #111;
-  font-size: 1.08rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  color: var(--color-negro);
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
+/* Subtítulo gris debajo del h2 */
 .faq-section > span {
   display: block;
-  color: #555;
-  font-size: 0.62rem;
-  margin-bottom: 32px;
+  color: #666;
+  font-size: 0.78rem;
+  margin-bottom: 36px;
 }
 
+/* ── Lista de preguntas ── */
 .faq-section__list {
   width: min(1060px, 100%);
   margin: 0 auto;
   display: grid;
-  gap: 14px;
+  gap: 0;   /* sin gap, cada item tiene su propio borde */
+  text-align: left;
+}
+
+/* ── Cada item del acordeón ── */
+.faq-item {
+  background: var(--color-blanco);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.faq-item:first-child {
+  border-top: 1px solid #e0e0e0;
+  border-radius: 4px 4px 0 0;
+}
+
+.faq-item:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+/* Fila de pregunta: texto a la izq, + a la der */
+.faq-item__question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-principal);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-negro);
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.faq-item__question:hover {
+  color: var(--color-rojo);
+}
+
+/* Ícono "+" a la derecha */
+.faq-item__question::after {
+  content: '+';
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-rojo);
+  color: var(--color-rojo);
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Hack: after no puede ser flex directamente, usamos text-align */
+  text-align: center;
+  padding-top: 1px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* Estado abierto: "+" se vuelve "−" y fondo rojo */
+.faq-item--open .faq-item__question::after {
+  content: '−';
+  background: var(--color-rojo);
+  color: var(--color-blanco);
+  border-color: var(--color-rojo);
+}
+
+/* Respuesta oculta por defecto */
+.faq-item__answer {
+  display: none;
+  padding: 0 22px 18px;
+  color: #555;
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.faq-item--open .faq-item__answer {
+  display: block;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+/* Tablet: padding interior más compacto */
+@media (max-width: 700px) {
+  .faq-item__question {
+    padding: 14px 16px;
+    font-size: 0.84rem;
+  }
+
+  .faq-item__answer {
+    padding: 0 16px 14px;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+  .faq-section {
+    padding: 40px 0.75rem;
+  }
 }

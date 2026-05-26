@@ -1,49 +1,62 @@
+/* ================================================================
+   VALUE PROPOSAL — ValueProposal.css
+   Referencia: fondo blanco, encabezado centrado, 4 feature-cards
+   en fila, barra roja de métricas al fondo.
+   ================================================================ */
+
 .value-proposal {
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-principal);
   text-align: center;
-  background: #fff;
+  background: var(--color-blanco);
+  /* Padding superior para separar del hero */
+  padding-top: clamp(36px, 5vw, 60px);
 }
 
+/* ── Encabezado ── */
 .value-proposal__heading {
   width: min(720px, calc(100% - 2rem));
   margin: 0 auto 52px;
 }
 
-.value-proposal h2,
-.value-proposal h3,
-.value-proposal p {
-  margin: 0;
-}
-
+/* "Propuesta de valor" — pequeño, negro, uppercase */
 .value-proposal h2 {
-  font-size: 1.18rem;
-  font-weight: 900;
-  letter-spacing: 0.02em;
+  margin: 0 0 4px;
+  color: var(--color-negro);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
+/* Subtítulo grande debajo */
 .value-proposal h3 {
-  font-size: 1.18rem;
+  margin: 0 0 14px;
+  color: var(--color-negro);
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
   font-weight: 900;
   line-height: 1.25;
 }
 
 .value-proposal p {
-  margin-top: 18px;
-  color: #111;
+  margin: 0;
+  color: #555;
   font-size: 0.86rem;
-  line-height: 1.35;
+  line-height: 1.55;
 }
 
+/* ── Feature cards (4 iconos en fila) ── */
 .value-proposal__features {
   width: min(1040px, calc(100% - 2rem));
-  margin: 0 auto 58px;
+  margin: 0 auto 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: clamp(28px, 6vw, 86px);
+  gap: clamp(20px, 4vw, 56px);
 }
 
+/* ── Barra roja de métricas ── */
 .value-proposal__metrics {
-  background: #df0000;
+  margin-top: 52px;
+  background: var(--color-rojo);
   min-height: 114px;
   display: grid;
   grid-template-columns: repeat(4, minmax(160px, 1fr));
@@ -52,16 +65,32 @@
   padding: 18px clamp(26px, 8vw, 90px);
 }
 
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+/* Tablet: 2 columnas en lugar de 4 */
 @media (max-width: 860px) {
-  .value-proposal__features,
+  .value-proposal__features {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(20px, 4vw, 36px);
+  }
+
   .value-proposal__metrics {
     grid-template-columns: repeat(2, 1fr);
+    padding: 24px 32px;
   }
 }
 
+/* Móvil: 1 columna */
 @media (max-width: 520px) {
   .value-proposal__features,
   .value-proposal__metrics {
     grid-template-columns: 1fr;
+  }
+
+  .value-proposal__metrics {
+    padding: 24px 20px;
+    gap: 0.5rem;
   }
 }
