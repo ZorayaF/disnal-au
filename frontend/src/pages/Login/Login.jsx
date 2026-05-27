@@ -1,101 +1,143 @@
-// src/pages/Login.jsx
-import { useAuthLogin } from "@hooks/useAuthLogin";
+import { useAuthLogin } from '@hooks/useAuthLogin';
+import { Link } from 'react-router-dom';
+import './Login.css';
+
+const LOGO_SRC = '/assets/images/png logo disnal.png';
 
 export const Login = () => {
   const { credenciales, handleInputChange, error, cargando, handleSubmit } =
     useAuthLogin();
 
   return (
-    <div
-      style={{
-        padding: "40px 20px",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "20px",
-          background: "#fff",
-          width: "100%",
-          maxWidth: "400px",
-        }}
-      >
-        {/* Encabezado */}
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h2>Acceso Administrativo</h2>
-          <p style={{ fontSize: "14px", color: "#666" }}>
-            Insumos de Pastelería y Panadería
-          </p>
+    <div className="login-page">
+      <div className="login-card">
+
+        {/* ── Header rojo con logo ── */}
+        <div className="login-card__header">
+          <img
+            src={LOGO_SRC}
+            alt="Disnal AU"
+            className="login-card__logo"
+          />
+          <p className="login-card__subtitle">Distribuidora Nacional de Alimentos</p>
         </div>
 
-        {/* Alerta de Error Dinámica */}
-        {error && (
-          <div
-            style={{
-              marginBottom: "15px",
-              padding: "10px",
-              background: "#fff5f5",
-              border: "1px solid red",
-              color: "red",
-              fontSize: "14px",
-            }}
-          >
-            {error}
-          </div>
-        )}
+        {/* ── Cuerpo oscuro ── */}
+        <div className="login-card__body">
 
-        {/* Formulario */}
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-        >
-          {/* El atributo name debe coincidir exactamente con la propiedad del estado de tu hook */}
-          <div>
-            <label style={{ display: "block", marginBottom: "4px" }}>
-              Usuario
-            </label>
-            <input
-              type="text"
-              name="usuario"
-              placeholder="Ej: admin"
-              value={credenciales.usuario}
-              onChange={handleInputChange}
-              disabled={cargando}
-              style={{ width: "100%", padding: "6px" }}
-            />
-          </div>
+          {/* Error */}
+          {error && (
+            <div className="login-card__error">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              {error}
+            </div>
+          )}
 
-          <div>
-            <label style={{ display: "block", marginBottom: "4px" }}>
-              Contraseña
-            </label>
-            <input
-              type="password"
-              name="contrasena"
-              placeholder="••••••••"
-              value={credenciales.contrasena}
-              onChange={handleInputChange}
-              disabled={cargando}
-              style={{ width: "100%", padding: "6px" }}
-            />
-          </div>
+          {/* Botón volver */}
+          <Link to="/" className="login-back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ width: 14, height: 14 }}>
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Volver al inicio
+          </Link> 
 
-          <div style={{ marginTop: "10px" }}>
+          {/* Formulario */}
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+            {/* Campo: Usuario */}
+            <div className="login-field">
+              <label className="login-field__label" htmlFor="login-usuario">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Usuario
+              </label>
+              <div className="login-field__input-wrap">
+                <svg className="login-field__input-icon" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input
+                  id="login-usuario"
+                  className="login-field__input"
+                  type="text"
+                  name="usuario"
+                  placeholder="Ej: admin"
+                  value={credenciales.usuario}
+                  onChange={handleInputChange}
+                  disabled={cargando}
+                  autoComplete="username"
+                />
+              </div>
+            </div>
+
+            {/* Campo: Contraseña */}
+            <div className="login-field">
+              <label className="login-field__label" htmlFor="login-contrasena">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Contraseña
+              </label>
+              <div className="login-field__input-wrap">
+                <svg className="login-field__input-icon" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input
+                  id="login-contrasena"
+                  className="login-field__input"
+                  type="password"
+                  name="contrasena"
+                  placeholder="••••••••"
+                  value={credenciales.contrasena}
+                  onChange={handleInputChange}
+                  disabled={cargando}
+                  autoComplete="current-password"
+                />
+              </div>
+            </div>
+
+            {/* Submit */}
             <button
               type="submit"
+              className="login-card__submit"
               disabled={cargando}
-              style={{
-                width: "100%",
-                padding: "10px",
-                cursor: cargando ? "not-allowed" : "pointer",
-              }}
             >
-              {cargando ? "Verificando..." : "Iniciar Sesión"}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+              {cargando ? 'Verificando...' : 'Iniciar Sesión'}
             </button>
+
+          </form>
+
+          {/* Footer */}
+          <div className="login-card__footer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <p>Acceso exclusivo para usuarios autorizados.</p>
           </div>
-        </form>
+
+        </div>
       </div>
     </div>
   );

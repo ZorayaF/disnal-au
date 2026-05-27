@@ -3,6 +3,7 @@
    ================================================================ */
 
 :root {
+  background-color: #444444;
   --color-rojo:       #e30613;
   --color-negro:      #0b0b0b;
   --color-blanco:     #ffffff;
@@ -39,18 +40,7 @@
 }
 
 /* Decoración roja esquina superior derecha */
-.home-hero::after {
-  content: '';
-  position: absolute;
-  top: -28px;
-  right: -28px;
-  width: 90px;
-  height: 90px;
-  background: var(--color-rojo);
-  border-radius: 50%;
-  opacity: 0.92;
-  pointer-events: none;
-}
+
 
 /* ── Columna texto ── */
 .home-hero__copy {
