@@ -3,56 +3,73 @@
   font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
 }
 
+/* Título con acento rojo */
 .catalog-filters h2 {
-  margin: 0 0 24px;
-  border-bottom: 1px solid rgba(255,255,255,.9);
-  padding-bottom: 10px;
-  font-size: 0.74rem;
+  margin: 0 0 28px;
+  color: #ffffff;
+  font-size: 0.78rem;
   font-weight: 900;
-  letter-spacing: 0.48em;
+  letter-spacing: 0.36em;
   text-transform: uppercase;
 }
 
+.catalog-filters h2::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 2px;
+  background: #e30613;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+/* Grupos */
 .catalog-filters__group {
   border: 0;
   padding: 0;
-  margin: 0 0 22px;
+  margin: 0 0 24px;
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .catalog-filters__group legend {
   margin-bottom: 10px;
-  color: #f4f4f4;
-  font-size: 0.64rem;
-  letter-spacing: 0.28em;
+  color: #aaaaaa;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
 }
 
+/* Labels — fondo gris oscuro */
 .catalog-filters label {
   display: flex;
   align-items: center;
-  gap: 0.72rem;
-  min-height: 2.4rem;
-  padding: 0.45rem 0.7rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.18);
+  gap: 0.75rem;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 10px;
+  background: #2a2a2a;
   cursor: pointer;
+  transition: background 0.16s ease;
 }
 
 .catalog-filters label:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #333333;
 }
 
-.catalog-filters input {
+.catalog-filters input[type="checkbox"] {
   width: 16px;
   height: 16px;
   accent-color: #e30613;
+  flex-shrink: 0;
 }
 
 .catalog-filters span,
 .catalog-filters p {
-  color: #fff;
-  font-size: 0.68rem;
+  color: #f0f0f0;
+  font-size: 0.72rem;
+  font-weight: 500;
   text-transform: capitalize;
+  letter-spacing: 0.01em;
 }

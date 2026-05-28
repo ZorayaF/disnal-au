@@ -1,19 +1,28 @@
+/* ================================================================
+   HOW IT WORKS — HowItWorks.css
+   Referencia: fondo blanco, título rojo uppercase centrado,
+   3 círculos rojos numerados en fila conectados por línea gris,
+   texto de paso debajo de cada círculo.
+   ================================================================ */
+
 .how-it-works {
   width: min(840px, calc(100% - 2rem));
   margin: 40px auto 40px;
   text-align: center;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-principal);
 }
 
+/* "¿CÓMO FUNCIONA LA COTIZACIÓN?" — rojo, uppercase, con letra-spacing */
 .how-it-works h2 {
-  margin: 0 0 34px;
-  color: #df0000;
-  font-size: 0.92rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
+  margin: 0 0 40px;
+  color: var(--color-rojo);
+  font-size: clamp(0.82rem, 1.6vw, 1rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
+/* ── Contenedor de pasos (posición relative para la línea) ── */
 .how-it-works__steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -21,24 +30,39 @@
   position: relative;
 }
 
+/* Línea horizontal gris que conecta los círculos */
 .how-it-works__steps::before {
   content: '';
   position: absolute;
-  left: 16%;
-  right: 16%;
-  top: 2.15rem;
-  border-top: 1px solid #9b9b9b;
+  /* Centrada verticalmente en los círculos (la mitad de ~4.4rem de diámetro) */
+  top: 2.2rem;
+  /* Empieza y termina en el centro del primer/último círculo */
+  left: calc(100% / 6);
+  right: calc(100% / 6);
+  border-top: 1.5px solid #c0c0c0;
+  /* Debajo de los círculos */
+  z-index: 0;
 }
 
+/* ── Cada paso ── */
 .how-it-works__steps > * {
+  /* Por encima de la línea */
+  position: relative;
   z-index: 1;
 }
 
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+/* Tablet y móvil: pasos en columna, sin línea horizontal */
 @media (max-width: 700px) {
   .how-it-works__steps {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
+  /* Ocultar línea horizontal — no tiene sentido en columna */
   .how-it-works__steps::before {
     display: none;
   }

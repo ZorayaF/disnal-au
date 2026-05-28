@@ -1,3 +1,9 @@
+/* ================================================================
+   ABOUT SECTION — AboutSection.css
+   Referencia: grid 2 col, foto izquierda con caption superpuesto,
+   texto derecha con botón negro píldora. Fondo blanco general.
+   ================================================================ */
+
 .about-section {
   width: min(940px, calc(100% - 2rem));
   margin: 36px auto 0;
@@ -5,13 +11,15 @@
   grid-template-columns: minmax(260px, 1fr) minmax(280px, 1fr);
   gap: clamp(28px, 7vw, 86px);
   align-items: center;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-principal);
 }
 
+/* ── Foto con caption superpuesto ── */
 .about-section figure {
   margin: 0;
   position: relative;
   overflow: hidden;
+  /* Esquinas: arriba redondeadas, abajo-izquierda cuadrada (efecto ref) */
   border-radius: 20px 20px 20px 0;
 }
 
@@ -20,50 +28,85 @@
   height: 215px;
   object-fit: cover;
   display: block;
+  transition: transform 0.4s ease;
 }
 
+.about-section figure:hover img {
+  transform: scale(1.04);
+}
+
+/* Degradado oscuro + caption "Sobre Disnal AU" en blanco */
 .about-section figcaption {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: start center;
-  color: #fff;
+  color: var(--color-blanco);
   padding-top: 18px;
   font-size: 1.12rem;
   letter-spacing: 0.45em;
   font-style: italic;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.48), rgba(0,0,0,0.08));
+  /* Degradado de arriba (oscuro) a transparente abajo */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.52) 0%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
 }
 
+/* ── Texto derecho ── */
+/* "Sobre Disnal AU" — pequeño label encima */
 .about-section h2 {
   margin: 0 0 10px;
+  color: var(--color-negro);
   font-size: 1rem;
+  font-weight: 900;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .about-section p {
-  margin: 0 0 18px;
+  margin: 0 0 22px;
   color: #555;
-  font-size: 1.08rem;
-  line-height: 1.16;
+  font-size: 0.98rem;
+  line-height: 1.55;
 }
 
+/* Botón negro píldora-cuadrada: redondo en tres esquinas, cuadrado abajo-izq */
 .about-section a {
   display: inline-flex;
-  background: #050505;
-  color: #fff;
-  min-height: 2.25rem;
   align-items: center;
-  padding: 0.72rem 1.25rem;
+  background: var(--color-negro);
+  color: var(--color-blanco);
+  min-height: 2.25rem;
+  padding: 0.72rem 1.4rem;
   border-radius: 999px 999px 999px 0;
   text-decoration: none;
   font-size: 0.58rem;
   font-weight: 900;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  transition: background 0.18s ease, transform 0.18s ease;
 }
 
+.about-section a:hover {
+  background: var(--color-rojo);
+  transform: translateY(-1px);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+/* Tablet/móvil: apila foto arriba, texto abajo */
 @media (max-width: 760px) {
   .about-section {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  /* La foto ocupa todo el ancho */
+  .about-section img {
+    height: clamp(180px, 45vw, 260px);
   }
 }

@@ -32,20 +32,7 @@ export const Home = () => {
       {/* CONTRATO SEGURO: Reemplazamos la etiqueta vacia por este bloque plano.
         Evita el colapso de la app y le indica a tu compañero donde meter las tarjetas destacadas.
       */}
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: "20px",
-          background: "#fff",
-          margin: "10px 0",
-        }}
-      >
-        <h3>Sección: Productos Destacados (Espacio de ProductGrid)</h3>
-        <p>
-          Aquí el Integrante 2 debe maquetar las tarjetas de productos estrella
-          o recomendados.
-        </p>
-      </div>
+      
 
       <AboutSection />
       <FaqSection />

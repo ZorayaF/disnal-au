@@ -1,20 +1,35 @@
 .contact-channels {
-  background: #ef3434;
+  background: #e30613;
   display: grid;
-  grid-template-columns: repeat(5, minmax(118px, 1fr));
-  gap: clamp(0.75rem, 2.5vw, 1.4rem);
-  padding: 17px clamp(1rem, 8vw, 7rem) 15px;
+  grid-template-columns: repeat(5, 1fr);
   align-items: start;
+  padding: 20px clamp(1rem, 6vw, 5rem);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+/* Separadores verticales entre canales */
+.contact-channels > * + * {
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 @media (max-width: 860px) {
   .contact-channels {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0;
   }
+  .contact-channels > *:nth-child(2) { border-left: 1px solid rgba(255,255,255,0.3); }
+  .contact-channels > *:nth-child(3) { border-left: none; border-top: 1px solid rgba(255,255,255,0.3); grid-column: 1; }
+  .contact-channels > *:nth-child(4) { border-left: 1px solid rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.3); }
+  .contact-channels > *:nth-child(5) { border-left: none; border-top: 1px solid rgba(255,255,255,0.3); grid-column: 1 / -1; }
 }
 
 @media (max-width: 520px) {
   .contact-channels {
     grid-template-columns: 1fr;
+  }
+  .contact-channels > * + * {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
 }

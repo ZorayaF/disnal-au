@@ -1,0 +1,127 @@
+/* ================================================================
+   PRODUCT VIEW — ProductView.css
+   ================================================================ */
+
+.product-view {
+  background: #f7f7f7;
+  min-height: 100vh;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.product-view__inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 44px);
+}
+
+/* ── Barra superior con back + usos decorativos ── */
+.product-view__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.product-view__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.18s ease, gap 0.18s ease;
+}
+
+.product-view__back:hover {
+  color: #e30613;
+  gap: 10px;
+}
+
+.product-view__back svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Íconos decorativos de usos (parte superior derecha) */
+.product-view__uses {
+  display: flex;
+  gap: clamp(16px, 3vw, 36px);
+  align-items: center;
+}
+
+.product-view__use-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.45;
+}
+
+.product-view__use-item svg {
+  width: 32px;
+  height: 32px;
+  color: #e30613;
+}
+
+.product-view__use-label {
+  font-size: 0.60rem;
+  font-weight: 600;
+  color: #555;
+  text-align: center;
+}
+
+/* ── Sección productos relacionados ── */
+.product-view__related {}
+
+.product-view__related-title {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 900;
+  color: #0b0b0b;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin-bottom: clamp(16px, 2.5vw, 24px);
+}
+
+.product-view__related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: clamp(12px, 2vw, 20px);
+}
+
+/* ── Estados loading / error ── */
+.product-view__state {
+  display: grid;
+  place-items: center;
+  min-height: 40vh;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 640px) {
+  .product-view__uses {
+    display: none;
+  }
+
+  .product-view__related-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .product-view__related-grid {
+    grid-template-columns: 1fr;
+  }
+}

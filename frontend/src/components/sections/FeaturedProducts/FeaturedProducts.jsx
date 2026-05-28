@@ -4,7 +4,26 @@ import { ProductCard } from '@components/molecules/ProductCard';
 import { useProductGrid } from '@hooks/useProductGrid';
 import { FALLBACK_PRODUCTS } from '@data/fallbackProducts';
 import './FeaturedProducts.css';
+import { FeaturedProducts } from "@sections/FeaturedProducts";
 
+export const Home = () => {
+  useEffect(() => {
+    document.title = "Disnal AU - Home";
+  }, []);
+
+  return (
+    <main>
+      <Hero />
+      <ValueProposal />
+      <FactoryGallery />
+      <PartnerBrands />
+      <HowItWorks />
+      <FeaturedProducts />
+      <AboutSection />
+      <FaqSection />
+    </main>
+  );
+};
 
 export const FeaturedProducts = () => {
   const { productos = [], cargando } = useProductGrid({}, '', 'alfabetico-az');
