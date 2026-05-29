@@ -1,8 +1,11 @@
-import { useState, useMemo } from "react";
+// src/hooks/useClientDashboard.js
+import { useState, useMemo, useContext } from "react"; // 1. Importamos useContext
 import { useClientOrders } from "@hooks/useClientOrders";
+import { AuthContext } from "@context/AuthContext"; // 2. Importamos el contexto de autenticación global
 
 export const useClientDashboard = () => {
   const [activeTab, setActiveTab] = useState("pedidos");
+  const { logoutGlobal } = useContext(AuthContext); // 3. Extraemos la función central de limpieza de sesión
 
   const {
     pedidos,
@@ -24,7 +27,7 @@ export const useClientDashboard = () => {
     setPedidoExpandidoId((prevId) => (prevId === id ? null : id));
   };
 
-  // 🆕 Lógica matemática B2B integrada medianteuseMemo
+  // 🆕 Lógica matemática B2B integrada mediante useMemo
   const pedidosFiltrados = useMemo(() => {
     return pedidos
       .filter((pedido) => {
@@ -57,10 +60,13 @@ export const useClientDashboard = () => {
       });
   }, [pedidos, busqueda, filtroEstado]);
 
+  // 🛠️ Corrección en el cierre de sesión: coordinado con el estado global de React
   const ejecutarCerrarSesion = (navigate) => {
-    localStorage.removeItem("disnal_client_token");
+    // 1. Limpia los tokens correctos tanto del estado como de localStorage de forma segura
+    logoutGlobal();
+
+    // 2. Redirige al inicio de sesión corporativo de manera limpia
     navigate("/login-cliente");
-    window.location.reload();
   };
 
   return {

@@ -10,7 +10,7 @@
   position: sticky;
   top: 0;
   z-index: 80;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
   font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
   overflow: hidden;
 }
@@ -140,8 +140,12 @@
   text-decoration: none;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: background 0.18s ease;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.18s ease;
   flex-shrink: 0;
+  border: 1.5px solid transparent;
 }
 
 .main-navbar__cta:hover {
@@ -152,6 +156,22 @@
   width: 13px;
   height: 13px;
   flex-shrink: 0;
+}
+
+/* Estilos de perfil B2B adaptados al diseño original */
+.main-navbar__cta--profile {
+  background: #ffffff;
+  color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.main-navbar__cta--profile:hover {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.main-navbar__client-name {
+  font-weight: 600;
 }
 
 /* ── Botón hamburger (oculto en desktop) ──────────────────── */
@@ -172,7 +192,9 @@
   height: 2px;
   background: #1a1a1a;
   border-radius: 2px;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .main-navbar__toggle[aria-expanded="true"] span:nth-child(1) {
@@ -293,3 +315,4 @@
     display: none;
   }
 }
+

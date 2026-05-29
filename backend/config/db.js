@@ -62,7 +62,9 @@ export const initDatabase = () => {
       telefono TEXT NOT NULL,
       direccion TEXT,
       ciudad TEXT,
-      estado TEXT DEFAULT 'Aprobado'
+      url_nit TEXT DEFAULT NULL,       
+      estado TEXT DEFAULT 'Pendiente'   
+      
     )
   `,
   ).run();

@@ -1,10 +1,10 @@
 // src/hooks/useAuthLoginCliente.js
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "@context/AuthContext"; // 🟢 Importamos tu contexto de autenticación global
+import { AuthContext } from "@context/AuthContext"; // Importamos tu contexto de autenticación global
 
 export const useAuthLoginCliente = () => {
-  const { loginGlobal } = useContext(AuthContext); // 🟢 Extraemos la función centralizada de login
+  const { loginGlobal } = useContext(AuthContext); // Extraemos la función centralizada de login
   const [credenciales, setCredenciales] = useState({
     correo: "",
     contrasena: "",
@@ -15,7 +15,6 @@ export const useAuthLoginCliente = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // 🟢 Corrección: Cambiado setFormData por setCredenciales para que coincida con el estado real
     setCredenciales((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -43,11 +42,15 @@ export const useAuthLoginCliente = () => {
         throw new Error(data.error || "Error al iniciar sesión corporativa");
       }
 
-      // 🟢 Pasamos la respuesta del servidor al adaptador inteligente de tu contexto original
+      // 🟢 Pasamos la respuesta al adaptador inteligente de tu contexto original.
+      // Esto guarda automáticamente en "disnal_token" y "disnal_user" en disco
+      // y actualiza los estados reactivos de inmediato en toda la aplicación.
       loginGlobal(data);
 
       alert(`¡Bienvenido al portal, ${data.cliente.nombre_empresa}!`);
-      navigate("/"); // Redirige al catálogo o inicio
+
+      // Redirige al inicio. Al cambiar de ruta, los componentes leerán el nuevo estado global
+      navigate("/");
     } catch (err) {
       setError(err.message);
     } finally {

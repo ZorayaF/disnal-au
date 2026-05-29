@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { useAdmin } from "@hooks/useAdmin";
+import { useAdminClients } from "@hooks/useAdminClients"; // 1. Import your hook
+
 import { AdminOverview } from "@sections/AdminOverview";
 import { AdminManager } from "@sections/AdminManager";
 import { AdminChatPanel } from "@sections/AdminChatPanel";
 import { AdminOrdersActive } from "@sections/AdminOrdersActive";
 import { AdminOrdersHistory } from "@sections/AdminOrdersHistory";
+import { AdminClientRequests } from "@sections/AdminClientRequests"; // 2. We will create this below
+
 import { Title } from "@components/ui/Title";
 import { Button } from "@components/ui/Button";
 
 export const AdminDashboard = () => {
-  // Estado local para alternar entre 'inventario', 'soporte' y 'ordenes'
+  // Updated state to handle the new "clientes" tab option
   const [activeTab, setActiveTab] = useState("inventario");
-
-  // Sub-estado para las sub-pestañas internas de órdenes ('activas' o 'historial')
   const [subTabOrdenes, setSubTabOrdenes] = useState("activas");
 
-  // Extraemos toda la data y funciones del hook controlador de productos
   const {
     productos,
     productoEnEdicion,
@@ -26,6 +27,16 @@ export const AdminDashboard = () => {
     seleccionarParaEditar,
   } = useAdmin();
 
+  // 3. Destructure properties from your custom clients hook
+  const {
+    clientesPendientes,
+    cargandoClientes,
+    errorClientes,
+    procesandoResolucion,
+    resolverCliente,
+    refrescarClientes,
+  } = useAdminClients();
+
   return (
     <div className="min-h-screen bg-bg-main p-6 md:p-10 font-sans space-y-10">
       {/* SECCIÓN: Cabecera e Identidad Visual */}
@@ -33,8 +44,8 @@ export const AdminDashboard = () => {
         <div>
           <Title text="Panel de Administración General" level={1} />
           <p className="text-text-muted text-sm mt-1">
-            Control de stock, ingresos, órdenes CRM y soporte B2B en tiempo real
-            de Disnal AU.
+            Control de stock, ingresos, órdenes CRM, soporte y aprobación de
+            clientes B2B en tiempo real de Disnal AU.
           </p>
         </div>
 
@@ -45,11 +56,11 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* SECCIÓN: Menú de Pestañas Principales (Navegación del Admin) */}
-      <div className="flex gap-4 border-b border-border-component pb-2">
+      {/* SECCIÓN: Menú de Pestañas Principales */}
+      <div className="flex gap-4 border-b border-border-component pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab("inventario")}
-          className={`pb-2 px-4 font-medium text-sm transition-colors ${
+          className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors ${
             activeTab === "inventario"
               ? "border-b-2 border-blue-600 text-blue-600 font-bold"
               : "text-text-muted hover:text-text-main"
@@ -60,7 +71,7 @@ export const AdminDashboard = () => {
 
         <button
           onClick={() => setActiveTab("ordenes")}
-          className={`pb-2 px-4 font-medium text-sm transition-colors ${
+          className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors ${
             activeTab === "ordenes"
               ? "border-b-2 border-blue-600 text-blue-600 font-bold"
               : "text-text-muted hover:text-text-main"
@@ -71,13 +82,30 @@ export const AdminDashboard = () => {
 
         <button
           onClick={() => setActiveTab("soporte")}
-          className={`pb-2 px-4 font-medium text-sm transition-colors ${
+          className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors ${
             activeTab === "soporte"
               ? "border-b-2 border-blue-600 text-blue-600 font-bold"
               : "text-text-muted hover:text-text-main"
           }`}
         >
           💬 Soporte en Vivo
+        </button>
+
+        {/* 4. NEW TAB ELEMENT */}
+        <button
+          onClick={() => setActiveTab("clientes")}
+          className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors relative ${
+            activeTab === "clientes"
+              ? "border-b-2 border-blue-600 text-blue-600 font-bold"
+              : "text-text-muted hover:text-text-main"
+          }`}
+        >
+          👥 Registro de Clientes
+          {clientesPendientes.length > 0 && (
+            <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold">
+              {clientesPendientes.length}
+            </span>
+          )}
         </button>
       </div>
 
@@ -103,10 +131,9 @@ export const AdminDashboard = () => {
         </div>
       )}
 
-      {/* 2. Pestaña de Órdenes CRM (Con sus dos sub-vistas internas) */}
+      {/* 2. Pestaña de Órdenes CRM */}
       {activeTab === "ordenes" && (
         <div className="space-y-6">
-          {/* Sub-menú de navegación interno de órdenes */}
           <div className="flex gap-2 bg-gray-100 p-1 rounded-md max-w-xs">
             <button
               onClick={() => setSubTabOrdenes("activas")}
@@ -130,7 +157,6 @@ export const AdminDashboard = () => {
             </button>
           </div>
 
-          {/* Renderizado condicional de la sección de órdenes correspondiente */}
           <div className="bg-white p-6 rounded-lg border border-border-component shadow-sm">
             {subTabOrdenes === "activas" ? (
               <AdminOrdersActive />
@@ -146,6 +172,18 @@ export const AdminDashboard = () => {
         <div className="w-full shadow-md rounded-lg overflow-hidden">
           <AdminChatPanel />
         </div>
+      )}
+
+      {/* 5. NEW COMPONENT INTEGRATION: Client Approvals */}
+      {activeTab === "clientes" && (
+        <AdminClientRequests
+          clientes={clientesPendientes}
+          cargando={cargandoClientes}
+          error={errorClientes}
+          procesando={procesandoResolucion}
+          onResolver={resolverCliente}
+          onRefrescar={refrescarClientes}
+        />
       )}
     </div>
   );

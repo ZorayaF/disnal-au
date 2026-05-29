@@ -100,7 +100,7 @@ export const AuthFormSection = ({
                   id="login-dinamico"
                   className="login-field__input"
                   type="text"
-                  name={nameInput} // Cambia entre 'usuario' o 'correo'
+                  name={nameInput}
                   placeholder={placeholderInput}
                   value={credenciales[nameInput] || ""}
                   onChange={handleInputChange}
@@ -175,8 +175,62 @@ export const AuthFormSection = ({
             </button>
           </form>
 
+          {/* ── NUEVA SECCIÓN: Redirección Alta de Clientes B2B ── */}
+          <div
+            className="login-card__signup-prompt"
+            style={{
+              marginTop: 24,
+              paddingTop: 20,
+              borderTop: "1px dashed rgba(255, 255, 255, 0.15)",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                color: "#a0aec0",
+                fontSize: "13px",
+                margin: "0 0 8px 0",
+              }}
+            >
+              ¿Su empresa aún no comercializa con nosotros?
+            </p>
+            <Link
+              to="/signup"
+              className="login-card__signup-link"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+                color: "#3182ce",
+                fontSize: "14px",
+                fontWeight: "bold",
+                textDecoration: "none",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => (e.target.style.color = "#63b3ed")}
+              onMouseLeave={(e) => (e.target.style.color = "#3182ce")}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ width: 14, height: 14 }}
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="8.5" cy="7" r="4" />
+                <line x1="20" y1="8" x2="20" y2="14" />
+                <line x1="23" y1="11" x2="17" y2="11" />
+              </svg>
+              Solicitar Alta Comercial B2B
+            </Link>
+          </div>
+
           {/* Footer */}
-          <div className="login-card__footer">
+          <div className="login-card__footer" style={{ marginTop: 20 }}>
             <svg
               viewBox="0 0 24 24"
               fill="none"
