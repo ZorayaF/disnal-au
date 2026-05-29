@@ -17,6 +17,9 @@ export const AdminOrdersActive = () => {
   const [comentarios, setComentarios] = useState("");
   const [procesando, setProcesando] = useState(false);
 
+  // 🆕 Estado local dinámico para los precios de los productos en formato { id_producto: precio }
+  const [preciosProductos, setPreciosProductos] = useState({});
+
   // Filtramos solo los pedidos que requieren atención activa
   const pedidosActivos = pedidos.filter(
     (p) => p.estado === "Pendiente" || p.estado === "Pago_En_Revision",
@@ -24,9 +27,26 @@ export const AdminOrdersActive = () => {
 
   const alSeleccionarOrden = (pedido) => {
     seleccionarPedido(pedido);
-    // Si ya viene con un flete base (o re-evaluación), lo precargamos, si no, vacío
     setFlete(pedido.costo_flete || "");
     setComentarios(pedido.comentarios_admin || "");
+
+    const preciosIniciales = {};
+    if (pedido.productos) {
+      pedido.productos.forEach((prod) => {
+        // 🎯 Forzamos que la llave del objeto sea un String puro para evitar colisiones con IDs enteros
+        preciosIniciales[String(prod.id_producto)] =
+          prod.precio_b2b_asignado ?? "";
+      });
+    }
+    setPreciosProductos(preciosIniciales);
+  };
+
+  // 🆕 Manejador para actualizar el precio garantizando que la propiedad sea tratada como un String
+  const mantenerCambioPrecioProducto = (idProducto, valor) => {
+    setPreciosProductos((prev) => ({
+      ...prev,
+      [String(idProducto)]: valor,
+    }));
   };
 
   const manejarEnvioDecision = async (nuevoEstado) => {
@@ -44,12 +64,39 @@ export const AdminOrdersActive = () => {
       if (!continuar) return;
     }
 
+    // 🆕 Estructurar el array relacional de productos leyendo desde las llaves tipo String
+    const productosConPrecios = (pedidoSeleccionado.productos || []).map(
+      (p) => {
+        const valorPrecio = preciosProductos[String(p.id_producto)];
+        return {
+          id_producto: p.id_producto, // Enviamos el ID original al backend
+          precio_b2b_asignado:
+            valorPrecio !== "" && valorPrecio !== undefined
+              ? parseFloat(valorPrecio)
+              : 0.0,
+        };
+      },
+    );
+
+    // 🆕 Validación de seguridad B2B: Prevenir aprobación accidental con precios en cero
+    if (
+      nuevoEstado === "Aprobado" &&
+      productosConPrecios.some((p) => p.precio_b2b_asignado <= 0)
+    ) {
+      const ignorarPreciosCero = confirm(
+        "⚠️ Hay productos con precio unitario de $0 o vacío. ¿Estás seguro de que deseas aprobar esta cotización?",
+      );
+      if (!ignorarPreciosCero) return;
+    }
+
     setProcesando(true);
+    // Enviamos la información al Hook, el cual acepta "productosConPrecios" como 5to argumento
     const resultado = await procesarDecisionPedido(
       pedidoSeleccionado.id,
       nuevoEstado,
       flete,
       comentarios,
+      productosConPrecios,
     );
     setProcesando(false);
 
@@ -142,7 +189,7 @@ export const AdminOrdersActive = () => {
         </table>
       )}
 
-      {/* --- FORMULARIO DE EVALUACIÓN DETALLADA (MODAL O PANEL INFERIOR) --- */}
+      {/* --- FORMULARIO DE EVALUACIÓN DETALLADA --- */}
       {pedidoSeleccionado && (
         <div
           style={{
@@ -162,7 +209,7 @@ export const AdminOrdersActive = () => {
             <h3>🔍 Evaluando Pedido: {pedidoSeleccionado.id}</h3>
             <button
               onClick={cerrarDetallePedido}
-              style={{ background: "red", color: "white" }}
+              style={{ background: "red", color: "white", cursor: "pointer" }}
             >
               X Cerrar
             </button>
@@ -208,6 +255,104 @@ export const AdminOrdersActive = () => {
               </a>
             </div>
           )}
+
+          <hr />
+
+          {/* 📦 SECCIÓN LOGÍSTICA B2B: LISTADO DE PRODUCTOS A COTIZAR */}
+          <div
+            style={{
+              marginTop: "15px",
+              background: "#f9f9f9",
+              padding: "15px",
+              borderRadius: "6px",
+            }}
+          >
+            <h4 style={{ margin: "0 0 15px 0" }}>
+              📦 Productos Solicitados (Asignar Precios B2B)
+            </h4>
+
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              {pedidoSeleccionado.productos?.map((producto) => (
+                <div
+                  key={producto.id_producto}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "10px",
+                    background: "#fff",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <div>
+                    <strong style={{ fontSize: "14px" }}>
+                      {producto.nombre}
+                    </strong>
+                    <p
+                      style={{
+                        margin: "4px 0 0 0",
+                        color: "#666",
+                        fontSize: "13px",
+                      }}
+                    >
+                      Cantidad solicitada:{" "}
+                      <span style={{ fontWeight: "bold", color: "#333" }}>
+                        {producto.cantidad} und.
+                      </span>{" "}
+                      {producto.presentacion
+                        ? `(${producto.presentacion})`
+                        : ""}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      gap: "4px",
+                    }}
+                  >
+                    <label
+                      style={{
+                        fontSize: "11px",
+                        color: "#555",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Precio Unitario ($):
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="Ej: 1500"
+                      // 🎯 Forzamos la búsqueda de la propiedad usando el ID como String
+                      value={
+                        preciosProductos[String(producto.id_producto)] ?? ""
+                      }
+                      // 🎯 Garantizamos el casteo a String en el onChange
+                      onChange={(e) =>
+                        mantenerCambioPrecioProducto(
+                          producto.id_producto,
+                          e.target.value,
+                        )
+                      }
+                      style={{
+                        padding: "6px",
+                        width: "120px",
+                        textAlign: "right",
+                      }}
+                      disabled={
+                        pedidoSeleccionado.estado === "Pago_En_Revision"
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <hr />
 
@@ -259,6 +404,7 @@ export const AdminOrdersActive = () => {
                     background: "green",
                     color: "white",
                     padding: "10px",
+                    cursor: "pointer",
                   }}
                 >
                   {procesando
@@ -274,6 +420,7 @@ export const AdminOrdersActive = () => {
                       background: "blue",
                       color: "white",
                       padding: "10px 20px",
+                      cursor: "pointer",
                     }}
                   >
                     {procesando
@@ -288,6 +435,7 @@ export const AdminOrdersActive = () => {
                       background: "red",
                       color: "white",
                       padding: "10px 20px",
+                      cursor: "pointer",
                     }}
                   >
                     ❌ Rechazar Orden

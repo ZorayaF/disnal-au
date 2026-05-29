@@ -7,12 +7,11 @@ export const useAdminOrders = () => {
   const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
   const [errorPedidos, setErrorPedidos] = useState(null);
 
-  // 1. Cargar el listado relacional desde el Backend
+  // 1. Cargar el listado relacional desde el Backend (Con productos e ítems B2B incluidos)
   const cargarPedidos = useCallback(async () => {
     setCargandoPedidos(true);
     setErrorPedidos(null);
     try {
-      // Tu server.js mapea esto a http://localhost:4000/api/pedidos/admin/lista
       const respuesta = await fetch(`${API_BASE_URL}/pedidos/admin/lista`);
       const datos = await respuesta.json();
 
@@ -35,12 +34,13 @@ export const useAdminOrders = () => {
     cargarPedidos();
   }, [cargarPedidos]);
 
-  // 2. Procesar la decisión del Administrador (Aprobar/Rechazar + Flete + Comentarios)
+  // 2. Procesar la decisión del Administrador (Aprobar/Rechazar + Flete + Comentarios + Precios B2B por ítem)
   const procesarDecisionPedido = async (
     idPedido,
     nuevoEstado,
     flete,
     comentarios,
+    productosConPrecios, // Array con [{ id_producto, precio_b2b_asignado }]
   ) => {
     try {
       const respuesta = await fetch(
@@ -49,9 +49,10 @@ export const useAdminOrders = () => {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            estado: nuevoEstado, // 'Aprobado' o 'Rechazado'
+            estado: nuevoEstado,
             costo_flete: parseFloat(flete) || 0.0,
             comentarios_admin: comentarios,
+            productos: productosConPrecios, // Cuerpo relacional hacia Express
           }),
         },
       );
@@ -64,7 +65,7 @@ export const useAdminOrders = () => {
         );
       }
 
-      // Sincronizar el estado local sin recargar toda la API de golpe
+      // Sincronizar el estado de los pedidos locales incluyendo la mutación de los nuevos precios unitarios
       setPedidos((prevPedidos) =>
         prevPedidos.map((p) =>
           p.id === idPedido
@@ -73,24 +74,47 @@ export const useAdminOrders = () => {
                 estado: nuevoEstado,
                 costo_flete: parseFloat(flete) || 0.0,
                 comentarios_admin: comentarios,
+                productos: p.productos.map((prod) => {
+                  const itemActualizado = productosConPrecios.find(
+                    (x) => x.id_producto === prod.id_producto,
+                  );
+                  return itemActualizado
+                    ? {
+                        ...prod,
+                        precio_b2b_asignado:
+                          itemActualizado.precio_b2b_asignado,
+                      }
+                    : prod;
+                }),
               }
             : p,
         ),
       );
 
-      // Si el pedido modificado era el que estaba abierto para ver detalles, actualizamos su vista
+      // Si el pedido modificado estaba abierto en detalle, actualizamos su vista interna en caliente
       if (pedidoSeleccionado && pedidoSeleccionado.id === idPedido) {
         setPedidoSeleccionado((prev) => ({
           ...prev,
           estado: nuevoEstado,
           costo_flete: parseFloat(flete) || 0.0,
           comentarios_admin: comentarios,
+          productos: prev.productos.map((prod) => {
+            const itemActualizado = productosConPrecios.find(
+              (x) => x.id_producto === prod.id_producto,
+            );
+            return itemActualizado
+              ? {
+                  ...prod,
+                  precio_b2b_asignado: itemActualizado.precio_b2b_asignado,
+                }
+              : prod;
+          }),
         }));
       }
 
       return { exito: true, mensaje: resultado.mensaje };
     } catch (error) {
-      console.error("❌ Error al actualizar pedido:", error);
+      console.error("❌ Error al actualizar pedido en el hook:", error);
       alert(`Error: ${error.message}`);
       return { exito: false, error: error.message };
     }

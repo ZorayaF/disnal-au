@@ -98,6 +98,7 @@ export const initDatabase = () => {
       nombre_producto TEXT NOT NULL,
       presentacion TEXT,
       cantidad INTEGER NOT NULL,
+      precio_unitario REAL DEFAULT NULL,
       FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
     )
   `,
