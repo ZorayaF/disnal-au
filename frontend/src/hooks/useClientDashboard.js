@@ -1,19 +1,24 @@
-// src/hooks/useClientDashboard.js
-import { useState, useMemo, useContext } from "react"; // 1. Importamos useContext
+import { useState, useMemo, useContext } from "react";
 import { useClientOrders } from "@hooks/useClientOrders";
-import { AuthContext } from "@context/AuthContext"; // 2. Importamos el contexto de autenticación global
+import { AuthContext } from "@context/AuthContext";
 
 export const useClientDashboard = () => {
   const [activeTab, setActiveTab] = useState("pedidos");
-  const { logoutGlobal } = useContext(AuthContext); // 3. Extraemos la función central de limpieza de sesión
 
+  // 🎯 CORREGIDO: Tu AuthContext expone exactamente la variable 'usuario'
+  const { logoutGlobal, usuario } = useContext(AuthContext);
+
+  // Mapeamos 'usuario' a 'clienteLogueado' para mantener la legibilidad semántica en el dashboard
+  const clienteLogueado = usuario;
+
+  // Pasamos el ID real de la sesión a tus órdenes (evitando el id 1 estático)
   const {
     pedidos,
     cargando,
     subiendoComprobante,
     enviarComprobante,
     refrescarPedidos,
-  } = useClientOrders(1);
+  } = useClientOrders(clienteLogueado?.id || 0);
 
   const [busqueda, setBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("TODOS");
@@ -27,11 +32,16 @@ export const useClientDashboard = () => {
     setPedidoExpandidoId((prevId) => (prevId === id ? null : id));
   };
 
-  // 🆕 Lógica matemática B2B integrada mediante useMemo
+  // Lógica matemática B2B integrada mediante useMemo
   const pedidosFiltrados = useMemo(() => {
+    // 🛡️ Capa defensiva: si el ID es 0 o la data aún no carga, evitamos romper el filter
+    if (!pedidos || !Array.isArray(pedidos)) return [];
+
     return pedidos
       .filter((pedido) => {
-        const coincideId = pedido.id
+        // Aseguramos que el ID exista como string antes de usar toLowerCase
+        const idString = pedido.id ? String(pedido.id) : "";
+        const coincideId = idString
           .toLowerCase()
           .includes(busqueda.toLowerCase());
         const coincideEstado =
@@ -39,16 +49,12 @@ export const useClientDashboard = () => {
         return coincideId && coincideEstado;
       })
       .map((pedido) => {
-        // 🎯 1. Calcular el subtotal acumulado de los items
         const subtotal = (pedido.productos || []).reduce((acumulado, prod) => {
           const precio = prod.precio_b2b_asignado || 0;
           return acumulado + prod.cantidad * precio;
         }, 0);
 
-        // 🎯 2. Calcular el total general sumando el flete establecido por el admin
         const total = subtotal + (pedido.costo_flete || 0);
-
-        // 🎯 3. Determinar si el admin ya asignó precios (si es 'Pendiente', usualmente no hay precios)
         const preciosListos = pedido.estado !== "Pendiente" && subtotal > 0;
 
         return {
@@ -60,12 +66,8 @@ export const useClientDashboard = () => {
       });
   }, [pedidos, busqueda, filtroEstado]);
 
-  // 🛠️ Corrección en el cierre de sesión: coordinado con el estado global de React
   const ejecutarCerrarSesion = (navigate) => {
-    // 1. Limpia los tokens correctos tanto del estado como de localStorage de forma segura
     logoutGlobal();
-
-    // 2. Redirige al inicio de sesión corporativo de manera limpia
     navigate("/login-cliente");
   };
 
@@ -84,5 +86,6 @@ export const useClientDashboard = () => {
     enviarComprobante,
     refrescarPedidos,
     ejecutarCerrarSesion,
+    clienteLogueado, // 🎯 Exposto limpiamente al Front
   };
 };

@@ -23,22 +23,25 @@ export const AuthProvider = ({ children }) => {
 
   // Función para iniciar sesión de forma controlada
   const loginGlobal = (dataAuth) => {
+    // 🎯 CORREGIDO: Mantenemos la normalización para el Navbar, pero anexamos de forma segura
+    // la dirección, ciudad, teléfono y el nombre de empresa original.
     const datosNormalizados = dataAuth.user || {
       id: dataAuth.cliente.id,
-      usuario: dataAuth.cliente.nombre_empresa, // Mapeamos el nombre para que tu navbar no se rompa
+      usuario: dataAuth.cliente.nombre_empresa,
+      nombre_empresa: dataAuth.cliente.nombre_empresa, // 👈 Lo guardamos también con su llave original
       correo: dataAuth.cliente.correo,
       nit_ruc: dataAuth.cliente.nit_ruc,
-      rol: "cliente", // Le inyectamos explícitamente el rol de cliente
+      telefono: dataAuth.cliente.telefono || "", // 👈 Preservamos para el perfil
+      direccion: dataAuth.cliente.direccion || "", // 👈 Preservamos para el perfil
+      ciudad: dataAuth.cliente.ciudad || "", // 👈 Preservamos para el perfil
+      rol: "cliente",
     };
 
-    // Unificamos un token ficticio si el backend no lo genera aún (para pasar el isAuthenticated)
     const tokenSeguro = dataAuth.token || "token-ficticio-b2b";
 
-    // 1. Guardamos de inmediato en el almacenamiento físico
     localStorage.setItem("disnal_token", tokenSeguro);
     localStorage.setItem("disnal_user", JSON.stringify(datosNormalizados));
 
-    // 2. Modificamos el estado para notificar a la aplicación de forma limpia
     setToken(tokenSeguro);
     setUsuario(datosNormalizados);
   };

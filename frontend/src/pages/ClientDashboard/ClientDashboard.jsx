@@ -9,12 +9,13 @@ import "./ClientDashboard.css";
 export const ClientDashboard = () => {
   const navigate = useNavigate();
 
-  // Extraemos únicamente estructuras de datos y manejadores de interfaz
+  // 🎯 CORREGIDO: Desestructuramos 'clienteLogueado' que ahora expone tu hook
   const {
     activeTab,
     cambiarTab,
     ejecutarCerrarSesion,
-    ...hookTrackerProps // Empaquetamos el resto de propiedades para enviarlas de forma limpia a la sección
+    clienteLogueado, // 👈 Extraemos el nodo con los datos reales del cliente
+    ...hookTrackerProps
   } = useClientDashboard();
 
   return (
@@ -41,7 +42,6 @@ export const ClientDashboard = () => {
               gap: "8px",
             }}
           >
-            {/* Semantic logout icon indicator */}
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -91,7 +91,10 @@ export const ClientDashboard = () => {
           <ClientOrdersTracker {...hookTrackerProps} />
         )}
 
-        {activeTab === "perfil" && <ClientProfileSettings />}
+        {activeTab === "perfil" && (
+          /* 🎯 CORREGIDO: Le pasamos la propiedad mapeada del hook */
+          <ClientProfileSettings clienteAutenticado={clienteLogueado} />
+        )}
       </main>
     </div>
   );

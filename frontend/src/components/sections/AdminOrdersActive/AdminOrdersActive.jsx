@@ -1,110 +1,22 @@
-import { useState } from "react";
-import { useAdminOrders } from "@hooks/useAdminOrders";
+import { useAdminOrdersManager } from "@hooks/useAdminOrdersManager";
 
 export const AdminOrdersActive = () => {
+  // 🎯 CONECTADO: Usamos el manager unificado que acabamos de optimizar
   const {
-    pedidos,
     cargandoPedidos,
+    pedidosActivos,
     pedidoSeleccionado,
-    seleccionarPedido,
+    flete,
+    comentarios,
+    preciosProductos,
+    procesando,
+    setFlete,
+    setComentarios,
+    mantenerCambioPrecioProducto,
+    iniciarEvaluacion,
     cerrarDetallePedido,
-    procesarDecisionPedido,
-    refrescarPedidos,
-  } = useAdminOrders();
-
-  // Estados locales para el formulario de aprobación
-  const [flete, setFlete] = useState("");
-  const [comentarios, setComentarios] = useState("");
-  const [procesando, setProcesando] = useState(false);
-
-  // 🆕 Estado local dinámico para los precios de los productos en formato { id_producto: precio }
-  const [preciosProductos, setPreciosProductos] = useState({});
-
-  // Filtramos solo los pedidos que requieren atención activa
-  const pedidosActivos = pedidos.filter(
-    (p) => p.estado === "Pendiente" || p.estado === "Pago_En_Revision",
-  );
-
-  const alSeleccionarOrden = (pedido) => {
-    seleccionarPedido(pedido);
-    setFlete(pedido.costo_flete || "");
-    setComentarios(pedido.comentarios_admin || "");
-
-    const preciosIniciales = {};
-    if (pedido.productos) {
-      pedido.productos.forEach((prod) => {
-        // 🎯 Forzamos que la llave del objeto sea un String puro para evitar colisiones con IDs enteros
-        preciosIniciales[String(prod.id_producto)] =
-          prod.precio_b2b_asignado ?? "";
-      });
-    }
-    setPreciosProductos(preciosIniciales);
-  };
-
-  // 🆕 Manejador para actualizar el precio garantizando que la propiedad sea tratada como un String
-  const mantenerCambioPrecioProducto = (idProducto, valor) => {
-    setPreciosProductos((prev) => ({
-      ...prev,
-      [String(idProducto)]: valor,
-    }));
-  };
-
-  const manejarEnvioDecision = async (nuevoEstado) => {
-    if (!pedidoSeleccionado) return;
-
-    // Validación lógica B2B: si el despacho es gestionado y aprueba, sugerimos ingresar flete
-    if (
-      nuevoEstado === "Aprobado" &&
-      pedidoSeleccionado.tipo_despacho === "Gestionado por Distribuidora" &&
-      !flete
-    ) {
-      const continuar = confirm(
-        "¿Deseas aprobar este pedido con $0 en costo de flete?",
-      );
-      if (!continuar) return;
-    }
-
-    // 🆕 Estructurar el array relacional de productos leyendo desde las llaves tipo String
-    const productosConPrecios = (pedidoSeleccionado.productos || []).map(
-      (p) => {
-        const valorPrecio = preciosProductos[String(p.id_producto)];
-        return {
-          id_producto: p.id_producto, // Enviamos el ID original al backend
-          precio_b2b_asignado:
-            valorPrecio !== "" && valorPrecio !== undefined
-              ? parseFloat(valorPrecio)
-              : 0.0,
-        };
-      },
-    );
-
-    // 🆕 Validación de seguridad B2B: Prevenir aprobación accidental con precios en cero
-    if (
-      nuevoEstado === "Aprobado" &&
-      productosConPrecios.some((p) => p.precio_b2b_asignado <= 0)
-    ) {
-      const ignorarPreciosCero = confirm(
-        "⚠️ Hay productos con precio unitario de $0 o vacío. ¿Estás seguro de que deseas aprobar esta cotización?",
-      );
-      if (!ignorarPreciosCero) return;
-    }
-
-    setProcesando(true);
-    // Enviamos la información al Hook, el cual acepta "productosConPrecios" como 5to argumento
-    const resultado = await procesarDecisionPedido(
-      pedidoSeleccionado.id,
-      nuevoEstado,
-      flete,
-      comentarios,
-      productosConPrecios,
-    );
-    setProcesando(false);
-
-    if (resultado.exito) {
-      cerrarDetallePedido();
-      refrescarPedidos();
-    }
-  };
+    enviarResolucionAdmin,
+  } = useAdminOrdersManager();
 
   if (cargandoPedidos) return <p>Cargando órdenes entrantes del CRM...</p>;
 
@@ -137,54 +49,71 @@ export const AdminOrdersActive = () => {
             </tr>
           </thead>
           <tbody>
-            {pedidosActivos.map((pedido) => (
-              <tr key={pedido.id} style={{ borderBottom: "1px solid #eee" }}>
-                <td style={{ padding: "10px", fontSize: "14px" }}>
-                  <code>{pedido.id.substring(0, 8)}...</code>
-                </td>
-                <td style={{ padding: "10px" }}>
-                  <strong>{pedido.nombre_empresa}</strong>
-                </td>
-                <td style={{ padding: "10px" }}>{pedido.fecha}</td>
-                <td style={{ padding: "10px" }}>
-                  <span
-                    style={{
-                      padding: "3px 8px",
-                      background:
-                        pedido.tipo_despacho === "Recogida"
-                          ? "#e6f4ea"
-                          : "#e8f0fe",
-                      color:
-                        pedido.tipo_despacho === "Recogida" ? "green" : "blue",
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                    }}
-                  >
-                    {pedido.tipo_despacho}
-                  </span>
-                </td>
-                <td style={{ padding: "10px" }}>
-                  <span
-                    style={{
-                      fontWeight: "bold",
-                      color:
-                        pedido.estado === "Pago_En_Revision"
-                          ? "orange"
-                          : "#333",
-                    }}
-                  >
-                    {pedido.estado === "Pago_En_Revision"
-                      ? "💳 Pago en Revisión"
-                      : "⏳ Pendiente"}
-                  </span>
-                </td>
-                <td style={{ padding: "10px" }}>
-                  <button onClick={() => alSeleccionarOrden(pedido)}>
-                    Evaluar
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {pedidosActivos.map((pedido) => {
+              // 🛡️ CAPA DEFENSIVA: Extraer la identidad corporativa sin importar el formato del JOIN del backend
+              const nombreCliente =
+                pedido.nombre_empresa ||
+                pedido.nombreEmpresa ||
+                pedido.cliente_nombre ||
+                "Empresa no identificada";
+
+              return (
+                <tr key={pedido.id} style={{ borderBottom: "1px solid #eee" }}>
+                  <td style={{ padding: "10px", fontSize: "14px" }}>
+                    <code>{String(pedido.id).substring(0, 8)}...</code>
+                  </td>
+                  <td style={{ padding: "10px" }}>
+                    <strong>{nombreCliente}</strong>
+                  </td>
+                  <td style={{ padding: "10px" }}>
+                    {pedido.fecha || "Reciente"}
+                  </td>
+                  <td style={{ padding: "10px" }}>
+                    <span
+                      style={{
+                        padding: "3px 8px",
+                        background:
+                          pedido.tipo_despacho === "Recogida"
+                            ? "#e6f4ea"
+                            : "#e8f0fe",
+                        color:
+                          pedido.tipo_despacho === "Recogida"
+                            ? "green"
+                            : "blue",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {pedido.tipo_despacho || "Despacho General"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "10px" }}>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color:
+                          pedido.estado === "Pago_En_Revision"
+                            ? "orange"
+                            : "#333",
+                      }}
+                    >
+                      {pedido.estado === "Pago_En_Revision"
+                        ? "💳 Pago en Revisión"
+                        : "⏳ Pendiente"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "10px" }}>
+                    {/* 🎯 Cambiado al método del manager que inicializa los estados locales */}
+                    <button
+                      onClick={() => iniciarEvaluacion(pedido)}
+                      style={{ padding: "4px 8px", cursor: "pointer" }}
+                    >
+                      Evaluar
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
@@ -197,6 +126,7 @@ export const AdminOrdersActive = () => {
             padding: "20px",
             background: "#fdfdfd",
             marginTop: "10px",
+            textAlign: "left",
           }}
         >
           <div
@@ -209,19 +139,41 @@ export const AdminOrdersActive = () => {
             <h3>🔍 Evaluando Pedido: {pedidoSeleccionado.id}</h3>
             <button
               onClick={cerrarDetallePedido}
-              style={{ background: "red", color: "white", cursor: "pointer" }}
+              style={{
+                background: "red",
+                color: "white",
+                cursor: "pointer",
+                padding: "4px 8px",
+                border: "none",
+              }}
             >
               X Cerrar
             </button>
           </div>
 
+          {/* 🛡️ RESOLUCIÓN EN DETALLE: Fallback dinámico para datos de contacto */}
+          <p style={{ marginTop: "15px" }}>
+            <strong>Cliente:</strong>{" "}
+            {pedidoSeleccionado.nombre_empresa ||
+              pedidoSeleccionado.nombreEmpresa ||
+              "Comercio Afiliado"}
+            {pedidoSeleccionado.correo || pedidoSeleccionado.email
+              ? ` (${pedidoSeleccionado.correo || pedidoSeleccionado.email})`
+              : ""}
+          </p>
           <p>
-            <strong>Cliente:</strong> {pedidoSeleccionado.nombre_empresa} (
-            {pedidoSeleccionado.correo})
+            <strong>Identificación / NIT:</strong>{" "}
+            <code>
+              {pedidoSeleccionado.nit_ruc ||
+                pedidoSeleccionado.nit ||
+                "No adjunto"}
+            </code>
           </p>
           <p>
             <strong>Notas de la Empresa:</strong>{" "}
-            {pedidoSeleccionado.necesidades_especificas || "Ninguna"}
+            {pedidoSeleccionado.necesidades_especificas ||
+              pedidoSeleccionado.comentarios ||
+              "Ninguna provista."}
           </p>
 
           {pedidoSeleccionado.tipo_despacho !== "Recogida" && (
@@ -230,38 +182,54 @@ export const AdminOrdersActive = () => {
                 background: "#f0f4f8",
                 padding: "10px",
                 margin: "10px 0",
+                borderLeft: "4px solid #1d4ed8",
               }}
             >
               <p style={{ margin: 0 }}>
-                <strong>Dirección Destino:</strong>{" "}
-                {pedidoSeleccionado.direccion_envio} - (
-                {pedidoSeleccionado.ciudad_envio})
+                <strong>Dirección Destino para Flete:</strong>{" "}
+                {pedidoSeleccionado.direccion_envio ||
+                  pedidoSeleccionado.direccion ||
+                  "Dirección Fiscal Base"}
+                {pedidoSeleccionado.ciudad_envio || pedidoSeleccionado.ciudad
+                  ? ` - (${pedidoSeleccionado.ciudad_envio || pedidoSeleccionado.ciudad})`
+                  : ""}
               </p>
             </div>
           )}
 
           {pedidoSeleccionado.url_comprobante && (
-            <div style={{ margin: "15px 0" }}>
-              <p style={{ color: "orange" }}>
+            <div
+              style={{
+                margin: "15px 0",
+                background: "#fffbeb",
+                padding: "10px",
+                border: "1px solid #fef3c7",
+                borderRadius: "4px",
+              }}
+            >
+              <p style={{ color: "orange", margin: "0 0 5px 0" }}>
                 <strong>⚠️ El cliente ya subió un comprobante:</strong>
               </p>
               <a
                 href={`http://localhost:4000${pedidoSeleccionado.url_comprobante}`}
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: "blue", textDecoration: "underline" }}
+                style={{
+                  color: "blue",
+                  textDecoration: "underline",
+                  fontWeight: "bold",
+                }}
               >
                 Ver Comprobante de Pago Adjunto
               </a>
             </div>
           )}
 
-          <hr />
+          <hr style={{ margin: "20px 0" }} />
 
           {/* 📦 SECCIÓN LOGÍSTICA B2B: LISTADO DE PRODUCTOS A COTIZAR */}
           <div
             style={{
-              marginTop: "15px",
               background: "#f9f9f9",
               padding: "15px",
               borderRadius: "6px",
@@ -289,7 +257,7 @@ export const AdminOrdersActive = () => {
                 >
                   <div>
                     <strong style={{ fontSize: "14px" }}>
-                      {producto.nombre}
+                      {producto.nombre || "Producto de Catálogo"}
                     </strong>
                     <p
                       style={{
@@ -328,11 +296,9 @@ export const AdminOrdersActive = () => {
                     <input
                       type="number"
                       placeholder="Ej: 1500"
-                      // 🎯 Forzamos la búsqueda de la propiedad usando el ID como String
                       value={
                         preciosProductos[String(producto.id_producto)] ?? ""
                       }
-                      // 🎯 Garantizamos el casteo a String en el onChange
                       onChange={(e) =>
                         mantenerCambioPrecioProducto(
                           producto.id_producto,
@@ -354,7 +320,7 @@ export const AdminOrdersActive = () => {
             </div>
           </div>
 
-          <hr />
+          <hr style={{ margin: "20px 0" }} />
 
           {/* Formulario Logístico de Gestión */}
           <div
@@ -362,7 +328,6 @@ export const AdminOrdersActive = () => {
               display: "flex",
               flexDirection: "column",
               gap: "10px",
-              marginTop: "15px",
               maxWidth: "400px",
             }}
           >
@@ -374,6 +339,7 @@ export const AdminOrdersActive = () => {
               value={flete}
               onChange={(e) => setFlete(e.target.value)}
               placeholder="Ej: 45000"
+              style={{ padding: "8px" }}
               disabled={
                 pedidoSeleccionado.tipo_despacho === "Recogida" ||
                 pedidoSeleccionado.estado === "Pago_En_Revision"
@@ -385,26 +351,29 @@ export const AdminOrdersActive = () => {
               </span>
             )}
 
-            <label>
+            <label style={{ marginTop: "10px" }}>
               <strong>Comentarios o Instrucciones para el Cliente:</strong>
             </label>
             <textarea
               value={comentarios}
               onChange={(e) => setComentarios(e.target.value)}
-              placeholder="Ej: Cuenta Bancaria Ahorros #... ó Motivo del rechazo."
+              placeholder="Ej: Instrucciones de pago o motivo de rechazo."
               rows={3}
+              style={{ padding: "8px" }}
             />
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
               {pedidoSeleccionado.estado === "Pago_En_Revision" ? (
                 <button
-                  onClick={() => manejarEnvioDecision("Completado")}
+                  onClick={() => enviarResolucionAdmin("Completado")}
                   disabled={procesando}
                   style={{
                     background: "green",
                     color: "white",
                     padding: "10px",
                     cursor: "pointer",
+                    border: "none",
+                    fontWeight: "bold",
                   }}
                 >
                   {procesando
@@ -414,13 +383,15 @@ export const AdminOrdersActive = () => {
               ) : (
                 <>
                   <button
-                    onClick={() => manejarEnvioDecision("Aprobado")}
+                    onClick={() => enviarResolucionAdmin("Aprobado")}
                     disabled={procesando}
                     style={{
                       background: "blue",
                       color: "white",
                       padding: "10px 20px",
                       cursor: "pointer",
+                      border: "none",
+                      fontWeight: "bold",
                     }}
                   >
                     {procesando
@@ -429,13 +400,15 @@ export const AdminOrdersActive = () => {
                   </button>
 
                   <button
-                    onClick={() => manejarEnvioDecision("Rechazado")}
+                    onClick={() => enviarResolucionAdmin("Rechazado")}
                     disabled={procesando}
                     style={{
                       background: "red",
                       color: "white",
                       padding: "10px 20px",
                       cursor: "pointer",
+                      border: "none",
+                      fontWeight: "bold",
                     }}
                   >
                     ❌ Rechazar Orden

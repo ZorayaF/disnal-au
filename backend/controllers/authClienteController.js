@@ -24,12 +24,10 @@ export const registrarCliente = async (req, res) => {
 
   // 🆕 Validación B2B: Verificar que el cliente haya adjuntado su documento legal (NIT/RUC)
   if (!req.file) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Debe adjuntar obligatoriamente el documento digital de su NIT o RUC corporativo.",
-      });
+    return res.status(400).json({
+      error:
+        "Debe adjuntar obligatoriamente el documento digital de su NIT o RUC corporativo.",
+    });
   }
 
   // Formateamos la URL del recurso estático guardado por tu middleware Multer
@@ -76,12 +74,10 @@ export const registrarCliente = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error al registrar cliente corporativo:", error);
-    res
-      .status(500)
-      .json({
-        error:
-          "Error interno del servidor al procesar el registro de la empresa.",
-      });
+    res.status(500).json({
+      error:
+        "Error interno del servidor al procesar el registro de la empresa.",
+    });
   }
 };
 
@@ -148,11 +144,53 @@ export const loginCliente = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error en el proceso de login corporativo:", error);
+    res.status(500).json({
+      error:
+        "Error interno en el servidor durante la autenticación de la empresa.",
+    });
+  }
+};
+export const actualizarDatosCliente = async (req, res) => {
+  const { id, telefono, direccion, ciudad } = req.body;
+
+  if (!id || !telefono || !direccion || !ciudad) {
+    return res
+      .status(400)
+      .json({
+        error:
+          "El ID del cliente y todos los datos operativos son obligatorios.",
+      });
+  }
+
+  try {
+    const stmt = db.prepare(`
+      UPDATE clientes 
+      SET telefono = ?, direccion = ?, ciudad = ?
+      WHERE id = ? AND estado = 'Aprobado'
+    `);
+
+    const resultado = stmt.run(telefono, direccion, ciudad, id);
+
+    if (resultado.changes === 0) {
+      return res
+        .status(404)
+        .json({
+          error: "No se encontró el comercio o no está autorizado en la red.",
+        });
+    }
+
+    res.json({
+      mensaje:
+        "Datos maestros actualizados con éxito en la red de distribución.",
+      clienteActualizado: { id, telefono, direccion, ciudad },
+    });
+  } catch (error) {
+    console.error("❌ Error al actualizar perfil corporativo:", error);
     res
       .status(500)
       .json({
         error:
-          "Error interno en el servidor durante la autenticación de la empresa.",
+          "Error interno del servidor al procesar la actualización del comercio.",
       });
   }
 };

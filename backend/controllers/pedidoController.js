@@ -7,7 +7,7 @@ export const crearPedidoCRM = (req, res) => {
   const {
     idPedido,
     cliente_id,
-    needs_especificas, // mapeado según venga en tu body
+    needs_especificas,
     necesidades_especificas,
     tipo_despacho,
     direccion_envio,
@@ -45,6 +45,11 @@ export const crearPedidoCRM = (req, res) => {
       pedidoData.ciudad_envio || null,
     );
 
+    // 🎯 1. Preparamos un statement para buscar los datos reales del producto en el almacén
+    const stmtConsultarInfoProd = db.prepare(
+      "SELECT nombre, presentacion FROM productos WHERE id = ?",
+    );
+
     // Nota: precio_unitario se inserta vacío (NULL) por defecto ya que es una cotización B2B entrante
     const stmtDetalle = db.prepare(`
       INSERT INTO detalles_pedido (pedido_id, producto_id, nombre_producto, presentacion, cantidad, precio_unitario)
@@ -52,12 +57,23 @@ export const crearPedidoCRM = (req, res) => {
     `);
 
     for (const item of listaItems) {
+      const targetId = String(item.id_producto || item.producto_id || item.id);
+
+      // 🎯 2. Consultamos de forma segura la base de datos del servidor
+      const productoMaestro = stmtConsultarInfoProd.get(targetId);
+
+      if (!productoMaestro) {
+        // Romper la transacción con un rollback si intentan inyectar un ID inexistente
+        throw new Error(`PRODUCTO_NO_EXISTE_CATALOGO:${targetId}`);
+      }
+
+      // 🎯 3. Insertamos usando los datos maestros oficiales del Backend. Adiós al NOT NULL constraint error.
       stmtDetalle.run(
         pedidoData.id,
-        String(item.id || item.producto_id),
-        item.nombre,
-        item.presentacion || null,
-        item.cantidadEnCarrito || item.cantidad,
+        targetId,
+        productoMaestro.nombre, // ⚡ Resuelto: Traído de la BD, nunca será NULL
+        productoMaestro.presentacion || item.presentacion || null, // Fallback seguro
+        parseInt(item.cantidad || item.cantidadEnCarrito || 1, 10),
       );
     }
   });
@@ -82,6 +98,16 @@ export const crearPedidoCRM = (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error en la transacción de SQLite:", error);
+
+    if (error.message.startsWith("PRODUCTO_NO_EXISTE_CATALOGO")) {
+      const [_, idProd] = error.message.split(":");
+      return res
+        .status(404)
+        .json({
+          error: `El producto con ID ${idProd} no pertenece al catálogo activo.`,
+        });
+    }
+
     res.status(500).json({
       error: "Error interno del servidor al procesar la cotización relacional.",
     });
