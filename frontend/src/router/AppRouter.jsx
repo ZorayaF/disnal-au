@@ -12,6 +12,9 @@ import { Navbar } from "@components/common/Navbar";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ChatWidget } from "@components/molecules/ChatWidget";
 import { Footer } from "@components/common/Footer";
+import { LoginAdmin } from "@pages/LoginAdmin";
+import { LoginCliente } from "@pages/LoginCliente";
+import { ClientDashboard } from "@pages/ClientDashboard";
 
 const RouterContent = () => {
   const location = useLocation();
@@ -37,6 +40,9 @@ const RouterContent = () => {
         <Route path="/consulting" element={<Consulting />} />
         <Route path="/legal" element={<Legal />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/login-cliente" element={<LoginCliente />} />
+        <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route path="/mi-panel" element={<ClientDashboard />} />
 
         {/* 2. RUTAS PRIVADAS */}
         <Route element={<ProtectedRoute />}>

@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 
 // Filtro de seguridad para asegurar que solo se suban imágenes
 const fileFilter = (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png|webp/;
+  const filetypes = /jpeg|jpg|png|webp|pdf/;
   const mimetype = filetypes.test(file.mimetype);
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 

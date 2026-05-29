@@ -8,6 +8,10 @@ import { Server } from "socket.io";
 import { inicializarDB, leerDB } from "./data/database.js";
 import productRoutes from "./routes/productRoutes.js";
 import { inicializarChatSocket } from "./sockets/chatSocket.js";
+import { initDatabase } from "./config/db.js";
+import authClienteRoutes from "./routes/authClienteRoutes.js";
+import pedidoRoutes from "./routes/pedidoRoutes.js";
+import authAdminRoutes from "./routes/authAdminRoutes.js";
 
 dotenv.config();
 
@@ -24,12 +28,17 @@ const io = new Server(server, {
   },
 });
 
+initDatabase();
+
 const PORT = process.env.PORT || 4000;
 const SECRET_KEY = process.env.SECRET_KEY || "llave_por_defecto_si_no_hay_env";
 
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("public/uploads"));
+app.use("/api/clientes/auth", authClienteRoutes);
+app.use("/api/pedidos", pedidoRoutes);
+app.use("/api/admin/auth", authAdminRoutes);
 
 inicializarDB();
 

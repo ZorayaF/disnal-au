@@ -23,13 +23,24 @@ export const AuthProvider = ({ children }) => {
 
   // Función para iniciar sesión de forma controlada
   const loginGlobal = (dataAuth) => {
-    // 1. Guardamos de inmediato en el almacenamiento físico
-    localStorage.setItem("disnal_token", dataAuth.token);
-    localStorage.setItem("disnal_user", JSON.stringify(dataAuth.user));
+    const datosNormalizados = dataAuth.user || {
+      id: dataAuth.cliente.id,
+      usuario: dataAuth.cliente.nombre_empresa, // Mapeamos el nombre para que tu navbar no se rompa
+      correo: dataAuth.cliente.correo,
+      nit_ruc: dataAuth.cliente.nit_ruc,
+      rol: "cliente", // Le inyectamos explícitamente el rol de cliente
+    };
 
-    // 2. Modificamos el estado para notificar a la aplicacion de forma limpia
-    setToken(dataAuth.token);
-    setUsuario(dataAuth.user);
+    // Unificamos un token ficticio si el backend no lo genera aún (para pasar el isAuthenticated)
+    const tokenSeguro = dataAuth.token || "token-ficticio-b2b";
+
+    // 1. Guardamos de inmediato en el almacenamiento físico
+    localStorage.setItem("disnal_token", tokenSeguro);
+    localStorage.setItem("disnal_user", JSON.stringify(datosNormalizados));
+
+    // 2. Modificamos el estado para notificar a la aplicación de forma limpia
+    setToken(tokenSeguro);
+    setUsuario(datosNormalizados);
   };
 
   // Función para limpiar la sesión (Logout) de forma controlada

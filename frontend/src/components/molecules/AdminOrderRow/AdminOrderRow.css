@@ -1,0 +1,76 @@
+.admin-order-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s;
+}
+
+.admin-order-row:hover {
+  background-color: #f8fafc;
+}
+
+.admin-order-row__cell {
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.admin-order-row__cell--code code {
+  font-family: monospace;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.admin-order-row__cell--company {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.admin-order-row__badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.admin-order-row__badge--recogida {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.admin-order-row__badge--envio {
+  background-color: #eff6ff;
+  color: #1e40af;
+}
+
+.admin-order-row__status-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.admin-order-row__btn-eval {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-order-row__btn-eval:hover {
+  background-color: #1e293b;
+}
+
+.text-orange {
+  color: #d97706;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-medium {
+  font-weight: 500;
+}
