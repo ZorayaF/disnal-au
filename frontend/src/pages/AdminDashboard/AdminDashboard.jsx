@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useAdmin } from "@hooks/useAdmin";
-import { useAdminClients } from "@hooks/useAdminClients"; // Hook de auditoría B2B
+import { useAdmin } from "@/features/admin/hooks/useAdmin";
+import { useAdminClients } from "@/features/admin/hooks/useAdminClients"; // Hook de auditoría B2B
 
-import { AdminOverview } from "@sections/AdminOverview";
-import { AdminManager } from "@sections/AdminManager";
-import { AdminChatPanel } from "@sections/AdminChatPanel";
-import { AdminOrdersActive } from "@sections/AdminOrdersActive";
-import { AdminOrdersHistory } from "@sections/AdminOrdersHistory";
-import { AdminClientRequests } from "@/components/sections/AdminClientRequests"; // Componente con Tailwind
+import { AdminOverview } from "@/features/admin/components/AdminOverview";
+import { AdminManager } from "@/features/admin/components/AdminManager";
+import { AdminChatPanel } from "@/features/admin/components/AdminChatPanel";
+import { AdminOrdersActive } from "@/features/admin/components/AdminOrdersActive";
+import { AdminOrdersHistory } from "@/features/admin/components/AdminOrdersHistory";
+import { AdminClientRequests } from "@/features/admin/components/AdminClientRequests"; // Componente con Tailwind
 
 import { Title } from "@components/ui/Title";
 import { Button } from "@components/ui/Button";

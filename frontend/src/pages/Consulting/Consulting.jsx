@@ -1,10 +1,10 @@
 // src/pages/BusinessConsulting.jsx
 
 import { useEffect } from "react";
-import { PageHeader } from "@sections/PageHeader";
-import { ContactChannels } from "@sections/ContactChannels";
-import { ConsultingForm } from "@sections/ConsultingForm";
-import { BusinessHours } from "@sections/BusinessHours";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { ContactChannels } from "@/features/support/components/ContactChannels";
+import { ConsultingForm } from "@/features/support/components/ConsultingForm";
+import { BusinessHours } from "@/features/support/components/BusinessHours";
 
 export const Consulting = () => {
   useEffect(() => {

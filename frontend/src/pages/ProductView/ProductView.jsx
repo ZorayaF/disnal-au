@@ -1,8 +1,8 @@
 // src/pages/ProductView.jsx
 import { useEffect, useContext } from "react"; // 1. Importamos useContext
-import { useProductDetail } from "@hooks/useProductDetail";
-import { ProductDetail } from "@sections/ProductDetail";
-import { RelatedProductCard } from "@components/molecules/RelatedProductCard";
+import { useProductDetail } from "@/features/catalog/hooks/useProductDetail";
+import { ProductDetail } from "@/features/catalog/components/ProductDetail";
+import { RelatedProductCard } from "@/features/catalog/components/RelatedProductCard";
 import { AuthContext } from "@context/AuthContext"; // 2. Importamos el contexto global de autenticación
 import "./ProductView.css";
 

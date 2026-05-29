@@ -1,5 +1,5 @@
-import { useAuthLogin } from "@hooks/useAuthLogin";
-import { AuthFormSection } from "@sections/AuthFormSection";
+import { useAuthLogin } from "@/features/auth/hooks/useAuthLogin";
+import { AuthFormSection } from "@/features/auth/components/AuthFormSection";
 
 export const LoginAdmin = () => {
   const authProps = useAuthLogin(); // Extrae credenciales, handleInputChange, etc.
