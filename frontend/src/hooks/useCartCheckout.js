@@ -1,61 +1,66 @@
-// src/hooks/useCartCheckout.js
 import { useContext, useEffect, useState, useCallback } from "react";
 import { CartContext } from "@context/CartContext";
 import { obtenerProductos } from "@services/productService";
 
 export const useCartCheckout = () => {
-  const { carrito, setCarrito } = useContext(CartContext);
+  const { carrito, limpiarCarrito, setCarrito } = useContext(CartContext);
   const [notificaciones, setNotificaciones] = useState([]);
   const [sincronizando, setSincronizando] = useState(true);
+  const [enviando, setEnviando] = useState(false);
   const [step, setStep] = useState(1);
+  const [errorEnvio, setErrorEnvio] = useState(null);
 
-  // 🚀 OPTIMIZACIÓN: Quitamos 'carrito' de las dependencias usando un enfoque funcional
+  // 🆕 Estados para la flexibilidad de envío B2B
+  const [datosEnvio, setDatosEnvio] = useState({
+    tipo_despacho: "Gestionado por Distribuidora", // Valor por defecto
+    direccion_envio: "",
+    ciudad_envio: "",
+    necesidades_especificas: "",
+  });
+
+  // Manejador para actualizar los inputs de envío desde la UI
+  const manejarCambioEnvio = (e) => {
+    const { name, value } = e.target;
+    setDatosEnvio((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Barrido de consistencia optimizado y limpio (Una sola pasada al backend)
   const ejecutarBarrido = useCallback(async () => {
     setSincronizando(true);
     try {
       const respuestaApi = await obtenerProductos();
       const productosBackend = respuestaApi.productos || respuestaApi;
-      const alertasEncontradas = [];
+      const alertas = [];
 
       if (!Array.isArray(productosBackend)) {
-        throw new Error(
-          "El formato de respuesta del servidor no es un listado válido.",
-        );
+        throw new Error("El formato de respuesta del servidor no es válido.");
       }
 
-      let hayConflictos = false;
+      let conflictoDetectado = false;
 
-      // Usamos el estado anterior de forma segura para no depender de la variable externa 'carrito'
       setCarrito((carritoActual) => {
-        const carritoVerificado = carritoActual.map((item) => {
+        return carritoActual.map((item) => {
           const productoReal = productosBackend.find((p) => p.id === item.id);
 
           if (!productoReal) {
-            alertasEncontradas.push(
+            alertas.push(
               `El insumo "${item.nombre}" ya no forma parte del catálogo.`,
             );
-            hayConflictos = true;
-            return { ...item, conflicto: true, motivo: "eliminado" };
+            conflictoDetectado = true;
+            return { ...item, conflicto: true };
           }
 
           if (
             productoReal.estado === "no disponible" ||
             productoReal.cantidad <= 0
           ) {
-            alertasEncontradas.push(
-              `El insumo "${item.nombre}" se encuentra agotado o no disponible.`,
-            );
-            hayConflictos = true;
-            return {
-              ...item,
-              conflicto: true,
-              motivo: "no disponible",
-              cantidadEnCarrito: 0,
-            };
+            alertas.push(`El insumo "${item.nombre}" se encuentra agotado.`);
+            conflictoDetectado = true;
+            return { ...item, conflicto: true, cantidadEnCarrito: 0 };
           }
 
           if (item.cantidadEnCarrito > productoReal.cantidad) {
-            alertasEncontradas.push(
+            alertas.push(
               `El stock de "${item.nombre}" varió. Se ajustó al máximo disponible (${productoReal.cantidad} und).`,
             );
             return {
@@ -65,103 +70,19 @@ export const useCartCheckout = () => {
             };
           }
 
-          return { ...item, conflicto: false, motivo: null };
+          return { ...item, conflicto: false };
         });
-
-        return { carritoVerificado, alertas: alertasEncontradas };
       });
 
-      // Nota: Debido a que setCarrito ahora procesa internamente la información,
-      // dividimos el guardado de alertas para mantener la sincronía impecable.
-      const procesarCambiosEfectivos = (carritoActual) => {
-        const alertas = [];
-        const verificado = carritoActual.map((item) => {
-          const productoReal = productosBackend.find((p) => p.id === item.id);
-          if (!productoReal) return { ...item, conflicto: true };
-          if (
-            productoReal.estado === "no disponible" ||
-            productoReal.cantidad <= 0
-          )
-            return { ...item, conflicto: true };
-          if (item.cantidadEnCarrito > productoReal.cantidad)
-            return { ...item, cantidadEnCarrito: productoReal.cantidad };
-          return item;
-        });
-
-        setNotificaciones(alertasEncontradas);
-        return !verificado.some((item) => item.conflicto);
-      };
-
-      // Para mantener tu misma estructura de retorno limpia sin romper la UI de tus compañeros:
-      const verificarDirecto = () => {
-        const alertas = [];
-        const verificado = carrito.map((item) => {
-          const productoReal = productosBackend.find((p) => p.id === item.id);
-          if (
-            !productoReal ||
-            productoReal.estado === "no disponible" ||
-            productoReal.cantidad <= 0
-          ) {
-            return { ...item, conflicto: true };
-          }
-          return item;
-        });
-        setNotificaciones(alertasEncontradas);
-        return !verificado.some((i) => i.conflicto);
-      };
-
-      // Aplicamos el mapeo directo y seguro sobre el estado actual
-      const mapearYActualizar = () => {
-        const alertas = [];
-        const nuevoCarrito = carrito.map((item) => {
-          const productoReal = productosBackend.find((p) => p.id === item.id);
-          if (!productoReal) {
-            alertas.push(
-              `El insumo "${item.nombre}" ya no forma parte del catálogo.`,
-            );
-            return { ...item, conflicto: true, motivo: "eliminado" };
-          }
-          if (
-            productoReal.estado === "no disponible" ||
-            productoReal.cantidad <= 0
-          ) {
-            alertas.push(
-              `El insumo "${item.nombre}" se encuentra agotado o no disponible.`,
-            );
-            return {
-              ...item,
-              conflicto: true,
-              motivo: "no disponible",
-              cantidadEnCarrito: 0,
-            };
-          }
-          if (item.cantidadEnCarrito > productoReal.cantidad) {
-            alertas.push(
-              `El stock de "${item.nombre}" varió. Se ajustó al máximo disponible (${productoReal.cantidad} und).`,
-            );
-            return {
-              ...item,
-              cantidadEnCarrito: productoReal.cantidad,
-              conflicto: false,
-            };
-          }
-          return { ...item, conflicto: false, motivo: null };
-        });
-
-        setCarrito(nuevoCarrito);
-        setNotificaciones(alertas);
-        return !nuevoCarrito.some((i) => i.conflicto);
-      };
-
-      return mapearYActualizar();
+      setNotificaciones(alertas);
+      return !conflictoDetectado;
     } catch (error) {
-      console.error("Error crítico durante el barrido del carrito:", error);
+      console.error("Error en barrido:", error);
       return false;
     } finally {
-      // 🌟 SOLUCIÓN: Corrección del typo 'finaly' -> 'finally'
       setSincronizando(false);
     }
-  }, [carrito, setCarrito]); // Ahora es seguro y súper predecible
+  }, [setCarrito]);
 
   useEffect(() => {
     if (carrito.length > 0) {
@@ -169,16 +90,78 @@ export const useCartCheckout = () => {
     } else {
       setSincronizando(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const avanzarPaso = (proximoPaso) => setStep(proximoPaso);
 
+  // 🆕 FUNCIÓN CRÍTICA: Despachar el pedido formal al CRM Backend
+  const enviarPedidoCRM = async () => {
+    setEnviando(true);
+    setErrorEnvio(null);
+
+    // Volvemos a verificar inventario un milisegundo antes de enviar por seguridad redundante
+    const inventarioValido = await ejecutarBarrido();
+    if (!inventarioValido) {
+      setEnviando(false);
+      setStep(1); // Regresar al carrito para que vea las alertas de stock
+      return;
+    }
+
+    // Nota: Temporalmente mockeamos el cliente_id en '1' (Tu semilla de la BD)
+    // Cuando conectes useAuthLoginCliente, vendrá del localStorage o del context de Auth.
+    const cliente_id = 1;
+    const idPedido = crypto.randomUUID(); // Generamos el ID único del pedido
+
+    const payload = {
+      idPedido,
+      cliente_id,
+      necesidades_especificas: datosEnvio.necesidades_especificas,
+      tipo_despacho: datosEnvio.tipo_despacho,
+      direccion_envio:
+        datosEnvio.tipo_despacho === "Recogida"
+          ? null
+          : datosEnvio.direccion_envio,
+      ciudad_envio:
+        datosEnvio.tipo_despacho === "Recogida"
+          ? null
+          : datosEnvio.ciudad_envio,
+      items: carrito,
+    };
+
+    try {
+      const respuesta = await fetch("http://localhost:4000/api/pedidos/crear", {
+        // Ajusta tu URL de Express
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const resultado = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(resultado.error || "Error al procesar el pedido.");
+      }
+
+      // Éxito absoluto
+      limpiarCarrito(); // Vaciar Context y LocalStorage automáticamente
+      setStep(4); // Mandar a la pantalla final de éxito
+    } catch (error) {
+      setErrorEnvio(error.message);
+    } finally {
+      setEnviando(false);
+    }
+  };
+
   return {
     notificaciones,
     sincronizando,
+    enviando,
+    errorEnvio,
     step,
+    datosEnvio,
+    manejarCambioEnvio,
     avanzarPaso,
     ejecutarBarrido,
+    enviarPedidoCRM,
   };
 };

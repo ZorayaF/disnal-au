@@ -7,4 +7,6 @@ export const API_BASE_URL = "http://localhost:4000/api";
 export const SOCKET_BASE_URL = "http://localhost:4000";
 
 // Número de WhatsApp corporativo de la empresa (con código de país, sin espacios ni el signo +)
-export const WHATSAPP_CONTACT_NUMBER = "573118572322";
+export const WHATSAPP_CONTACT_NUMBER = "573000000000";
+
+export const MODO_DESPACHO = "WEB";
