@@ -35,6 +35,7 @@ export const ClientOrderCard = ({
 
       {/* CUERPO DE DATOS PRINCIPALES */}
       <div className="client-order-card__body">
+        {/* Cambiamos el grid para soportar la nueva columna de Total */}
         <div className="client-order-card__grid">
           <div className="client-order-card__col">
             <span className="client-order-card__col-title">
@@ -59,6 +60,29 @@ export const ClientOrderCard = ({
             </span>
           </div>
 
+          {/* 🆕 NUEVA COLUMNA: TOTAL VALORADO B2B */}
+          <div className="client-order-card__col">
+            <span className="client-order-card__col-title">TOTAL COTIZADO</span>
+            <span
+              className="client-order-card__col-value client-order-card__col-value--price"
+              style={{ fontWeight: "bold" }}
+            >
+              {pedido.preciosListos ? (
+                `$${pedido.total.toLocaleString()}`
+              ) : (
+                <span
+                  style={{
+                    color: "orange",
+                    fontStyle: "italic",
+                    fontSize: "13px",
+                  }}
+                >
+                  Por cotizar
+                </span>
+              )}
+            </span>
+          </div>
+
           <div className="client-order-card__col">
             <span className="client-order-card__col-title">
               ESTADO DEL PROCESO
@@ -80,7 +104,8 @@ export const ClientOrderCard = ({
         )}
 
         {/* COMPONENTE ANIDADO DE DETALLES (ACORDEÓN) */}
-        {estaExpandido && <ClientOrderDetail pedidoId={pedido.id} />}
+        {/* 🎯 Pasamos el "pedido" completo en vez de solo el ID para que aproveche los precios ya calculados */}
+        {estaExpandido && <ClientOrderDetail pedido={pedido} />}
       </div>
 
       {/* ZONA DE CARGA DE COMPROBANTE */}

@@ -2,10 +2,8 @@ import { useState, useMemo } from "react";
 import { useClientOrders } from "@hooks/useClientOrders";
 
 export const useClientDashboard = () => {
-  // Control de navegación interna (Pestañas)
   const [activeTab, setActiveTab] = useState("pedidos");
 
-  // Hook base que conecta con el Backend (Trae los pedidos del cliente id: 1)
   const {
     pedidos,
     cargando,
@@ -14,12 +12,10 @@ export const useClientDashboard = () => {
     refrescarPedidos,
   } = useClientOrders(1);
 
-  // Estados de control de UI para Búsqueda, Filtros y Acordeón de Detalles
   const [busqueda, setBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("TODOS");
   const [pedidoExpandidoId, setPedidoExpandidoId] = useState(null);
 
-  // Manejadores de eventos puros
   const cambiarTab = (tab) => setActiveTab(tab);
   const manejarBusqueda = (e) => setBusqueda(e.target.value);
   const manejarFiltroEstado = (e) => setFiltroEstado(e.target.value);
@@ -28,19 +24,39 @@ export const useClientDashboard = () => {
     setPedidoExpandidoId((prevId) => (prevId === id ? null : id));
   };
 
-  // Lógica de filtrado y búsqueda optimizada con useMemo
+  // 🆕 Lógica matemática B2B integrada medianteuseMemo
   const pedidosFiltrados = useMemo(() => {
-    return pedidos.filter((pedido) => {
-      const coincideId = pedido.id
-        .toLowerCase()
-        .includes(busqueda.toLowerCase());
-      const coincideEstado =
-        filtroEstado === "TODOS" || pedido.estado === filtroEstado;
-      return coincideId && coincideEstado;
-    });
+    return pedidos
+      .filter((pedido) => {
+        const coincideId = pedido.id
+          .toLowerCase()
+          .includes(busqueda.toLowerCase());
+        const coincideEstado =
+          filtroEstado === "TODOS" || pedido.estado === filtroEstado;
+        return coincideId && coincideEstado;
+      })
+      .map((pedido) => {
+        // 🎯 1. Calcular el subtotal acumulado de los items
+        const subtotal = (pedido.productos || []).reduce((acumulado, prod) => {
+          const precio = prod.precio_b2b_asignado || 0;
+          return acumulado + prod.cantidad * precio;
+        }, 0);
+
+        // 🎯 2. Calcular el total general sumando el flete establecido por el admin
+        const total = subtotal + (pedido.costo_flete || 0);
+
+        // 🎯 3. Determinar si el admin ya asignó precios (si es 'Pendiente', usualmente no hay precios)
+        const preciosListos = pedido.estado !== "Pendiente" && subtotal > 0;
+
+        return {
+          ...pedido,
+          subtotal,
+          total,
+          preciosListos,
+        };
+      });
   }, [pedidos, busqueda, filtroEstado]);
 
-  // Lógica pura de cierre de sesión corporativa
   const ejecutarCerrarSesion = (navigate) => {
     localStorage.removeItem("disnal_client_token");
     navigate("/login-cliente");
