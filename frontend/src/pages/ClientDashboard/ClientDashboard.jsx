@@ -9,12 +9,13 @@ import "./ClientDashboard.css";
 export const ClientDashboard = () => {
   const navigate = useNavigate();
 
-  // Extraemos únicamente estructuras de datos y manejadores de interfaz
+  // 🎯 CORREGIDO: Desestructuramos 'clienteLogueado' que ahora expone tu hook
   const {
     activeTab,
     cambiarTab,
     ejecutarCerrarSesion,
-    ...hookTrackerProps // Empaquetamos el resto de propiedades para enviarlas de forma limpia a la sección
+    clienteLogueado, // 👈 Extraemos el nodo con los datos reales del cliente
+    ...hookTrackerProps
   } = useClientDashboard();
 
   return (
@@ -28,12 +29,33 @@ export const ClientDashboard = () => {
             comprobantes de pago.
           </p>
         </div>
+
+        {/* ACCIONES DE CABECERA AUTOMATIZADAS */}
         <div className="client-dashboard__header-actions">
           <Button
             variant="secondary"
             onClick={() => ejecutarCerrarSesion(navigate)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
           >
-            Salir del Panel
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ width: 15, height: 15 }}
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Cerrar Sesión
           </Button>
         </div>
       </header>
@@ -69,7 +91,10 @@ export const ClientDashboard = () => {
           <ClientOrdersTracker {...hookTrackerProps} />
         )}
 
-        {activeTab === "perfil" && <ClientProfileSettings />}
+        {activeTab === "perfil" && (
+          /* 🎯 CORREGIDO: Le pasamos la propiedad mapeada del hook */
+          <ClientProfileSettings clienteAutenticado={clienteLogueado} />
+        )}
       </main>
     </div>
   );

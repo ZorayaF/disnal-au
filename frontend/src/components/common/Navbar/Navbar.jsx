@@ -13,10 +13,45 @@ const BASE_NAV_ITEMS = [
   { label: "Asesoría", to: "/consulting" },
   { label: "Legal", to: "/legal" },
 ];
+import { NavLink, useLocation } from "react-router-dom";
+import { CartContext } from "@context/CartContext";
+import { AuthContext } from "@context/AuthContext";
+import "./Navbar.css";
+
+const LOGO_SRC = "/assets/images/logo disnal.png";
 
 export const Navbar = () => {
   const { totalItems } = useContext(CartContext);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  // Escuchamos el estado global y los roles reales del AuthContext
+  const { usuario, isAuthenticated } = useContext(AuthContext);
+
+  // Evaluamos si el usuario se encuentra explorando rutas del panel de administración
+  const esZonaAdmin = location.pathname.startsWith("/admin");
+
+  // 📝 CONSTRUCCIÓN DECLARATIVA CON FILTROS SEGUROS DE ROL
+  const navItems = [
+    { label: "Inicio", to: "/", end: true },
+    { label: "Catálogo", to: "/catalog" },
+
+    // 🏢 RUTA EXCLUSIVA CLIENTE: Cotización y Panel de Compras B2B
+    ...(isAuthenticated && usuario?.rol === "cliente"
+      ? [
+          { label: "Cotización", to: "/cart", isCart: true },
+          { label: "Mi Panel B2B", to: "/mi-panel" },
+        ]
+      : []),
+
+    // 🛠️ RUTA EXCLUSIVA ADMIN: Se muestra únicamente si el rol es 'admin'
+    ...(isAuthenticated && usuario?.rol === "admin"
+      ? [{ label: "Panel Administración", to: "/admin" }]
+      : []),
+
+    { label: "Asesoría", to: "/consulting" },
+    { label: "Legal", to: "/legal" },
+  ];
 
   // 🔌 CONEXIÓN AUTH (Simulada): Cuando conectes useAuthLoginCliente, estas variables
   // vendrán de tu Contexto global. Por ahora, las dejamos listas para simular la sesión.
@@ -36,6 +71,7 @@ export const Navbar = () => {
       <NavLink
         className="main-navbar__brand"
         to="/"
+        onClick={() => setIsOpen(false)}
         aria-label="Ir al inicio de Disnal"
       >
         <img src={LOGO_SRC} alt="Disnal" />
@@ -72,16 +108,30 @@ export const Navbar = () => {
         ))}
       </nav>
 
-      {/* CTA Iniciar Sesión / Nombre de Usuario — columna 3 */}
-      {clienteAutenticado && datosCliente ? (
-        /* Renderizado cuando el cliente corporativo está autenticado */
+      {/* ── CTA Iniciar Sesión / Perfil Dinámico Activo — Columna 3 ── */}
+      {isAuthenticated && usuario ? (
         <NavLink
-          className="main-navbar__cta main-navbar__cta--profile"
-          to="/mi-panel"
-          aria-label={`Ver perfil de ${datosCliente.nombre_empresa}`}
-          style={{ borderColor: "#1d4ed8", color: "#1d4ed8" }} // Toque sutil azul corporativo
+          // 🎯 SECURE MULTI-CHECK VERIFICATION:
+          // If the role token says 'admin', OR the username is explicitly 'admin', OR we are inside an admin view path,
+          // we force routing directly to /admin. Otherwise, route safely to /mi-panel.
+          to={
+            usuario.rol === "admin" ||
+            usuario.usuario?.toLowerCase() === "admin" ||
+            esZonaAdmin
+              ? "/admin"
+              : "/mi-panel"
+          }
+          onClick={() => setIsOpen(false)}
+          className={`main-navbar__cta ${usuario.rol === "admin" || usuario.usuario?.toLowerCase() === "admin" || esZonaAdmin ? "" : "main-navbar__cta--profile"}`}
+          aria-label={`Ver panel de ${usuario.usuario}`}
+          style={
+            usuario.rol === "admin" ||
+            usuario.usuario?.toLowerCase() === "admin" ||
+            esZonaAdmin
+              ? { background: "#1e293b", borderColor: "#1e293b" }
+              : {}
+          }
         >
-          {/* Icono de perfil corporativo/maletín o usuario */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -107,6 +157,14 @@ export const Navbar = () => {
         <NavLink
           className="main-navbar__cta"
           to="/login-cliente"
+          <span className="main-navbar__client-name">{usuario.usuario}</span>
+        </NavLink>
+      ) : (
+        /* Guest View / Not Logged In */
+        <NavLink
+          className="main-navbar__cta"
+          to={esZonaAdmin ? "/admin/login" : "/login-cliente"}
+          onClick={() => setIsOpen(false)}
           aria-label="Iniciar Sesión"
         >
           <svg
@@ -127,7 +185,7 @@ export const Navbar = () => {
         </NavLink>
       )}
 
-      {/* Hamburger — solo visible en tablet/móvil */}
+      {/* Hamburger */}
       <button
         className="main-navbar__toggle"
         aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}

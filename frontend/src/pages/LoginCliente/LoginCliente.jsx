@@ -1,4 +1,4 @@
-import { useAuthLoginCliente } from "@hooks/useAuthLoginCliente"; // Tu nuevo hook de clientes
+import { useAuthLoginCliente } from "@hooks/useAuthLoginCliente";
 import { AuthFormSection } from "@sections/AuthFormSection";
 
 export const LoginCliente = () => {

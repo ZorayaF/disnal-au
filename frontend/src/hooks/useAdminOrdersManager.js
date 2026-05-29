@@ -19,12 +19,19 @@ export const useAdminOrdersManager = () => {
 
   // Segmentación optimizada de datos usando useMemo
   const pedidosActivos = useMemo(() => {
+  // 🎯 NUEVO: Mover el estado de precios de productos al manager para persistencia limpia
+  const [preciosProductos, setPreciosProductos] = useState({});
+
+  // Segmentación optimizada de datos usando useMemo
+  const pedidosActivos = useMemo(() => {
+    if (!pedidos || !Array.isArray(pedidos)) return [];
     return pedidos.filter(
       (p) => p.estado === "Pendiente" || p.estado === "Pago_En_Revision",
     );
   }, [pedidos]);
 
   const historialPedidos = useMemo(() => {
+    if (!pedidos || !Array.isArray(pedidos)) return [];
     return pedidos.filter(
       (p) => p.estado !== "Pendiente" && p.estado !== "Pago_En_Revision",
     );
@@ -35,6 +42,23 @@ export const useAdminOrdersManager = () => {
     seleccionarPedido(pedido);
     setFlete(pedido.costo_flete || "");
     setComentarios(pedido.comentarios_admin || "");
+
+    // Sincronizar precios asignados del pedido
+    const preciosIniciales = {};
+    if (pedido.productos) {
+      pedido.productos.forEach((prod) => {
+        preciosIniciales[String(prod.id_producto)] =
+          prod.precio_b2b_asignado ?? "";
+      });
+    }
+    setPreciosProductos(preciosIniciales);
+  };
+
+  const mantenerCambioPrecioProducto = (idProducto, valor) => {
+    setPreciosProductos((prev) => ({
+      ...prev,
+      [String(idProducto)]: valor,
+    }));
   };
 
   // Ejecución asíncrona estructurada hacia la API del CRM
@@ -52,12 +76,37 @@ export const useAdminOrdersManager = () => {
       if (!continuar) return false;
     }
 
+    // Estructurar el array relacional de productos leyendo desde las llaves tipo String
+    const productosConPrecios = (pedidoSeleccionado.productos || []).map(
+      (p) => {
+        const valorPrecio = preciosProductos[String(p.id_producto)];
+        return {
+          id_producto: p.id_producto,
+          precio_b2b_asignado:
+            valorPrecio !== "" && valorPrecio !== undefined
+              ? parseFloat(valorPrecio)
+              : 0.0,
+        };
+      },
+    );
+
+    if (
+      nuevoEstado === "Aprobado" &&
+      productosConPrecios.some((p) => p.precio_b2b_asignado <= 0)
+    ) {
+      const ignorarPreciosCero = confirm(
+        "⚠️ Hay productos con precio unitario de $0 o vacío. ¿Estás seguro de que deseas aprobar esta cotización?",
+      );
+      if (!ignorarPreciosCero) return false;
+    }
+
     setProcesando(true);
     const resultado = await procesarDecisionPedido(
       pedidoSeleccionado.id,
       nuevoEstado,
       flete,
       comentarios,
+      productosConPrecios, // Transmitido como 5to argumento relacional
     );
     setProcesando(false);
 
@@ -76,9 +125,11 @@ export const useAdminOrdersManager = () => {
     pedidoSeleccionado,
     flete,
     comentarios,
+    preciosProductos, // 🎯 Exponer estado
     procesando,
     setFlete,
     setComentarios,
+    mantenerCambioPrecioProducto, // 🎯 Exponer mutador
     iniciarEvaluacion,
     cerrarDetallePedido,
     enviarResolucionAdmin,

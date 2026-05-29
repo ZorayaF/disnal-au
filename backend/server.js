@@ -12,6 +12,7 @@ import { initDatabase } from "./config/db.js";
 import authClienteRoutes from "./routes/authClienteRoutes.js";
 import pedidoRoutes from "./routes/pedidoRoutes.js";
 import authAdminRoutes from "./routes/authAdminRoutes.js";
+import adminClienteRoutes from "./routes/adminClienteRoutes.js";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use("/api/clientes/auth", authClienteRoutes);
 app.use("/api/pedidos", pedidoRoutes);
 app.use("/api/admin/auth", authAdminRoutes);
 
+app.use("/api/admin/clientes", adminClienteRoutes);
 inicializarDB();
 
 // Conectamos el controlador de sockets al servidor io

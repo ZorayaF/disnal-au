@@ -15,6 +15,7 @@ import { Footer } from "@components/common/Footer";
 import { LoginAdmin } from "@pages/LoginAdmin";
 import { LoginCliente } from "@pages/LoginCliente";
 import { ClientDashboard } from "@pages/ClientDashboard";
+import { RegisterPage } from "@pages/RegisterPage";
 
 const RouterContent = () => {
   const location = useLocation();
@@ -43,6 +44,7 @@ const RouterContent = () => {
         <Route path="/login-cliente" element={<LoginCliente />} />
         <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/mi-panel" element={<ClientDashboard />} />
+        <Route path="/signup" element={<RegisterPage />} />
 
         {/* 2. RUTAS PRIVADAS */}
         <Route element={<ProtectedRoute />}>
