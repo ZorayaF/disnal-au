@@ -1,51 +1,61 @@
 import { useState, useEffect, useCallback } from "react";
-import { API_BASE_URL } from "@config/api"; // Tu configuración global de URLs
+import { API_BASE_URL } from "@config/api";
 
 export const useAdminClients = () => {
-  const [clientesPendientes, setClientesPendientes] = useState([]);
+  const [clientes, setClientes] = useState([]);
   const [cargandoClientes, setCargandoClientes] = useState(true);
   const [errorClientes, setErrorClientes] = useState(null);
-  const [procesandoResolucion, setProcesandoResolucion] = useState(false);
 
-  // Carga únicamente los clientes cuyo estado es 'Pendiente' de aprobación
-  const cargarClientesPendientes = useCallback(async () => {
+  const cargarClientes = useCallback(async (estadoFiltro = "Pendiente") => {
     setCargandoClientes(true);
     setErrorClientes(null);
     try {
+      // 🎯 Ajusta aquí si tu server.js tiene prefijos como /api/admin/clientes
       const respuesta = await fetch(
-        `${API_BASE_URL}/admin/clientes?estado=Pendiente`,
+        `${API_BASE_URL}/admin/clientes?estado=${estadoFiltro}`,
       );
+
       const datos = await respuesta.json();
 
       if (!respuesta.ok) {
         throw new Error(
-          datos.error || "Error al recuperar solicitudes de clientes.",
+          datos.error || "Fallo al recuperar las empresas del CRM.",
         );
       }
 
-      setClientesPendientes(datos);
+      // 🎯 CONTROL DEFENSIVO: Nos aseguramos de que lo que guardamos sea un Array real.
+      // Si el backend envía { productos: [...] } o un objeto de error, lo manejamos con fallback a []
+      if (Array.isArray(datos)) {
+        setClientes(datos);
+      } else if (datos.clientes && Array.isArray(datos.clientes)) {
+        setClientes(datos.clientes);
+      } else {
+        setClientes([]);
+      }
     } catch (error) {
-      console.error("❌ Error en useAdminClients hook:", error);
+      console.error(
+        "❌ Error en el hook de administración de clientes:",
+        error,
+      );
       setErrorClientes(error.message);
+      setClientes([]); // 🎯 CAPA DE SEGURIDAD: Si la API se cae o da 404, forzamos un array vacío para que el Front no colapse
     } finally {
       setCargandoClientes(false);
     }
   }, []);
 
   useEffect(() => {
-    cargarClientesPendientes();
-  }, [cargarClientesPendientes]);
+    cargarClientes("Pendiente");
+  }, [cargarClientes]);
 
-  // Procesa la aprobación o rechazo de una empresa corporativa
-  const procesarResolucionCliente = async (idCliente, nuevoEstado) => {
-    setProcesandoResolucion(true);
+  const procesarAuditoriaCliente = async (idCliente, resolucion) => {
     try {
       const respuesta = await fetch(
         `${API_BASE_URL}/admin/clientes/evaluar/${idCliente}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nuevoEstado }),
+          body: JSON.stringify({ nuevoEstado: resolucion }),
         },
       );
 
@@ -53,29 +63,29 @@ export const useAdminClients = () => {
 
       if (!respuesta.ok) {
         throw new Error(
-          resultado.error || "No se pudo actualizar el estado de la empresa.",
+          resultado.error || "No se pudo actualizar el estatus de la empresa.",
         );
       }
 
-      // Sincronización in-place: Removemos el cliente de la lista de pendientes de inmediato
-      setClientesPendientes((prev) => prev.filter((c) => c.id !== idCliente));
+      setClientes((prevClientes) =>
+        Array.isArray(prevClientes)
+          ? prevClientes.filter((c) => c.id !== idCliente)
+          : [],
+      );
 
       return { exito: true, mensaje: resultado.mensaje };
     } catch (error) {
-      console.error("❌ Error al resolver estatus de cliente:", error);
+      console.error("❌ Error al evaluar cliente en el hook:", error);
       alert(`Error de auditoría: ${error.message}`);
       return { exito: false, error: error.message };
-    } finally {
-      setProcesandoResolucion(false);
     }
   };
 
   return {
-    clientesPendientes,
+    clientes: Array.isArray(clientes) ? clientes : [], // 🎯 ÚLTIMO FILTRO DE SEGURIDAD: Garantiza array al Dashboard
     cargandoClientes,
     errorClientes,
-    procesandoResolucion,
-    resolverCliente: procesarResolucionCliente,
-    refrescarClientes: cargarClientesPendientes,
+    refrescarClientes: cargarClientes,
+    procesarAuditoriaCliente,
   };
 };

@@ -85,6 +85,10 @@ export const AdminClientRequests = ({
                   </th>
                   <th className="p-4 font-semibold">Contacto Directo</th>
                   <th className="p-4 font-semibold">País/Ciudad</th>
+                  <th className="p-4 font-semibold text-center">
+                    Carpeta Fiscal
+                  </th>{" "}
+                  {/* 🆕 Nueva Cabecera */}
                   <th className="p-4 font-semibold text-right">
                     Resolución Instantánea
                   </th>
@@ -99,7 +103,9 @@ export const AdminClientRequests = ({
                     {/* Company identity details */}
                     <td className="p-4">
                       <div className="font-bold text-blue-900">
-                        {cliente.nombreEmpresa || cliente.nombre}
+                        {cliente.nombre_empresa ||
+                          cliente.nombreEmpresa ||
+                          cliente.nombre}
                       </div>
                       <div className="text-xs text-text-muted mt-0.5">
                         Ref ID: {cliente.id}
@@ -108,24 +114,44 @@ export const AdminClientRequests = ({
 
                     {/* Identification document or Tax code */}
                     <td className="p-4 font-mono text-xs text-gray-600">
-                      {cliente.nit ||
+                      {cliente.nit_ruc ||
+                        cliente.nit ||
                         cliente.rut ||
-                        cliente.documentoIdentidad ||
                         "No especificado"}
                     </td>
 
                     {/* Contact detail cluster */}
                     <td className="p-4">
-                      <div className="font-medium">{cliente.email}</div>
+                      <div className="font-medium">
+                        {cliente.correo || cliente.email}
+                      </div>
                       <div className="text-xs text-text-muted">
                         {cliente.telefono || "Sin teléfono"}
                       </div>
                     </td>
 
-                    {/* Geolocation metadata if available */}
+                    {/* Geolocation metadata */}
                     <td className="p-4 text-xs text-gray-600">
-                      {cliente.pais || "N/A"}
+                      {cliente.direccion || "N/A"}
                       {cliente.ciudad ? `, ${cliente.ciudad}` : ""}
+                    </td>
+
+                    {/* 🆕 COLUMNA INTEGRADORA: Enlace directo al recurso de Multer en el Backend */}
+                    <td className="p-4 text-center">
+                      {cliente.url_nit ? (
+                        <a
+                          href={`http://localhost:4000${cliente.url_nit}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline bg-blue-50 px-2.5 py-1.5 rounded"
+                        >
+                          📄 Ver NIT / RUC
+                        </a>
+                      ) : (
+                        <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded font-medium">
+                          Sin archivo
+                        </span>
+                      )}
                     </td>
 
                     {/* Quick evaluation operational UI */}

@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { useAdmin } from "@hooks/useAdmin";
-import { useAdminClients } from "@hooks/useAdminClients"; // 1. Import your hook
+import { useAdminClients } from "@hooks/useAdminClients"; // Hook de auditoría B2B
 
 import { AdminOverview } from "@sections/AdminOverview";
 import { AdminManager } from "@sections/AdminManager";
 import { AdminChatPanel } from "@sections/AdminChatPanel";
 import { AdminOrdersActive } from "@sections/AdminOrdersActive";
 import { AdminOrdersHistory } from "@sections/AdminOrdersHistory";
-import { AdminClientRequests } from "@sections/AdminClientRequests"; // 2. We will create this below
+import { AdminClientRequests } from "@/components/sections/AdminClientRequests"; // Componente con Tailwind
 
 import { Title } from "@components/ui/Title";
 import { Button } from "@components/ui/Button";
 
 export const AdminDashboard = () => {
-  // Updated state to handle the new "clientes" tab option
   const [activeTab, setActiveTab] = useState("inventario");
   const [subTabOrdenes, setSubTabOrdenes] = useState("activas");
 
+  // Estado e inventario comercial básico
   const {
     productos,
     productoEnEdicion,
@@ -27,13 +27,12 @@ export const AdminDashboard = () => {
     seleccionarParaEditar,
   } = useAdmin();
 
-  // 3. Destructure properties from your custom clients hook
+  // 🎯 CORREGIDO: Sincronización exacta con las propiedades del hook useAdminClients
   const {
-    clientesPendientes,
+    clientes, // Mapea con la lista interna (Pendientes, Aprobados, etc.)
     cargandoClientes,
     errorClientes,
-    procesandoResolucion,
-    resolverCliente,
+    procesarAuditoriaCliente, // Función resolutoria hacia Express
     refrescarClientes,
   } = useAdminClients();
 
@@ -91,9 +90,12 @@ export const AdminDashboard = () => {
           💬 Soporte en Vivo
         </button>
 
-        {/* 4. NEW TAB ELEMENT */}
+        {/* TAB ELEMENT CON BADGE DE NOTIFICACIÓN DE SOLICITUDES */}
         <button
-          onClick={() => setActiveTab("clientes")}
+          onClick={() => {
+            setActiveTab("clientes");
+            refrescarClientes("Pendiente"); // Aseguramos que cargue las pendientes al abrir
+          }}
           className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors relative ${
             activeTab === "clientes"
               ? "border-b-2 border-blue-600 text-blue-600 font-bold"
@@ -101,9 +103,10 @@ export const AdminDashboard = () => {
           }`}
         >
           👥 Registro de Clientes
-          {clientesPendientes.length > 0 && (
-            <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold">
-              {clientesPendientes.length}
+          {/* El globo rojo se pintará dinámicamente si hay registros en cola */}
+          {clientes?.length > 0 && activeTab !== "clientes" && (
+            <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-sm">
+              {clientes.length}
             </span>
           )}
         </button>
@@ -174,15 +177,15 @@ export const AdminDashboard = () => {
         </div>
       )}
 
-      {/* 5. NEW COMPONENT INTEGRATION: Client Approvals */}
+      {/* 5. SECCIÓN AUDITORÍA B2B: Conectada con los datos reales */}
       {activeTab === "clientes" && (
         <AdminClientRequests
-          clientes={clientesPendientes}
-          cargando={cargandoClientes}
-          error={errorClientes}
-          procesando={procesandoResolucion}
-          onResolver={resolverCliente}
-          onRefrescar={refrescarClientes}
+          clientes={clientes} // 🎯 Actualizado
+          cargando={cargandoClientes} // 🎯 Actualizado
+          error={errorClientes} // 🎯 Actualizado
+          procesando={false} // Pasamos false porque el botón maneja su deshabilitación local por item
+          onResolver={procesarAuditoriaCliente} // 🎯 Actualizado
+          onRefrescar={() => refrescarClientes("Pendiente")} // 🎯 Actualizado
         />
       )}
     </div>

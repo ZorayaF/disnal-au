@@ -26,7 +26,8 @@ export const RegisterFormSection = ({
         <div className="pt-2">
           <p className="text-xs text-text-muted">
             Se enviará una notificación a:{" "}
-            <strong className="text-gray-800">{formulario.email}</strong>
+            <strong className="text-gray-800">{formulario.correo}</strong>{" "}
+            {/* 🎯 Actualizado a .correo */}
           </p>
         </div>
       </div>
@@ -60,8 +61,8 @@ export const RegisterFormSection = ({
             </label>
             <input
               type="text"
-              name="nombreEmpresa"
-              value={formulario.nombreEmpresa}
+              name="nombre_empresa" // 🎯 Sincronizado con hook y BD
+              value={formulario.nombre_empresa}
               onChange={onCambio}
               placeholder="Ej. Distribuidora Central S.A.S."
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -76,8 +77,8 @@ export const RegisterFormSection = ({
             </label>
             <input
               type="text"
-              name="nit"
-              value={formulario.nit}
+              name="nit_ruc" // 🎯 Sincronizado con hook y BD
+              value={formulario.nit_ruc}
               onChange={onCambio}
               placeholder="Ej. 900123456-1"
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -94,8 +95,8 @@ export const RegisterFormSection = ({
             </label>
             <input
               type="email"
-              name="email"
-              value={formulario.email}
+              name="correo" // 🎯 Sincronizado con hook y BD
+              value={formulario.correo}
               onChange={onCambio}
               placeholder="compras@tuempresa.com"
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -110,12 +111,45 @@ export const RegisterFormSection = ({
             </label>
             <input
               type="tel"
-              name="telefono"
+              name="telefono" // 🎯 Sincronizado con el hook
               value={formulario.telefono}
               onChange={onCambio}
               placeholder="Ej. +57 300 123 4567"
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               disabled={cargando}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 🆕 NUEVO CAMPO: Contraseña Corporativa */}
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">
+              Contraseña del Portal *
+            </label>
+            <input
+              type="password"
+              name="password" // 🎯 Sincronizado con el hook
+              value={formulario.password || ""}
+              onChange={onCambio}
+              placeholder="Cree una clave segura"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              disabled={cargando}
+              required
+            />
+          </div>
+
+          {/* Copia Digital de NIT o RUC */}
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">
+              Copia Digital de NIT o RUC *
+            </label>
+            <input
+              type="file"
+              name="nitFile" // 🎯 Mapea con la propiedad de archivo binario en el hook
+              accept="image/*,application/pdf"
+              onChange={onCambio} // El hook ya procesa e.target.files de forma automática con nuestra actualización anterior
+              className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
             />
           </div>
         </div>
@@ -147,7 +181,7 @@ export const RegisterFormSection = ({
             </label>
             <input
               type="text"
-              name="ciudad"
+              name="ciudad" // 🎯 Sincronizado con hook y BD
               value={formulario.ciudad}
               onChange={onCambio}
               placeholder="Ej. Bogotá"
@@ -178,7 +212,7 @@ export const RegisterFormSection = ({
           </div>
         </div>
 
-        {/* Optional Comments text-box areas */}
+        {/* Optional Comments */}
         <div className="space-y-1">
           <label className="text-xs font-bold text-gray-700 uppercase tracking-wider block">
             Información adicional / Notas operativas
@@ -194,12 +228,12 @@ export const RegisterFormSection = ({
           ></textarea>
         </div>
 
-        {/* Form Submission Actions Container */}
+        {/* Form Submission Actions */}
         <div className="pt-2">
           <button
             type="submit"
             disabled={cargando}
-            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
           >
             {cargando ? (
               <>

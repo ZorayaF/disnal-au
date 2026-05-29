@@ -2,14 +2,14 @@ import { useState } from "react";
 import { API_BASE_URL } from "@config/api";
 
 const INITIAL_FORM_STATE = {
-  nombreEmpresa: "",
-  nit: "", // Tax identity number (RUT / NIT / Corporate Identifier)
-  email: "",
+  nombre_empresa: "", // 🎯 Ajustado a la llave exacta del backend
+  nit_ruc: "", // 🎯 Ajustado a la llave exacta del backend
+  correo: "", // 🎯 Ajustado a la llave exacta del backend
+  password: "", // 🆕 Agregado campo para que el cliente cree su clave
   telefono: "",
-  pais: "Colombia",
-  ciudad: "",
-  sectorComercial: "",
-  comentarios: "",
+  direccion: "", // Mapeado con tu BD
+  ciudad: "", // Mapeado con tu BD
+  nitFile: null, // 🆕 Espacio en memoria para almacenar el archivo físico del NIT
 };
 
 export const useClientRegister = () => {
@@ -18,34 +18,43 @@ export const useClientRegister = () => {
   const [error, setError] = useState(null);
   const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  // Updates form field state variables dynamically
+  // Manejador dinámico inteligente (Soporta Inputs de texto e inputs de Archivos)
   const manejarCambio = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
+
     setFormulario((prev) => ({
       ...prev,
-      [name]: value,
+      // Si el input es de tipo file, guardamos el archivo binario, si no, el valor de texto
+      [name]: files ? files[0] : value,
     }));
   };
 
-  // Simplistic frontend validation rule verification layer
+  // Validación en Frontend antes de disparar la red
   const validarFormulario = () => {
-    if (!formulario.nombreEmpresa.trim())
+    if (!formulario.nombre_empresa.trim())
       return "La razón social o nombre de la empresa es requerido.";
-    if (!formulario.nit.trim())
-      return "El número de identificación fiscal (NIT/RUT) es obligatorio.";
+    if (!formulario.nit_ruc.trim())
+      return "El número de identificación fiscal (NIT/RUC) es obligatorio.";
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formulario.email))
+    if (!emailRegex.test(formulario.correo))
       return "Por favor introduce un correo corporativo válido.";
+
+    if (!formulario.password || formulario.password.length < 4)
+      return "La contraseña es obligatoria y debe tener un largo válido.";
+
     if (!formulario.telefono.trim())
       return "Un número telefónico de contacto es obligatorio.";
+
+    if (!formulario.nitFile)
+      return "Debe adjuntar obligatoriamente el documento digital de su NIT o RUC corporativo.";
 
     return null;
   };
 
-  // Submits payload configuration to the server instances
+  // Envío relacional mediante Multipart Form-Data hacia Express
   const enviarRegistro = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError(null);
 
     const errorValidacion = validarFormulario();
@@ -56,14 +65,23 @@ export const useClientRegister = () => {
 
     setCargando(true);
     try {
-      const respuesta = await fetch(`${API_BASE_URL}/clientes/registrar`, {
+      // 🎯 1. Construcción del contenedor FormData (Multer-ready)
+      const datosFormulario = new FormData();
+      datosFormulario.append("nit_ruc", formulario.nit_ruc);
+      datosFormulario.append("nombre_empresa", formulario.nombre_empresa);
+      datosFormulario.append("correo", formulario.correo);
+      datosFormulario.append("password", formulario.password);
+      datosFormulario.append("telefono", formulario.telefono);
+      datosFormulario.append("direccion", formulario.direccion);
+      datosFormulario.append("ciudad", formulario.ciudad);
+
+      // El nombre del campo "nit" debe coincidir EXACTAMENTE con tu routes: upload.single("nit")
+      datosFormulario.append("nit", formulario.nitFile);
+
+      // 🎯 2. Fetch ajustado con el prefijo real de tu server.js y SIN headers manuales
+      const respuesta = await fetch(`${API_BASE_URL}/clientes/auth/registrar`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formulario,
-          estado: "Pendiente", // Enters admin panel audit layout automatically
-          fechaSolicitud: new Date().toISOString(),
-        }),
+        body: datosFormulario, // El navegador inyecta el boundary 'multipart/form-data' automáticamente
       });
 
       const datos = await respuesta.json();
@@ -76,7 +94,7 @@ export const useClientRegister = () => {
       }
 
       setRegistroExitoso(true);
-      setFormulario(INITIAL_FORM_STATE); // Wipes configuration state clean
+      setFormulario(INITIAL_FORM_STATE); // Limpiamos el buffer del formulario
     } catch (err) {
       console.error("❌ Error en useClientRegister:", err);
       setError(err.message);
