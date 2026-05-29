@@ -1,4 +1,4 @@
-import { useAuthLogin } from "@hooks/useAuthLogin";
+import { useAuthLogin } from "@/features/auth/hooks/useAuthLogin";
 import { Link } from "react-router-dom";
 import "./Login.css";
 

@@ -1,5 +1,5 @@
-import { useAuthLoginCliente } from "@hooks/useAuthLoginCliente";
-import { AuthFormSection } from "@sections/AuthFormSection";
+import { useAuthLoginCliente } from "@/features/auth/hooks/useAuthLoginCliente";
+import { AuthFormSection } from "@/features/auth/components/AuthFormSection";
 
 export const LoginCliente = () => {
   const authProps = useAuthLoginCliente();

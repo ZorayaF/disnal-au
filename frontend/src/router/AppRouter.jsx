@@ -10,7 +10,7 @@ import { Login } from "@pages/Login";
 import { AdminDashboard } from "@pages/AdminDashboard";
 import { Navbar } from "@components/common/Navbar";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { ChatWidget } from "@components/molecules/ChatWidget";
+import { ChatWidget } from "@/components/shared/ChatWidget";
 import { Footer } from "@components/common/Footer";
 import { LoginAdmin } from "@pages/LoginAdmin";
 import { LoginCliente } from "@pages/LoginCliente";

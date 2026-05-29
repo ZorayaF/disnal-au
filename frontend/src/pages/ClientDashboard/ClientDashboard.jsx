@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useClientDashboard } from "@hooks/useClientDashboard";
-import { ClientOrdersTracker } from "@sections/ClientOrdersTracker";
-import { ClientProfileSettings } from "@sections/ClientProfileSettings";
+import { useClientDashboard } from "@/features/client/hooks/useClientDashboard";
+import { ClientOrdersTracker } from "@/features/client/components/ClientOrdersTracker";
+import { ClientProfileSettings } from "@/features/client/components/ClientProfileSettings";
 import { Title } from "@components/ui/Title";
 import { Button } from "@components/ui/Button";
 import "./ClientDashboard.css";

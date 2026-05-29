@@ -1,7 +1,7 @@
 // src/pages/Legal.jsx
 import { useEffect } from "react";
-import { PageHeader } from "@sections/PageHeader";
-import { LegalDirectory } from "@sections/LegalDirectory";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { LegalDirectory } from "@/features/legal/components/LegalDirectory";
 
 export const Legal = () => {
   useEffect(() => {

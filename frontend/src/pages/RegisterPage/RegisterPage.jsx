@@ -1,5 +1,5 @@
-import { useClientRegister } from "@hooks/useClientRegister";
-import { RegisterFormSection } from "@sections/RegisterFormSection";
+import { useClientRegister } from "@/features/auth/hooks/useClientRegister";
+import { RegisterFormSection } from "@/features/auth/components/RegisterFormSection";
 import { Title } from "@components/ui/Title";
 
 export const RegisterPage = () => {

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useCartCheckout } from "@hooks/useCartCheckout";
-import { CartList } from "@sections/CartList";
+import { useCartCheckout } from "@/features/cart/hooks/useCartCheckout";
+import { CartList } from "@/features/cart/components/CartList";
 
 export const Cart = () => {
   const {

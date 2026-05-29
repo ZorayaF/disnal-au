@@ -1,13 +1,13 @@
 // src/pages/Home.jsx
 import { useEffect } from "react";
-import { Hero } from "@sections/Hero";
-import { ValueProposal } from "@/components/sections/ValueProposal";
-import { ProductGrid } from "@sections/ProductGrid"; // Lo dejamos importado por si lo necesitan luego
-import { PartnerBrands } from "@sections/PartnerBrands";
-import { HowItWorks } from "@sections/HowItWorks";
-import { FaqSection } from "@sections/FaqSection";
-import { AboutSection } from "@sections/AboutSection";
-import { FactoryGallery } from "@sections/FactoryGallery";
+import { Hero } from "@/features/marketing/components/Hero";
+import { ValueProposal } from "@/features/marketing/components/ValueProposal";
+import { ProductGrid } from "@/features/catalog/components/ProductGrid"; // Lo dejamos importado por si lo necesitan luego
+import { PartnerBrands } from "@/features/catalog/components/PartnerBrands";
+import { HowItWorks } from "@/features/marketing/components/HowItWorks";
+import { FaqSection } from "@/features/marketing/components/FaqSection";
+import { AboutSection } from "@/features/marketing/components/AboutSection";
+import { FactoryGallery } from "@/features/marketing/components/FactoryGallery";
 
 export const Home = () => {
   useEffect(() => {
@@ -32,7 +32,6 @@ export const Home = () => {
       {/* CONTRATO SEGURO: Reemplazamos la etiqueta vacia por este bloque plano.
         Evita el colapso de la app y le indica a tu compañero donde meter las tarjetas destacadas.
       */}
-      
 
       <AboutSection />
       <FaqSection />

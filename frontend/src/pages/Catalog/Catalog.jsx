@@ -1,10 +1,10 @@
 // src/pages/Catalog.jsx
 import { useEffect, useState } from "react";
-import { CatalogToolbar } from "@sections/CatalogToolbar";
-import { CatalogFilters } from "@sections/CatalogFilters";
-import { ProductGrid } from "@sections/ProductGrid";
+import { CatalogToolbar } from "@/features/catalog/components/CatalogToolbar";
+import { CatalogFilters } from "@/features/catalog/components/CatalogFilters";
+import { ProductGrid } from "@/features/catalog/components/ProductGrid";
 // 🌟 IMPORTACIÓN CLAVE: Traemos tu hook de cuadrícula para capturar la data cruda aquí arriba
-import { useProductGrid } from "@hooks/useProductGrid";
+import { useProductGrid } from "@/features/catalog/hooks/useProductGrid";
 
 export const Catalog = () => {
   // 1. Estados de control compuestos intactos
