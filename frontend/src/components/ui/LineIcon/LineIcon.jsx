@@ -373,7 +373,8 @@ export const LineIcon = ({
     aria-label={ariaLabel}
     aria-hidden={ariaLabel ? undefined : true}
     className={`
-      w-11 h-11 rounded-full bg-white text-disnal-black-soft 
+      className="
+      w-11 h-11 rounded-full bg-red-600 text-white
       inline-grid place-items-center text-[1.42rem] leading-none 
       shadow-[0_12px_28px_rgba(0,0,0,0.12)] shrink-0 select-none
       [&>svg]:w-[55%] [&>svg]:h-[55%] [&>svg]:block

@@ -2,9 +2,9 @@
 @reference "@css";
 
 .contact-channel-card {
-  /* 🎯 Cambiado align-content-start por content-start, text-decoration-none por no-underline y gap por píxeles exactos */
+  /* Cambiado align-content-start por content-start, text-decoration-none por no-underline y gap por píxeles exactos */
   @apply min-h-[5.45rem] grid grid-rows-[auto_auto_auto] justify-items-center content-start gap-[8px] text-white text-center no-underline font-sans p-[18px_12px] cursor-pointer transition-all duration-200;
-  /* 🎯 Borde izquierdo por defecto en pantallas grandes */
+  /* Borde izquierdo por defecto en pantallas grandes */
   @apply border-l border-white/20;
 }
 
@@ -13,7 +13,7 @@
   @apply border-l-0;
 }
 
-/* 🎯 El círculo blanco con el ícono rojo de Disnal */
+/* El círculo blanco con el ícono rojo de Disnal */
 .contact-channel-card .disnal-line-icon {
   @apply w-[52px] h-[52px] rounded-full bg-white text-disnal-red shadow-md text-[1.2rem] leading-none grid place-items-center transition-transform duration-200 ease-in-out;
 }
@@ -30,7 +30,7 @@
   @apply max-w-[8.4rem] text-white/90 text-[0.68rem] font-normal leading-[1.4] tracking-normal normal-case font-sans;
 }
 
-/* 📱 ADAPTACIÓN RESPONSIVA INTEGRADA: Limpia los bordes según la grilla */
+/* ADAPTACIÓN RESPONSIVA INTEGRADA: Limpia los bordes según la grilla */
 @media (max-width: 860px) {
   .contact-channel-card {
     /* En tabletas, al pasar a 2 columnas, removemos el borde lateral izquierdo general */
