@@ -58,9 +58,21 @@ El backend está diseñado bajo una arquitectura modular y desacoplada que resue
 
 - **Dotenv**: Gestor para la carga segura de variables de entorno desde un archivo `.env`, manteniendo las credenciales fuera del código fuente.
 
-## Configuración Obligatoria (`.env`)
+## Configuración Obligatoria y Valores por Defecto (`.env`)
 
-El servidor requiere de variables de entorno para inicializarse.
+El servidor backend está diseñado para ser resiliente: busca variables de entorno para parametrizar puertos y claves de seguridad, pero cuenta con **mecanismos de respaldo (fallbacks)** integrados en el código. Esto permite que el servidor se inicialice correctamente en entornos de desarrollo rápido incluso si el archivo `.env` no está presente.
+
+Puedes crear un archivo `.env` en la raíz de la carpeta `backend/` para personalizar las siguientes variables:
+
+```env
+# Puerto en el que correrá el servidor API
+# (Si no se especifica, el sistema levantará en el puerto 4000 por defecto)
+PORT=4000
+
+# Clave secreta para la firma y verificación de tokens de sesión
+# (Si no se especifica, usará una cadena de texto interna de respaldo)
+SECRET_KEY=tu_llave_secreta_personalizada
+```
 
 ## Documentación de la API (Endpoints)
 
