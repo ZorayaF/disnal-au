@@ -153,7 +153,6 @@ erDiagram
         REAL precio_unitario
     }
 
----
 ```
 
 ### Diccionario de Tablas e Infraestructura de Datos
