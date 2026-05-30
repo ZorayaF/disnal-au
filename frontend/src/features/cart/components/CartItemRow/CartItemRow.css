@@ -1,138 +1,79 @@
+/* src/features/cart/components/CartItemRow/CartItemRow.css */
+@reference "@css";
+
 .cart-item-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
+  @apply grid grid-cols-[1fr_auto_auto] items-center min-h-[104px] p-[1.05rem_1.2rem] border border-[#eeeeee] rounded-[14px] bg-white shadow-[0_10px_22px_rgba(0,0,0,0.055)] font-sans transition-colors duration-200;
   gap: clamp(16px, 3vw, 28px);
-  min-height: 104px;
-  padding: 1.05rem 1.2rem;
-  border: 1px solid #eeeeee;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.055);
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
 }
 
+/* ⚠️ Estado condicional de conflicto B2B - Ajustado formato alfa en v4 */
 .cart-item-row--conflict {
-  border-color: rgba(227, 6, 19, 0.24);
-  background: #fff5f5;
+  @apply border-disnal-red/[0.24] bg-red-50;
 }
 
 .cart-item-row__product {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  align-items: center;
-  gap: 1.25rem;
-  min-width: 0;
+  @apply grid grid-cols-[88px_1fr] items-center gap-5 min-w-0;
 }
 
 .cart-item-row__product img {
-  width: 82px;
-  height: 72px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: #fafafa;
-  padding: 6px;
+  @apply w-[82px] h-[72px] object-contain rounded-xl bg-[#fafafa] p-1.5;
 }
 
 .cart-item-row h3 {
-  margin: 0;
-  color: #181818;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-  line-height: 1.45;
-  text-transform: uppercase;
+  @apply m-0 text-disnal-ink text-[0.78rem] font-black tracking-[0.16em] leading-[1.45] uppercase font-sans;
 }
 
 .cart-item-row p {
-  margin: 0.38rem 0 0;
-  color: #7a7a7a;
-  font-size: 0.61rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  @apply mt-[0.38rem] mx-0 mb-0 text-disnal-gray text-[0.61rem] font-bold tracking-[0.08em] font-sans;
 }
 
 .cart-item-row strong {
-  display: inline-block;
-  margin-top: 0.38rem;
-  color: #df0000;
-  font-size: 0.6rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  @apply inline-block mt-[0.38rem] text-disnal-red text-[0.6rem] font-black tracking-[0.08em] uppercase font-sans;
 }
 
+/* 🔢 El selector numérico de cantidades de Disnal */
 .cart-item-row__quantity {
-  display: grid;
-  grid-template-columns: 34px 52px 34px;
-  min-height: 34px;
-  overflow: hidden;
-  border: 1.5px solid #111111;
-  border-radius: 999px;
-  background: #ffffff;
+  @apply grid grid-cols-[34px_52px_34px] min-h-[34px] overflow-hidden border-[1.5px] border-disnal-ink rounded-full bg-white;
 }
 
 .cart-item-row__quantity button {
-  display: grid;
-  place-items: center;
-  border: 0;
-  background: #ffffff;
-  color: #111111;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 900;
-  padding: 0;
+  @apply grid place-items-center border-0 bg-white text-disnal-ink cursor-pointer text-[1rem] font-black p-0 transition-colors duration-150;
 }
 
 .cart-item-row__quantity button:hover {
-  background: #111111;
-  color: #ffffff;
+  @apply bg-disnal-ink text-white;
 }
 
 .cart-item-row__quantity span {
-  display: grid;
-  place-items: center;
-  border-inline: 1.5px solid #111111;
-  color: #111111;
-  font-size: 0.78rem;
-  font-weight: 900;
+  @apply grid place-items-center border-l-[1.5px] border-r-[1.5px] border-disnal-ink text-disnal-ink text-[0.78rem] font-black;
 }
 
+/* 🗑️ Botón de eliminación */
 .cart-item-row__delete {
-  min-width: 42px;
-  min-height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
+  @apply min-w-[42px] min-h-[42px] grid place-items-center rounded-full p-0;
 }
 
+/* Ajustado el porcentaje de opacidad a formato estricto v4 */
 .cart-item-row__delete .disnal-line-icon {
-  width: 1.9rem;
-  height: 1.9rem;
-  border-radius: 999px;
-  box-shadow: none;
-  background: rgba(227, 6, 19, 0.08);
-  color: #df0000;
-  font-size: 1rem;
+  @apply w-[1.9rem] h-[1.9rem] rounded-full shadow-none bg-disnal-red/[0.08] text-disnal-red text-[1rem] flex items-center justify-center;
 }
 
+/* 📱 CAPA RESPONSIVA NATIVA */
 @media (max-width: 720px) {
   .cart-item-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    @apply grid-cols-1 gap-4;
   }
 
   .cart-item-row__product {
-    grid-template-columns: 74px 1fr;
+    @apply grid-cols-[74px_1fr];
   }
 
   .cart-item-row__product img {
-    width: 70px;
-    height: 64px;
+    @apply w-[70px] h-[64px];
   }
 
   .cart-item-row__quantity,
   .cart-item-row__delete {
-    justify-self: stretch;
+    @apply justify-self-stretch text-center;
   }
 }

@@ -22,16 +22,14 @@ const LOGO_SRC = "/assets/images/logo disnal.png";
 
 export const Navbar = () => {
   const { totalItems } = useContext(CartContext);
+  const { usuario, isAuthenticated } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // Escuchamos el estado global y los roles reales del AuthContext
-  const { usuario, isAuthenticated } = useContext(AuthContext);
-
-  // Evaluamos si el usuario se encuentra explorando rutas del panel de administración
+  // Evaluamos si el usuario se encuentra explorando rutas del panel administrativo
   const esZonaAdmin = location.pathname.startsWith("/admin");
 
-  // 📝 CONSTRUCCIÓN DECLARATIVA CON FILTROS SEGUROS DE ROL
+  // 📝 CONSTRUCCIÓN DECLARATIVA DEL MENÚ SEGÚN EL ROL REAL
   const navItems = [
     { label: "Inicio", to: "/", end: true },
     { label: "Catálogo", to: "/catalog" },
@@ -44,7 +42,7 @@ export const Navbar = () => {
         ]
       : []),
 
-    // 🛠️ RUTA EXCLUSIVA ADMIN: Se muestra únicamente si el rol es 'admin'
+    // 🛠️ RUTA EXCLUSIVA ADMIN: Se activa dinámicamente si el rol es 'admin'
     ...(isAuthenticated && usuario?.rol === "admin"
       ? [{ label: "Panel Administración", to: "/admin" }]
       : []),
@@ -80,7 +78,7 @@ export const Navbar = () => {
       {/* Links de navegación dinámicos — columna 2 */}
       <nav
         id="main-nav"
-        className={`main-navbar__nav${isOpen ? " is-open" : ""}`}
+        className={`main-navbar__nav ${isOpen ? "is-open" : ""}`}
         aria-label="Navegación principal"
       >
         {navItems.map((item) => (
@@ -90,9 +88,7 @@ export const Navbar = () => {
             end={item.end}
             onClick={() => setIsOpen(false)}
             className={({ isActive }) =>
-              ["main-navbar__link", isActive ? "active" : ""]
-                .filter(Boolean)
-                .join(" ")
+              `main-navbar__link ${isActive ? "active" : ""}`
             }
           >
             <span>{item.label}</span>
@@ -111,9 +107,7 @@ export const Navbar = () => {
       {/* ── CTA Iniciar Sesión / Perfil Dinámico Activo — Columna 3 ── */}
       {isAuthenticated && usuario ? (
         <NavLink
-          // 🎯 SECURE MULTI-CHECK VERIFICATION:
-          // If the role token says 'admin', OR the username is explicitly 'admin', OR we are inside an admin view path,
-          // we force routing directly to /admin. Otherwise, route safely to /mi-panel.
+          // Verificación de enrutamiento seguro para Administradores o Clientes
           to={
             usuario.rol === "admin" ||
             usuario.usuario?.toLowerCase() === "admin" ||
@@ -122,7 +116,13 @@ export const Navbar = () => {
               : "/mi-panel"
           }
           onClick={() => setIsOpen(false)}
-          className={`main-navbar__cta ${usuario.rol === "admin" || usuario.usuario?.toLowerCase() === "admin" || esZonaAdmin ? "" : "main-navbar__cta--profile"}`}
+          className={`main-navbar__cta ${
+            usuario.rol === "admin" ||
+            usuario.usuario?.toLowerCase() === "admin" ||
+            esZonaAdmin
+              ? ""
+              : "main-navbar__cta--profile"
+          }`}
           aria-label={`Ver panel de ${usuario.usuario}`}
           style={
             usuario.rol === "admin" ||
@@ -141,26 +141,18 @@ export const Navbar = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
+            className="w-3.5 h-3.5 shrink-0"
           >
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-          <span
-            className="main-navbar__client-name"
-            style={{ fontWeight: "600" }}
-          >
-            {datosCliente.nombre_empresa}
+          <span className="font-semibold whitespace-nowrap">
+            {/* Si es cliente pintamos su razón social (usuario), si es admin su identificador */}
+            {usuario.nombre_empresa || usuario.usuario || "Usuario B2B"}
           </span>
         </NavLink>
       ) : (
-        /* Renderizado original por defecto para usuarios invitados */
-        <NavLink
-          className="main-navbar__cta"
-          to="/login-cliente"
-          <span className="main-navbar__client-name">{usuario.usuario}</span>
-        </NavLink>
-      ) : (
-        /* Guest View / Not Logged In */
+        /* Guest View / Not Logged In — Botón corregido sin duplicaciones */
         <NavLink
           className="main-navbar__cta"
           to={esZonaAdmin ? "/admin/login" : "/login-cliente"}
@@ -176,6 +168,7 @@ export const Navbar = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
+            className="w-3.5 h-3.5 shrink-0"
           >
             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
             <line x1="3" y1="6" x2="21" y2="6" />

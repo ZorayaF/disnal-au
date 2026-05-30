@@ -1,11 +1,10 @@
-// src/components/sections/AdminChatPanel/ChatWindow.jsx
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export const ChatWindow = ({ chatActual, mensajes, onEnviarMensaje }) => {
   const [textoRespuesta, setTextoRespuesta] = useState("");
   const mensajesEndRef = useRef(null);
 
-  // Auto-scroll al recibir mensajes
+  // Auto-scroll al recibir o enviar nuevos mensajes
   useEffect(() => {
     if (mensajesEndRef.current) {
       mensajesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -20,72 +19,40 @@ export const ChatWindow = ({ chatActual, mensajes, onEnviarMensaje }) => {
   };
 
   return (
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        background: "#f8f9fa",
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          padding: "14px 20px",
-          background: "#e9ecef",
-          borderBottom: "1px solid #ccc",
-          fontWeight: "bold",
-        }}
-      >
-        Conversación con: {chatActual.nombre}
-        <span
-          style={{
-            display: "block",
-            fontSize: "11px",
-            fontWeight: "normal",
-            color: "#555",
-          }}
-        >
+    <div className="flex-1 flex flex-col bg-gray-50/50 font-sans h-full">
+      {/* 👤 ENCABEZADO DE CONVERSACIÓN ACTIVA */}
+      <header className="p-[14px_20px] bg-white border-b border-gray-100 flex flex-col gap-0.5 shrink-0">
+        <h2 className="m-0 text-disnal-black text-[13px] font-black uppercase tracking-wider">
+          Conversación con:{" "}
+          <span className="text-disnal-red">{chatActual.nombre}</span>
+        </h2>
+        <span className="block text-[10px] font-mono font-bold text-disnal-gray tracking-normal uppercase">
           ID Canal: {chatActual.id}
         </span>
-      </div>
+      </header>
 
-      {/* Burbujas de Mensajes */}
-      <div
-        style={{
-          flex: 1,
-          padding: "20px",
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
+      {/* 💬 BURBUJAS DE MENSAJES FLUIDOS */}
+      <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-2.5 scrollbar-thin bg-gray-50/30">
         {mensajes.map((msg, index) => {
           const esAsesor = msg.remitente === "asesor";
           return (
             <div
               key={index}
-              style={{
-                alignSelf: esAsesor ? "flex-end" : "flex-start",
-                backgroundColor: esAsesor ? "#28a745" : "#fff",
-                color: esAsesor ? "white" : "black",
-                padding: "10px 14px",
-                borderRadius: "8px",
-                maxWidth: "65%",
-                fontSize: "13.5px",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-              }}
+              className={`
+                p-[9px_14px] rounded-xl max-w-[70%] text-[13.5px] leading-snug shadow-xs transition-all flex flex-col
+                ${
+                  esAsesor
+                    ? "self-end bg-disnal-black text-white rounded-tr-none"
+                    : "self-start bg-white text-disnal-ink border border-gray-100 rounded-tl-none"
+                }
+              `.trim()}
             >
-              <div>{msg.texto}</div>
+              <div className="break-words font-medium">{msg.texto}</div>
               <span
-                style={{
-                  display: "block",
-                  fontSize: "9px",
-                  textAlign: "right",
-                  marginTop: "4px",
-                  opacity: 0.7,
-                }}
+                className={`
+                  block text-[9px] text-right mt-1 opacity-70 font-semibold
+                  ${esAsesor ? "text-gray-300" : "text-disnal-gray"}
+                `}
               >
                 {msg.hora}
               </span>
@@ -95,41 +62,22 @@ export const ChatWindow = ({ chatActual, mensajes, onEnviarMensaje }) => {
         <div ref={mensajesEndRef} />
       </div>
 
-      {/* Input de Escritura */}
+      {/* ⌨️ FORMULARIO DE ESCRITURA Y DESPACHO */}
       <form
         onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          padding: "12px",
-          borderTop: "1px solid #ccc",
-          background: "#fff",
-        }}
+        className="flex items-center gap-2.5 p-3 border-t border-gray-100 bg-white shrink-0"
       >
         <input
           type="text"
           placeholder={`Responder a ${chatActual.nombre}...`}
           value={textoRespuesta}
           onChange={(e) => setTextoRespuesta(e.target.value)}
-          style={{
-            flex: 1,
-            padding: "8px 12px",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            marginRight: "8px",
-          }}
+          className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-[13.5px] outline-none transition-colors focus:border-disnal-red bg-gray-50 text-disnal-ink"
         />
         <button
           type="submit"
           disabled={!textoRespuesta.trim()}
-          style={{
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            padding: "8px 18px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
+          className="bg-disnal-red text-white font-black border-0 p-[9px_20px] rounded-lg cursor-pointer text-[11px] uppercase tracking-wider shrink-0 transition-all duration-150 hover:bg-disnal-red-dark disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed shadow-xs"
         >
           Enviar Respuesta
         </button>

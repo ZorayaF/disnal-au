@@ -22,6 +22,7 @@ export default defineConfig({
       "@hooks": fileURLToPath(new URL("./src/hooks", import.meta.url)),
       "@models": fileURLToPath(new URL("./src/models", import.meta.url)),
       "@config": fileURLToPath(new URL("./src/config", import.meta.url)),
+      "@css": fileURLToPath(new URL("./src/index.css", import.meta.url)),
     },
   },
 });

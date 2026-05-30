@@ -1,79 +1,56 @@
+/* src/features/client/components/CompanyForm/CompanyForm.css */
+@reference "@css";
+
 .company-form-section {
-  min-height: calc(100vh - 70px);
+  @apply min-h-[calc(100vh-70px)] bg-white font-sans;
   padding: 62px 1rem 72px;
-  background: #fff;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
 }
 
+/* 🎯 El formulario ahora es un contenedor neutro. 
+   El estilo visual ("Dark" o "Light") se controla por props o clases externas */
 .company-form {
-  width: min(820px, 100%);
-  margin: 0 auto;
-  background: #171717;
-  color: #fff;
-  padding: clamp(32px, 4.8vw, 48px);
-  border-radius: 7px;
-  box-shadow: 0 0 0 1px rgba(227, 6, 19, 0.45), 0 16px 34px rgba(0, 0, 0, 0.25);
+  @apply w-full max-w-[820px] mx-auto p-[clamp(32px,4.8vw,48px)] rounded-[7px] font-sans;
 }
 
 .company-form h1 {
-  margin: 0 0 36px;
-  padding-bottom: 22px;
-  border-bottom: 1px solid rgba(227, 6, 19, 0.45);
-  text-align: center;
-  font-size: 1.22rem;
-  font-weight: 500;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
+  /* Cambiado pb-5.5 a pb-[22px] para asegurar la compatibilidad estricta de v4 */
+  @apply m-0 mb-9 pb-[22px] text-center text-[1.22rem] font-medium tracking-[0.34em] uppercase border-b border-current/30;
 }
 
 .company-form__error {
-  margin: 0 0 1.25rem;
-  color: #ffb3b3;
-  text-align: center;
-  font-size: 0.72rem;
-  text-transform: uppercase;
+  @apply m-0 mb-5 text-center text-[0.72rem] uppercase tracking-wider;
 }
 
 .company-form__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 24px;
+  @apply grid grid-cols-2 gap-y-5 gap-x-6;
 }
 
+/* ✅ Esta clase de utilidad BEM se conserva para controlar los inputs de ancho completo */
 .company-form__full {
-  grid-column: 1 / -1;
+  @apply col-span-full;
 }
 
 .company-form__actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 36px;
-  flex-wrap: wrap;
+  @apply flex justify-center gap-4 mt-9 flex-wrap;
 }
 
+/* 🎯 Botones estandarizados B2B */
+/* Cambiado py-3.5 a py-[14px] en el motor v4 */
 .company-form__actions button {
-  min-height: 3rem;
-  min-width: 240px;
-  border: 0;
-  border-radius: 999px 999px 999px 0;
-  padding: 0.88rem 2.4rem;
-  background: #df0000;
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.86rem;
-  font-weight: 900;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
+  @apply min-h-[3rem] min-w-[240px] border-0 rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none py-[14px] px-9 bg-disnal-red text-white cursor-pointer text-[0.86rem] font-black tracking-[0.25em] uppercase transition-all duration-150;
 }
 
-.company-form__actions button:first-child {
-  background: transparent;
-  border: 1px solid #fff;
+/* Botón secundario ("Atrás") dinámico */
+.company-form__actions button[type="button"] {
+  @apply bg-transparent border border-current text-current;
 }
 
+/* 📱 RESPONSIVO NATIVO INTEGRADO */
 @media (max-width: 700px) {
   .company-form__grid {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
+  }
+  .company-form__actions button {
+    @apply w-full;
   }
 }
