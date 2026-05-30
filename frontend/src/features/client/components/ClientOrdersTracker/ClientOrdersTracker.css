@@ -113,3 +113,26 @@
   font-size: 0.875rem;
   font-style: italic;
 }
+/* ==========================================
+   RESPONSIVE TRACKER
+========================================== */
+
+@media (max-width: 768px) {
+
+  .client-orders-tracker__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .client-orders-tracker__search-wrapper {
+    max-width: 100%;
+  }
+
+  .client-orders-tracker__filter-wrapper {
+    width: 100%;
+  }
+
+  .client-orders-tracker__select-filter {
+    width: 100%;
+  }
+}

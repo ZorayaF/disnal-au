@@ -470,3 +470,73 @@
   background-color: #d1d5db;
   cursor: not-allowed;
 }
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1024px) {
+  .client-order-card__header {
+    padding: 1rem;
+  }
+
+  .client-order-card__body {
+    padding: 1rem;
+  }
+
+  .client-order-card__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .client-order-card__notify-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .client-order-card__notify-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+  .client-order-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .client-order-card__header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .client-order-card__date-zone {
+    text-align: left;
+  }
+
+  .client-order-card__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .client-order-card__col {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .client-order-card__stepper {
+    padding-bottom: .5rem;
+  }
+
+  .client-order-card__notify-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .client-order-card__notify-banner {
+    text-align: left;
+  }
+}
