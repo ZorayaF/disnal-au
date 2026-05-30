@@ -1,20 +1,7 @@
-// backend/controllers/authClienteController.js
 import bcrypt from "bcryptjs";
 import db from "../config/db.js";
 
 /**
- * Registro de un nuevo Cliente Corporativo
- */
-export const registrarCliente = async (req, res) => {
-  const { nit_ruc, nombre_empresa, correo, password, telefono } = req.body;
-
-  // Validación básica de campos obligatorios
-  if (!nit_ruc || !nombre_empresa || !correo || !password || !telefono) {
-    return res
-      .status(400)
-      .json({ error: "Todos los campos son obligatorios." });
-  }
-
  * Registro de un nuevo Cliente Corporativo con Validación de NIT (Modo B2B)
  */
 export const registrarCliente = async (req, res) => {
@@ -53,11 +40,6 @@ export const registrarCliente = async (req, res) => {
       .get(nit_ruc, correo);
 
     if (clienteExistente) {
-      return res
-        .status(400)
-        .json({
-          error: "El NIT/RUC o el correo empresarial ya están registrados.",
-        });
       return res.status(400).json({
         error:
           "El NIT/RUC o el correo empresarial ya están registrados en nuestra red de distribuidores.",
@@ -68,25 +50,6 @@ export const registrarCliente = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // 3. Insertar el cliente en la base de datos SQLite relacional
-    // Nota: Por defecto el estado es 'Pendiente' si el admin debe aprobarlo, o puedes cambiarlo a 'Aprobado'
-    const stmt = db.prepare(`
-      INSERT INTO clientes (nit_ruc, nombre_empresa, correo, password_hash, telefono, estado)
-      VALUES (?, ?, ?, ?, ?, 'Aprobado')
-    `);
-
-    stmt.run(nit_ruc, nombre_empresa, correo, passwordHash, telefono);
-
-    res
-      .status(21)
-      .json({
-        mensaje: "Empresa registrada con éxito. Ya puedes iniciar sesión.",
-      });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "Error interno del servidor al registrar el cliente." });
     // 3. Insertar el cliente en la base de datos SQLite con estado 'Pendiente' por defecto
     const stmt = db.prepare(`
       INSERT INTO clientes (nit_ruc, nombre_empresa, correo, password_hash, telefono, direccion, ciudad, url_nit, estado)
@@ -119,7 +82,6 @@ export const registrarCliente = async (req, res) => {
 };
 
 /**
- * Inicio de Sesión (Login) del Cliente Corporativo
  * Inicio de Sesión (Login) del Cliente Corporativo con Control de Acceso B2B
  */
 export const loginCliente = async (req, res) => {
@@ -136,17 +98,6 @@ export const loginCliente = async (req, res) => {
       .get(correo);
 
     if (!cliente) {
-      return res.status(400).json({ error: "Credenciales inválidas." });
-    }
-
-    // 2. Validar que la cuenta no esté suspendida o pendiente de aprobación
-    if (cliente.estado !== "Aprobado") {
-      return res
-        .status(403)
-        .json({
-          error:
-            "Tu cuenta empresarial está pendiente de aprobación por el administrador.",
-        });
       return res
         .status(400)
         .json({ error: "Credenciales corporativas inválidas." });
@@ -174,10 +125,6 @@ export const loginCliente = async (req, res) => {
     );
 
     if (!passwordCorrecto) {
-      return res.status(400).json({ error: "Credenciales inválidas." });
-    }
-
-    // 4. Responder con los datos públicos del cliente para guardarlos en el Contexto de React
       return res
         .status(400)
         .json({ error: "Credenciales corporativas inválidas." });
@@ -191,13 +138,6 @@ export const loginCliente = async (req, res) => {
         nombre_empresa: cliente.nombre_empresa,
         nit_ruc: cliente.nit_ruc,
         correo: cliente.correo,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "Error interno en el servidor durante el login." });
         direccion: cliente.direccion,
         ciudad: cliente.ciudad,
       },

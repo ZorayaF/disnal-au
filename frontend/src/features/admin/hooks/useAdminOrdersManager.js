@@ -17,8 +17,6 @@ export const useAdminOrdersManager = () => {
   const [comentarios, setComentarios] = useState("");
   const [procesando, setProcesando] = useState(false);
 
-  // Segmentación optimizada de datos usando useMemo
-  const pedidosActivos = useMemo(() => {
   // 🎯 NUEVO: Mover el estado de precios de productos al manager para persistencia limpia
   const [preciosProductos, setPreciosProductos] = useState({});
 

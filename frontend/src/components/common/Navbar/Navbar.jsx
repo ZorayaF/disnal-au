@@ -1,18 +1,4 @@
 import { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
-import { CartContext } from "@context/CartContext";
-import "./Navbar.css";
-
-const LOGO_SRC = "/assets/images/logo disnal.png";
-
-// Elementos base de navegación común
-const BASE_NAV_ITEMS = [
-  { label: "Inicio", to: "/", end: true },
-  { label: "Catálogo", to: "/catalog" },
-  { label: "Cotización", to: "/cart", isCart: true },
-  { label: "Asesoría", to: "/consulting" },
-  { label: "Legal", to: "/legal" },
-];
 import { NavLink, useLocation } from "react-router-dom";
 import { CartContext } from "@context/CartContext";
 import { AuthContext } from "@context/AuthContext";
@@ -50,18 +36,6 @@ export const Navbar = () => {
     { label: "Asesoría", to: "/consulting" },
     { label: "Legal", to: "/legal" },
   ];
-
-  // 🔌 CONEXIÓN AUTH (Simulada): Cuando conectes useAuthLoginCliente, estas variables
-  // vendrán de tu Contexto global. Por ahora, las dejamos listas para simular la sesión.
-  const clienteAutenticado = true; // Cambia a false para probar cómo se ve sin iniciar sesión
-  const datosCliente = { nombre_empresa: "Empresa de Prueba B2B" };
-
-  // Construcción dinámica de items: Si está autenticado, inyectamos "Mi Panel B2B" al menú
-  const navItems = [...BASE_NAV_ITEMS];
-  if (clienteAutenticado) {
-    // Insertamos la nueva pestaña antes de Asesoría/Legal o al final si prefieres
-    navItems.splice(3, 0, { label: "Mi Panel B2B", to: "/mi-panel" });
-  }
 
   return (
     <header className="main-navbar" role="banner">

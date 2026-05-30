@@ -40,7 +40,6 @@ app.use("/uploads", express.static("public/uploads"));
 app.use("/api/clientes/auth", authClienteRoutes);
 app.use("/api/pedidos", pedidoRoutes);
 app.use("/api/admin/auth", authAdminRoutes);
-
 app.use("/api/admin/clientes", adminClienteRoutes);
 inicializarDB();
 

@@ -101,16 +101,12 @@ export const ClientProfileSettings = ({ clienteAutenticado }) => {
   return (
     <form
       onSubmit={guardarDatos}
-      className="space-y-4 max-w-xl bg-white p-6 border border-border-component rounded-lg shadow-sm"
       className="space-y-4 max-w-xl bg-white p-6 border border-border-component rounded-lg shadow-sm text-left"
     >
       <h2 className="text-xl font-bold text-text-main">
         🏢 Configuración del Cliente Corporativo
       </h2>
 
-      {guardado && (
-        <div className="bg-green-50 border border-green-200 text-green-700 p-2 text-sm rounded">
-          ¡Datos de envío y fiscales actualizados correctamente en el CRM!
       {mensajeFeedback.texto && (
         <div
           className={`p-2.5 text-sm rounded border ${
@@ -157,7 +153,6 @@ export const ClientProfileSettings = ({ clienteAutenticado }) => {
             className="w-full p-2 bg-gray-50 border rounded text-gray-500 cursor-not-allowed"
           />
         </div>
-        <hr className="col-span-2 my-2" />
 
         <hr className="col-span-2 my-2" />
 
