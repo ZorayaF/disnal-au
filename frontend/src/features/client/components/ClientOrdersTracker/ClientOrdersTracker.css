@@ -2,69 +2,27 @@
 .client-orders-tracker {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 /* ── TOOLBAR ─────────────────────────────────────────── */
 .client-orders-tracker__toolbar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
-}
-
-@media (min-width: 640px) {
-  .client-orders-tracker__toolbar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
+  flex-wrap: wrap;
 }
 
 /* Search */
 .client-orders-tracker__search-wrapper {
   position: relative;
   flex: 1;
-  max-width: 26rem;
+  min-width: 220px;
+  max-width: 28rem;
 }
 
 .client-orders-tracker__search-icon {
-  position: absolute;
-  left: 0.875rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9ca3af;
-  pointer-events: none;
-  width: 16px;
-  height: 16px;
-}
-
-.client-orders-tracker__input-search {
-  width: 100%;
-  padding: 0.625rem 0.875rem 0.625rem 2.5rem;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  background: #fff;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  color: #111827;
-}
-
-.client-orders-tracker__input-search::placeholder {
-  color: #9ca3af;
-}
-
-.client-orders-tracker__input-search:focus {
-  border-color: #e30613;
-  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.1);
-}
-
-/* Filter */
-.client-orders-tracker__filter-wrapper {
-  position: relative;
-}
-
-.client-orders-tracker__filter-icon {
   position: absolute;
   left: 0.875rem;
   top: 50%;
@@ -75,17 +33,56 @@
   height: 15px;
 }
 
-.client-orders-tracker__select-filter {
-  appearance: none;
-  padding: 0.625rem 2.5rem 0.625rem 2.5rem;
+.client-orders-tracker__input-search {
+  width: 100%;
+  padding: 0.6rem 0.875rem 0.6rem 2.4rem;
   border: 1.5px solid #e5e7eb;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.825rem;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+.client-orders-tracker__input-search::placeholder {
+  color: #9ca3af;
+}
+
+.client-orders-tracker__input-search:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.08);
+}
+
+/* Filter */
+.client-orders-tracker__filter-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.client-orders-tracker__filter-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+  width: 13px;
+  height: 13px;
+}
+
+.client-orders-tracker__select-filter {
+  appearance: none;
+  padding: 0.6rem 2.5rem 0.6rem 2.35rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.825rem;
   background-color: #fff;
   cursor: pointer;
   outline: none;
   color: #374151;
-  font-weight: 500;
+  font-weight: 600;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.875rem center;
@@ -94,7 +91,7 @@
 
 .client-orders-tracker__select-filter:focus {
   border-color: #e30613;
-  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.1);
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.08);
 }
 
 /* ── LIST ───────────────────────────────────────────── */
@@ -113,12 +110,9 @@
   font-size: 0.875rem;
   font-style: italic;
 }
-/* ==========================================
-   RESPONSIVE TRACKER
-========================================== */
 
-@media (max-width: 768px) {
-
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 640px) {
   .client-orders-tracker__toolbar {
     flex-direction: column;
     align-items: stretch;
@@ -126,10 +120,6 @@
 
   .client-orders-tracker__search-wrapper {
     max-width: 100%;
-  }
-
-  .client-orders-tracker__filter-wrapper {
-    width: 100%;
   }
 
   .client-orders-tracker__select-filter {

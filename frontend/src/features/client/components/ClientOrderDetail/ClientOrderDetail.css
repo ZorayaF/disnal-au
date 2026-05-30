@@ -1,186 +1,167 @@
-.client-order-detail {
-  margin-top: 1rem;
+/* ClientOrderDetail.css */
+
+.cod {
+  margin-top: 0.5rem;
   background: #fff;
-  border: 1px solid #ececec;
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-  animation: slideDown .25s ease;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.625rem;
+  padding: 1.25rem;
+  animation: cod-slide-in 0.2s ease;
 }
 
-/* =======================================
-   TITULO
-======================================= */
+@keyframes cod-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-.client-order-detail__title {
+/* Title */
+.cod__title {
   display: flex;
   align-items: center;
-  gap: .75rem;
-
-  font-size: 1rem;
-  font-weight: 700;
+  gap: 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 800;
   color: #374151;
-
-  margin-bottom: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: .03em;
+  letter-spacing: 0.04em;
+  margin: 0 0 1.25rem;
 }
 
-/* =======================================
-   TABLA
-======================================= */
+.cod__title-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
-.client-order-detail__table {
+.cod__title-icon svg {
+  width: 14px;
+  height: 14px;
+  color: #e30613;
+}
+
+/* Table */
+.cod__table-wrap {
+  overflow-x: auto;
+}
+
+.cod__table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.client-order-detail__table th {
+.cod__table th {
   text-align: left;
-  padding: 1rem .75rem;
-
+  padding: 0.75rem;
   color: #6b7280;
-  font-size: .95rem;
+  font-size: 0.78rem;
   font-weight: 700;
-
-  border-bottom: 2px solid #ececec;
+  border-bottom: 2px solid #f3f4f6;
 }
 
-.client-order-detail__table td {
-  padding: 1rem .75rem;
-  border-bottom: 1px solid #f1f5f9;
+.cod__th-right {
+  text-align: right !important;
+}
+
+.cod__table td {
+  padding: 0.875rem 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.825rem;
   color: #111827;
 }
 
-.client-order-detail__table tbody tr:hover {
+.cod__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cod__table tbody tr:hover {
   background: #fafafa;
 }
 
-/* =======================================
-   BADGE PRESENTACION
-======================================= */
-
-.client-order-detail__badge-pres {
-  background: rgba(227, 6, 19, .08);
-  color: #e30613;
-
-  padding: 5px 12px;
-  border-radius: 999px;
-
-  font-size: .75rem;
-  font-weight: 600;
-}
-
-/* =======================================
-   TEXTOS
-======================================= */
-
-.text-right {
+.cod__td-right {
   text-align: right;
 }
 
-.font-bold {
+.cod__td-bold {
   font-weight: 700;
 }
 
-.client-order-detail__quote {
-  color: #b45309;
+/* Badge */
+.cod__badge-pres {
+  background: rgba(227, 6, 19, 0.08);
+  color: #e30613;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* Quote */
+.cod__quote {
+  color: #d97706;
   font-style: italic;
-  font-size: .85rem;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
-/* =======================================
-   RESUMEN FINANCIERO
-======================================= */
-
-.client-order-detail__summary {
-  margin-top: 1.5rem;
+/* Summary */
+.cod__summary {
+  margin-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 1rem;
 }
 
-.client-order-detail__summary-top {
+.cod__summary-top {
   display: flex;
   justify-content: flex-end;
   gap: 2rem;
-
-  padding-bottom: 1rem;
+  padding-bottom: 0.75rem;
 }
 
-.client-order-detail__summary-item {
-  font-size: 1rem;
+.cod__summary-item {
+  font-size: 0.825rem;
   color: #374151;
 }
 
-.client-order-detail__summary-item strong {
+.cod__summary-item strong {
   color: #111827;
 }
 
-.client-order-detail__summary-bottom {
-  border-top: 1px solid #ececec;
-  padding-top: 1rem;
-
+.cod__summary-bottom {
   display: flex;
   justify-content: flex-end;
 }
 
-.client-order-detail__total {
-  font-size: 1.25rem;
+.cod__total {
+  font-size: 1.1rem;
   font-weight: 800;
-  color: #ff3c3c;
-}
-
-.client-order-detail__total span {
   color: #e30613;
 }
 
-.client-order-detail__pending {
+.cod__total span {
+  color: #e30613;
+}
+
+.cod__pending-msg {
   width: 100%;
   text-align: center;
-
-  padding: .85rem;
-
-  background: rgba(227, 6, 19, .05);
-
-  border-radius: 10px;
-
+  padding: 0.75rem;
+  background: rgba(227, 6, 19, 0.04);
+  border-radius: 0.5rem;
   color: #6b7280;
+  font-size: 0.78rem;
   font-style: italic;
 }
 
-/* =======================================
-   RESPONSIVE
-======================================= */
-
-@media (max-width: 768px) {
-
-  .client-order-detail {
-    overflow-x: auto;
-  }
-
-  .client-order-detail__table {
-    min-width: 700px;
-  }
-
-  .client-order-detail__summary-top {
+/* Responsive */
+@media (max-width: 640px) {
+  .cod__summary-top {
     flex-direction: column;
     align-items: flex-end;
-    gap: .5rem;
-  }
-
-  .client-order-detail__summary-bottom {
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    gap: 0.4rem;
   }
 }
