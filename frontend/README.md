@@ -9,18 +9,57 @@ Esta es la capa del cliente de la plataforma Disnal-AU, enfocada en ofrecer una 
 - **Tailwind CSS** (v4.2.4): Framework de estilos basado en tokens semánticos de diseño.
 - **React Router DOM**: Manejo de enrutamiento dinámico y protección de vistas.
 
-## Estructura de Directorios
+## Estructura del Proyecto
 
-El proyecto adopta una arquitectura modular escalable apoyada en **Alias de Vite**:
+El proyecto sigue una arquitectura modular orientada a dominios o características (**Feature-Driven Development**), complementada con componentes globales reutilizables y un manejo centralizado de estados (Context). A continuación se describe el propósito de las carpetas principales en el directorio `src/`:
 
-- `src/assets/`: Recursos estáticos, logotipos y multimedia base.
-- `src/components/ui/`: Componentes atómicos e interactivos puros (Ej: `Button.jsx`, `InputField.jsx`). Acceso directo vía alias `@components/ui`.
-- `src/components/sections/`: Secciones compuestas de la interfaz (Ej: `AdminOverview.jsx`, `ImageManager.jsx`).
-- `src/context/`: Estado global de la aplicación (`AuthContext.jsx` para persistencia de sesiones).
-- `src/pages/`: Vistas de alto nivel (Catálogo, Home, Login, AdminDashboard).
-- `src/router/`: Configuración de caminos de navegación y lógica de `ProtectedRoute`.
-- `src/services/`: Capa de abstracción de red (Peticiones HTTP `fetch` hacia el servidor).
+```text
+src/
+├── components/          # Componentes globales reutilizables (Átomos y Moléculas)
+│   ├── common/          # Componentes del layout principal (Navbar, Footer, etc.)
+│   ├── shared/          # Componentes compartidos de nivel medio (Tarjetas, Widgets)
+│   └── ui/              # Elementos básicos de UI atómica (Botones, Inputs, Textos)
+├── features/            # Módulos encapsulados por dominio de negocio (Core)
+│   ├── admin/           # Gestión de productos, imágenes, pedidos y chat de soporte
+│   ├── auth/            # Formularios y lógica de acceso y registro de clientes
+│   ├── cart/            # Flujo del carrito de compras, Checkout y Stepper de pago
+│   ├── catalog/         # Grilla de productos, filtros avanzados y buscador
+│   ├── client/          # Panel del cliente, rastreador de pedidos y configuración de perfil
+│   ├── legal/           # Páginas estáticas de términos, condiciones y políticas
+│   ├── marketing/       # Landing page (Hero, Propuestas de valor, Galería de fábrica)
+│   └── support/         # Canales de atención, horarios de negocio y chats activos
+├── pages/               # Vistas principales de la aplicación asociadas al Router
+├── context/             # Proveedores de estado global de React (Auth, Cart, Chat)
+├── router/              # Configuración de rutas de la app y rutas protegidas (Middlwares)
+├── services/            # Módulos de comunicación y peticiones HTTP hacia el Backend (API)
+├── models/              # Abstracciones o esquemas de datos cliente (Company, Product)
+└── config/              # Parámetros y variables de entorno del cliente de rastreador
 
-## Rutas Protegidas
+```
 
-El frontend cuenta con un escudo perimetral (`ProtectedRoute`). Si un usuario intenta acceder manualmente a la ruta `/admin` sin un token JWT válido almacenado en el navegador, el sistema lo expulsará automáticamente hacia la pantalla de `/login`.
+### Detalles de los Módulos Clave
+
+#### 1. Arquitectura de Componentes (`/components`)
+
+- **`ui/`**: Componentes puros de interfaz sin lógica de negocio, diseñados para ser altamente reutilizables y customizables mediante props (ej. `Button.jsx`, `InputField.jsx`).
+- **`shared/`**: Bloques modulares visuales que combinan múltiples elementos atómicos de UI (ej. `FeatureCard.jsx`, `MetricCard.jsx`).
+
+#### 2. Encapsulación por Características (`/features`)
+
+Cada feature está diseñada para ser independiente y contiene sus propios:
+
+- **`components/`**: Elementos de vista exclusivos para este dominio.
+- **`hooks/`**: Custom Hooks de React que extraen y aíslan la lógica de negocio, peticiones y manejo de formularios fuera de los archivos `.jsx` de la vista.
+
+#### 3. Estados Globales (`/context`)
+
+- **`AuthContext.jsx`**: Controla el estado de inicio de sesión, roles (Admin vs Cliente) y persistencia del token.
+- **`CartContext.jsx`**: Administra los productos seleccionados, cantidades, cálculos de totales y limpieza del carrito.
+- **`ChatContext.jsx`**: Controla la comunicación bidireccional en tiempo real para soporte.
+
+#### 4. Conectores de Red (`/services`)
+
+Centraliza los servicios que consumen tus endpoints del backend de forma limpia:
+
+- `authService.js`: Peticiones de login y registro.
+- `productService.js`: Consumo de la API para catálogo y gestión de inventario.
