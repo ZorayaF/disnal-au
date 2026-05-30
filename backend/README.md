@@ -2,6 +2,38 @@
 
 Este es el motor de servicios y persistencia de datos de la plataforma Disnal-AU. Se encarga de procesar la seguridad, el almacenamiento físico de imágenes y el ciclo de vida del inventario.
 
+---
+
+## Funcionalidades Detalladas del Sistema
+
+El backend está diseñado bajo una arquitectura modular y desacoplada que resuelve de manera eficiente la lógica de negocio B2B, la seguridad de accesos y la persistencia relacional. Sus capacidades principales incluyen:
+
+### 1. Gestión de Identidad y Autenticación Segura (Auth)
+
+- **Separación de Roles (RBAC):** Sistema dual de autenticación que segmenta de forma aislada las rutas y accesos para **Administradores del CRM** y **Clientes Corporativos**.
+- **Criptografía de Alto Nivel:** Almacenamiento seguro de contraseñas mediante el algoritmo de hash adaptativo `bcryptjs`, impidiendo la persistencia de credenciales en texto plano.
+- **Filtro Comercial Anti-Spam (Onboarding B2B):** Durante el registro, los clientes deben adjuntar obligatoriamente su documentación comercial (`nit`). Las cuentas se crean en estado `Pendiente` y no pueden operar comercialmente hasta que un administrador las evalúe y apruebe en el CRM.
+
+### 2. Motor de Persistencia Relacional y Semillas (SQLite3)
+
+- **Integridad Estricta de Datos:** Implementación de restricciones relacionales a través de `better-sqlite3`, forzando el uso de llaves foráneas (`foreign_keys = ON`).
+- **Reglas de Borrado Automatizadas:**
+  - **`ON DELETE CASCADE`** en los detalles del pedido, garantizando que si una orden es removida, sus líneas internas no dejen registros huérfanos.
+  - **`ON DELETE RESTRICT`** en clientes, protegiendo el histórico financiero y de auditoría de la base de datos contra eliminaciones accidentales.
+- **Aprovisionamiento Automático (Seeders):** Al iniciar la aplicación, el servidor verifica la existencia de datos y realiza una auto-inyección segura de infraestructura base: credenciales del administrador inicial, perfiles B2B de pruebas y el catálogo maestro de insumos iniciales.
+
+### 3. Procesamiento Multimedia y Gestión del Almacenamiento
+
+- **Ingesta Controlada de Archivos:** Integración del middleware `Multer` para interceptar de forma asíncrona la carga de imágenes en el disco del servidor.
+- **Carga Simultánea Eficiente:** Endpoint dedicado de alta capacidad capaz de procesar, renombrar y mapear dinámicamente hasta 5 imágenes en una sola petición HTTP para la creación expedita de productos.
+- **Resolución Dinámica de Recursos:** Mapeo automatizado que transforma los metadatos de los archivos del sistema de archivos local en URLs absolutas públicas y accesibles desde el Frontend.
+
+### 4. Ciclo de Vida del Pedido y Logística B2B
+
+- **Snapshot de Precios Históricos:** La tabla de detalles de la orden almacena un campo `precio_unitario` flotante (`REAL`) que congela el costo del producto al momento exacto de la compra, aislando la transacción de futuros cambios o fluctuaciones en el catálogo maestro.
+- **Cálculo y Gestión de Fletes:** Soporte para múltiples modalidades de entrega (`Recogida`, `Contraentrega`, `Gestionado por Distribuidora`). Permite al administrador computar y actualizar costos de envío en tiempo real basados en la ciudad destino tras cotizar externamente con transportadoras.
+- **Pasarela de Verificación Manual:** Los clientes pueden actualizar sus pedidos adjuntando un comprobante de pago digital. El administrador audita visualmente el archivo desde el CRM y realiza la transición de estados de la orden (ej: de _Pendiente_ a _Aprobado_ o _Despachado_).
+
 ## Tecnologías Utilizadas
 
 ### Núcleo del Servidor y Redes
