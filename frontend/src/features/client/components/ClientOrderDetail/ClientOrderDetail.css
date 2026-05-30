@@ -1,68 +1,184 @@
 .client-order-detail {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  padding: 1rem;
   margin-top: 1rem;
-  animation: slideDown 0.2s ease-out;
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  animation: slideDown .25s ease;
 }
 
+/* =======================================
+   TITULO
+======================================= */
+
 .client-order-detail__title {
-  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+
+  font-size: 1rem;
+  font-weight: 700;
+  color: #374151;
+
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #4b5563;
-  margin-bottom: 0.75rem;
+  letter-spacing: .03em;
 }
+
+/* =======================================
+   TABLA
+======================================= */
 
 .client-order-detail__table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
-  text-align: left;
 }
 
 .client-order-detail__table th {
-  padding: 0.5rem;
+  text-align: left;
+  padding: 1rem .75rem;
+
   color: #6b7280;
-  font-weight: 600;
-  border-bottom: 2px solid #e5e7eb;
+  font-size: .95rem;
+  font-weight: 700;
+
+  border-bottom: 2px solid #ececec;
 }
 
 .client-order-detail__table td {
-  padding: 0.65rem 0.5rem;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 1rem .75rem;
+  border-bottom: 1px solid #f1f5f9;
   color: #111827;
 }
 
-.client-order-detail__badge-pres {
-  background-color: #e0e7ff;
-  color: #3730a3;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
+.client-order-detail__table tbody tr:hover {
+  background: #fafafa;
 }
 
-.client-order-detail__loading {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-style: italic;
-  padding: 1rem 0;
+/* =======================================
+   BADGE PRESENTACION
+======================================= */
+
+.client-order-detail__badge-pres {
+  background: rgba(227, 6, 19, .08);
+  color: #e30613;
+
+  padding: 5px 12px;
+  border-radius: 999px;
+
+  font-size: .75rem;
+  font-weight: 600;
 }
+
+/* =======================================
+   TEXTOS
+======================================= */
 
 .text-right {
   text-align: right;
 }
+
 .font-bold {
   font-weight: 700;
+}
+
+.client-order-detail__quote {
+  color: #b45309;
+  font-style: italic;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+/* =======================================
+   RESUMEN FINANCIERO
+======================================= */
+
+.client-order-detail__summary {
+  margin-top: 1.5rem;
+}
+
+.client-order-detail__summary-top {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+
+  padding-bottom: 1rem;
+}
+
+.client-order-detail__summary-item {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.client-order-detail__summary-item strong {
+  color: #111827;
+}
+
+.client-order-detail__summary-bottom {
+  border-top: 1px solid #ececec;
+  padding-top: 1rem;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+.client-order-detail__total {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ff3c3c;
+}
+
+.client-order-detail__total span {
+  color: #e30613;
+}
+
+.client-order-detail__pending {
+  width: 100%;
+  text-align: center;
+
+  padding: .85rem;
+
+  background: rgba(227, 6, 19, .05);
+
+  border-radius: 10px;
+
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* =======================================
+   RESPONSIVE
+======================================= */
+
+@media (max-width: 768px) {
+
+  .client-order-detail {
+    overflow-x: auto;
+  }
+
+  .client-order-detail__table {
+    min-width: 700px;
+  }
+
+  .client-order-detail__summary-top {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .5rem;
+  }
+
+  .client-order-detail__summary-bottom {
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
