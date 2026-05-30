@@ -1,33 +1,36 @@
-.page-header {
+/* src/components/shared/PageHeader/PageHeader.css */
+@reference "@css";
+
+.disnal-page-header {
+  @apply bg-white text-center font-sans border-b border-black/[0.04];
   padding: clamp(34px, 5vw, 58px) 1rem 26px;
-  text-align: center;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
-  background: #fff;
 }
 
-.page-header h1 {
-  margin: 0;
-  color: #151515;
+.disnal-page-header__inner {
+  @apply max-w-[980px] w-full my-0 mx-auto relative z-10;
+}
+
+.disnal-page-header__title {
+  @apply m-0 font-medium leading-tight uppercase text-disnal-black;
   font-size: clamp(1.35rem, 3.8vw, 2.25rem);
-  font-weight: 500;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
+  letter-spacing: 0.42em; /* Mantenemos el espaciado ancho elegante */
 }
 
-.page-header p {
-  margin: 22px auto 0;
-  max-width: 760px;
-  color: #333;
-  font-size: 0.82rem;
-  line-height: 1.6;
+.disnal-page-header__subtitle {
+  @apply mt-[22px] mx-auto mb-0 max-w-[760px] text-[#333] text-[0.82rem] leading-[1.6];
   letter-spacing: 0.18em;
 }
 
-.page-header span {
-  display: block;
-  margin-top: 8px;
-  color: #8a8a8a;
-  font-size: 0.52rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+.disnal-page-header__eyebrow {
+  @apply block mt-2 text-[#8a8a8a] text-[0.52rem] tracking-[0.24em] uppercase;
+}
+
+/* Conservamos la banda negra B2B por si el CRM o el Carrito la solicitan */
+.disnal-page-header__band {
+  /* Pasamos py-4.5 a padding de píxeles explícito [18px] para evitar que v4 rechace el decimal */
+  @apply mt-6 mx-[calc(50%-50vw)] mb-0 py-[18px] px-5 bg-disnal-black text-white text-center;
+}
+
+.disnal-page-header__band-title {
+  @apply m-0 text-[0.86rem] font-medium tracking-[0.34em] uppercase;
 }

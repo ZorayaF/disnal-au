@@ -1,87 +1,61 @@
+/* src/components/ui/InputField/InputField.css */
+@reference "@css";
+
 .disnal-field {
-  display: grid;
-  gap: 0.58rem;
-  width: 100%;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  @apply grid gap-2.5 w-full font-sans;
 }
 
 .disnal-field__label {
-  color: inherit;
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
+  @apply text-inherit text-[0.62rem] font-black tracking-[0.28em] uppercase font-sans;
 }
 
+.disnal-field__input-wrapper {
+  @apply relative w-full;
+}
+
+/* 🎯 El control nativo absorbe las propiedades estructurales fijas */
+/* Pasamos duration-160 a duration-[160ms] con corchetes explícitos para Tailwind v4 */
 .disnal-field__control {
-  width: 100%;
-  min-height: 2.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 5px;
-  background: #f8f8f8;
-  color: #111;
-  font: inherit;
-  font-size: 0.76rem;
-  line-height: 1.4;
-  padding: 0.78rem 1rem;
-  outline: none;
-  transition: border 160ms ease, box-shadow 160ms ease, background 160ms ease;
+  @apply w-full min-h-[2.65rem] border rounded-[5px] text-[0.76rem] leading-normal p-[0.78rem_1rem] outline-none transition-all duration-[160ms] ease-in-out font-sans;
 }
 
 select.disnal-field__control {
-  cursor: pointer;
+  @apply cursor-pointer;
 }
 
 textarea.disnal-field__control {
-  min-height: 8.8rem;
-  resize: vertical;
+  @apply min-h-[8.8rem] resize-y;
 }
 
 .disnal-field__control::placeholder {
-  color: #9b9b9b;
-  letter-spacing: 0.12em;
+  @apply text-[#9b9b9b] tracking-[0.12em];
 }
 
+/* 🎯 Estados dinámicos de enfoque unificados con el tema global */
 .disnal-field__control:focus {
-  background: #ffffff;
-  border-color: #e30613;
-  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.16);
+  @apply bg-white border-disnal-red shadow-[0_0_0_3px_rgba(227,6,19,0.16)];
 }
 
-.disnal-field__control[aria-invalid='true'] {
-  border-color: #e30613;
+/* 🚨 Manejo nativo del estado de error visual */
+.disnal-field__control[aria-invalid="true"] {
+  @apply border-disnal-red;
 }
 
 .disnal-field__error {
-  color: #ffb3b3;
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-}
-/* Wrapper para ícono */
-.disnal-field__input-wrapper {
-  position: relative;
-  width: 100%;
+  @apply text-[0.62rem] tracking-[0.08em] font-sans font-bold;
 }
 
+/* 🎯 Posicionamiento absoluto de los íconos de entrada */
 .disnal-field__icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: #e30613;
-  pointer-events: none;
-  flex-shrink: 0;
+  @apply absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-disnal-red pointer-events-none shrink-0 flex items-center justify-center;
 }
 
-/* Textarea: ícono alineado arriba */
+/* Alineación superior del ícono si el elemento es un bloque de texto largo */
 .disnal-field__input-wrapper--textarea .disnal-field__icon {
-  top: 14px;
-  transform: none;
+  @apply top-3.5 translate-y-0;
 }
 
-/* Padding extra cuando hay ícono */
-.disnal-field__input-wrapper .disnal-field__control {
-  padding-left: 2.4rem;
+/* ✅ Regla inteligente BEM: Cambiado pl-9.5 a pl-[38px] para un renderizado exacto y limpio */
+.disnal-field__input-wrapper--has-icon .disnal-field__control {
+  @apply pl-[38px];
 }

@@ -1,7 +1,10 @@
+// src/features/admin/components/AdminOrdersActive.jsx
+import React from "react";
 import { useAdminOrdersManager } from "@/features/admin/hooks/useAdminOrdersManager";
+import { InputField } from "@components/ui/InputField/InputField";
+import { Button } from "@components/ui/Button/Button";
 
 export const AdminOrdersActive = () => {
-  // 🎯 CONECTADO: Usamos el manager unificado que acabamos de optimizar
   const {
     cargandoPedidos,
     pedidosActivos,
@@ -18,256 +21,229 @@ export const AdminOrdersActive = () => {
     enviarResolucionAdmin,
   } = useAdminOrdersManager();
 
-  if (cargandoPedidos) return <p>Cargando órdenes entrantes del CRM...</p>;
+  if (cargandoPedidos) {
+    return (
+      <div className="text-center py-12 bg-white rounded-lg border border-disnal-line shadow-sm font-sans">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-disnal-red mx-auto mb-4"></div>
+        <p className="text-disnal-gray text-sm font-medium">
+          Cargando órdenes entrantes del CRM...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-      <h2>📥 Panel de Órdenes Entrantes (Acción Requerida)</h2>
+    <div className="flex flex-col gap-5 text-disnal-ink font-sans">
+      <h2 className="text-xl font-black text-disnal-black uppercase tracking-tight">
+        📥 Panel de Órdenes Entrantes (Acción Requerida)
+      </h2>
 
       {pedidosActivos.length === 0 ? (
-        <p style={{ color: "gray", fontStyle: "italic" }}>
-          No hay pedidos pendientes de revisión por el momento.
-        </p>
+        <div className="text-center py-12 bg-white rounded-lg border border-disnal-line shadow-sm">
+          <p className="text-disnal-gray text-sm italic">
+            No hay pedidos pendientes de revisión por el momento.
+          </p>
+        </div>
       ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            textAlign: "left",
-          }}
-        >
-          <thead>
-            <tr
-              style={{ background: "#f2f2f2", borderBottom: "2px solid #ccc" }}
-            >
-              <th style={{ padding: "10px" }}>ID Pedido</th>
-              <th style={{ padding: "10px" }}>Empresa Cliente</th>
-              <th style={{ padding: "10px" }}>Fecha</th>
-              <th style={{ padding: "10px" }}>Tipo Despacho</th>
-              <th style={{ padding: "10px" }}>Estado Actual</th>
-              <th style={{ padding: "10px" }}>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pedidosActivos.map((pedido) => {
-              // 🛡️ CAPA DEFENSIVA: Extraer la identidad corporativa sin importar el formato del JOIN del backend
-              const nombreCliente =
-                pedido.nombre_empresa ||
-                pedido.nombreEmpresa ||
-                pedido.cliente_nombre ||
-                "Empresa no identificada";
-
-              return (
-                <tr key={pedido.id} style={{ borderBottom: "1px solid #eee" }}>
-                  <td style={{ padding: "10px", fontSize: "14px" }}>
-                    <code>{String(pedido.id).substring(0, 8)}...</code>
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    <strong>{nombreCliente}</strong>
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    {pedido.fecha || "Reciente"}
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    <span
-                      style={{
-                        padding: "3px 8px",
-                        background:
-                          pedido.tipo_despacho === "Recogida"
-                            ? "#e6f4ea"
-                            : "#e8f0fe",
-                        color:
-                          pedido.tipo_despacho === "Recogida"
-                            ? "green"
-                            : "blue",
-                        borderRadius: "4px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {pedido.tipo_despacho || "Despacho General"}
-                    </span>
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    <span
-                      style={{
-                        fontWeight: "bold",
-                        color:
-                          pedido.estado === "Pago_En_Revision"
-                            ? "orange"
-                            : "#333",
-                      }}
-                    >
-                      {pedido.estado === "Pago_En_Revision"
-                        ? "💳 Pago en Revisión"
-                        : "⏳ Pendiente"}
-                    </span>
-                  </td>
-                  <td style={{ padding: "10px" }}>
-                    {/* 🎯 Cambiado al método del manager que inicializa los estados locales */}
-                    <button
-                      onClick={() => iniciarEvaluacion(pedido)}
-                      style={{ padding: "4px 8px", cursor: "pointer" }}
-                    >
-                      Evaluar
-                    </button>
-                  </td>
+        <div className="bg-white rounded-lg border border-disnal-line shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-disnal-black/[0.02] border-b-2 border-disnal-line text-disnal-gray text-xs font-black uppercase tracking-disnal-nav">
+                  <th className="p-4">ID Pedido</th>
+                  <th className="p-4">Empresa Cliente</th>
+                  <th className="p-4">Fecha</th>
+                  <th className="p-4">Tipo Despacho</th>
+                  <th className="p-4">Estado Actual</th>
+                  <th className="p-4 text-right">Acción</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y divide-disnal-line/40 text-sm text-disnal-ink">
+                {pedidosActivos.map((pedido) => {
+                  const nombreCliente =
+                    pedido.nombre_empresa ||
+                    pedido.nombreEmpresa ||
+                    pedido.cliente_nombre ||
+                    "Empresa no identificada";
+
+                  return (
+                    <tr
+                      key={pedido.id}
+                      className="hover:bg-disnal-black/[0.01] transition-colors"
+                    >
+                      <td className="p-4 font-mono text-xs text-disnal-ink/70">
+                        <code>{String(pedido.id).substring(0, 8)}...</code>
+                      </td>
+                      <td className="p-4 font-black text-disnal-black">
+                        {nombreCliente}
+                      </td>
+                      <td className="p-4 text-xs font-medium text-disnal-gray">
+                        {pedido.fecha || "Reciente"}
+                      </td>
+                      <td className="p-4">
+                        <span
+                          className={`
+                          inline-block px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-wider rounded-sm
+                          ${
+                            pedido.tipo_despacho === "Recogida"
+                              ? "bg-disnal-black text-white"
+                              : "bg-disnal-red/10 text-disnal-red border border-disnal-red/20"
+                          }
+                        `
+                            .trim()
+                            .replace(/\s+/g, " ")}
+                        >
+                          {pedido.tipo_despacho || "Despacho General"}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span
+                          className={`
+                          text-xs font-black uppercase tracking-wide
+                          ${pedido.estado === "Pago_En_Revision" ? "text-amber-600" : "text-disnal-gray"}
+                        `
+                            .trim()
+                            .replace(/\s+/g, " ")}
+                        >
+                          {pedido.estado === "Pago_En_Revision"
+                            ? "💳 Pago en Revisión"
+                            : "⏳ Pendiente"}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => iniciarEvaluacion(pedido)}
+                          className="shadow-none"
+                        >
+                          Evaluar
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
 
       {/* --- FORMULARIO DE EVALUACIÓN DETALLADA --- */}
       {pedidoSeleccionado && (
-        <div
-          style={{
-            border: "2px solid #333",
-            padding: "20px",
-            background: "#fdfdfd",
-            marginTop: "10px",
-            textAlign: "left",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3>🔍 Evaluando Pedido: {pedidoSeleccionado.id}</h3>
-            <button
+        <div className="border-2 border-disnal-black p-6 bg-white rounded shadow-disnal-deep space-y-6 mt-4">
+          <div className="flex justify-between items-center border-b border-disnal-line pb-4">
+            <h3 className="text-md font-black uppercase tracking-disnal-nav text-disnal-black">
+              🔍 Evaluando Pedido:{" "}
+              <span className="font-mono text-disnal-red">
+                {pedidoSeleccionado.id}
+              </span>
+            </h3>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={cerrarDetallePedido}
-              style={{
-                background: "red",
-                color: "white",
-                cursor: "pointer",
-                padding: "4px 8px",
-                border: "none",
-              }}
+              className="!text-disnal-red border-disnal-red/30 hover:bg-disnal-red/5"
             >
-              X Cerrar
-            </button>
+              ✕ Cerrar
+            </Button>
           </div>
 
-          {/* 🛡️ RESOLUCIÓN EN DETALLE: Fallback dinámico para datos de contacto */}
-          <p style={{ marginTop: "15px" }}>
-            <strong>Cliente:</strong>{" "}
-            {pedidoSeleccionado.nombre_empresa ||
-              pedidoSeleccionado.nombreEmpresa ||
-              "Comercio Afiliado"}
-            {pedidoSeleccionado.correo || pedidoSeleccionado.email
-              ? ` (${pedidoSeleccionado.correo || pedidoSeleccionado.email})`
-              : ""}
-          </p>
-          <p>
-            <strong>Identificación / NIT:</strong>{" "}
-            <code>
-              {pedidoSeleccionado.nit_ruc ||
-                pedidoSeleccionado.nit ||
-                "No adjunto"}
-            </code>
-          </p>
-          <p>
-            <strong>Notas de la Empresa:</strong>{" "}
-            {pedidoSeleccionado.necesidades_especificas ||
-              pedidoSeleccionado.comentarios ||
-              "Ninguna provista."}
-          </p>
+          {/* Ficha técnica e identidades de la orden */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm bg-disnal-black/[0.01] p-4 rounded border border-disnal-line/50">
+            <p>
+              <strong className="font-black uppercase text-xs text-disnal-gray block mb-0.5">
+                Cliente:
+              </strong>{" "}
+              <span className="font-bold text-disnal-black">
+                {pedidoSeleccionado.nombre_empresa ||
+                  pedidoSeleccionado.nombreEmpresa ||
+                  "Comercio Afiliado"}
+              </span>
+              {(pedidoSeleccionado.correo || pedidoSeleccionado.email) && (
+                <span className="text-xs text-disnal-gray block mt-0.5">
+                  {pedidoSeleccionado.correo || pedidoSeleccionado.email}
+                </span>
+              )}
+            </p>
+            <p>
+              <strong className="font-black uppercase text-xs text-disnal-gray block mb-0.5">
+                Identificación / NIT:
+              </strong>{" "}
+              <code className="font-mono text-xs bg-disnal-black/[0.04] px-1.5 py-0.5 rounded text-disnal-ink/90">
+                {pedidoSeleccionado.nit_ruc ||
+                  pedidoSeleccionado.nit ||
+                  "No adjunto"}
+              </code>
+            </p>
+            <p className="md:col-span-2 border-t border-disnal-line/40 pt-2 mt-1">
+              <strong className="font-black uppercase text-xs text-disnal-gray block mb-0.5">
+                Notas de la Empresa:
+              </strong>{" "}
+              <span className="text-disnal-ink/80 text-xs italic">
+                {pedidoSeleccionado.necesidades_especificas ||
+                  pedidoSeleccionado.comentarios ||
+                  "Ninguna provista."}
+              </span>
+            </p>
+          </div>
 
+          {/* Alertas logísticas de despacho */}
           {pedidoSeleccionado.tipo_despacho !== "Recogida" && (
-            <div
-              style={{
-                background: "#f0f4f8",
-                padding: "10px",
-                margin: "10px 0",
-                borderLeft: "4px solid #1d4ed8",
-              }}
-            >
-              <p style={{ margin: 0 }}>
-                <strong>Dirección Destino para Flete:</strong>{" "}
+            <div className="bg-disnal-black/[0.03] p-3 rounded-r border-l-4 border-disnal-black text-xs font-medium">
+              <p>
+                <strong className="font-black uppercase tracking-wider text-disnal-black mr-1">
+                  Dirección Destino para Flete:
+                </strong>{" "}
                 {pedidoSeleccionado.direccion_envio ||
                   pedidoSeleccionado.direccion ||
                   "Dirección Fiscal Base"}
-                {pedidoSeleccionado.ciudad_envio || pedidoSeleccionado.ciudad
-                  ? ` - (${pedidoSeleccionado.ciudad_envio || pedidoSeleccionado.ciudad})`
-                  : ""}
+                {(pedidoSeleccionado.ciudad_envio ||
+                  pedidoSeleccionado.ciudad) && (
+                  <span className="font-bold text-disnal-red">
+                    {` - (${pedidoSeleccionado.ciudad_envio || pedidoSeleccionado.ciudad})`}
+                  </span>
+                )}
               </p>
             </div>
           )}
 
+          {/* Comprobantes financieros por Multer */}
           {pedidoSeleccionado.url_comprobante && (
-            <div
-              style={{
-                margin: "15px 0",
-                background: "#fffbeb",
-                padding: "10px",
-                border: "1px solid #fef3c7",
-                borderRadius: "4px",
-              }}
-            >
-              <p style={{ color: "orange", margin: "0 0 5px 0" }}>
-                <strong>⚠️ El cliente ya subió un comprobante:</strong>
+            <div className="bg-amber-50 border border-amber-200 p-3 rounded text-xs">
+              <p className="text-amber-700 font-black uppercase tracking-wider mb-1.5">
+                ⚠️ El cliente ya subió un comprobante:
               </p>
               <a
                 href={`http://localhost:4000${pedidoSeleccionado.url_comprobante}`}
                 target="_blank"
                 rel="noreferrer"
-                style={{
-                  color: "blue",
-                  textDecoration: "underline",
-                  fontWeight: "bold",
-                }}
+                className="inline-flex items-center gap-1 font-black text-amber-900 hover:text-amber-700 underline uppercase tracking-wider"
               >
-                Ver Comprobante de Pago Adjunto
+                📄 Ver Comprobante de Pago Adjunto
               </a>
             </div>
           )}
 
-          <hr style={{ margin: "20px 0" }} />
-
           {/* 📦 SECCIÓN LOGÍSTICA B2B: LISTADO DE PRODUCTOS A COTIZAR */}
-          <div
-            style={{
-              background: "#f9f9f9",
-              padding: "15px",
-              borderRadius: "6px",
-            }}
-          >
-            <h4 style={{ margin: "0 0 15px 0" }}>
+          <div className="bg-disnal-black/[0.02] p-4 rounded-lg border border-disnal-line/60">
+            <h4 className="text-sm font-black uppercase tracking-disnal-nav text-disnal-black mb-3">
               📦 Productos Solicitados (Asignar Precios B2B)
             </h4>
 
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
+            <div className="flex flex-col gap-2.5">
               {pedidoSeleccionado.productos?.map((producto) => (
                 <div
                   key={producto.id_producto}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "10px",
-                    background: "#fff",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                  }}
+                  className="flex flex-col sm:flex-row justify-between sm:items-center p-3 bg-white border border-disnal-line/60 rounded shadow-2xs gap-3"
                 >
                   <div>
-                    <strong style={{ fontSize: "14px" }}>
+                    <strong className="text-sm font-black text-disnal-black">
                       {producto.nombre || "Producto de Catálogo"}
                     </strong>
-                    <p
-                      style={{
-                        margin: "4px 0 0 0",
-                        color: "#666",
-                        fontSize: "13px",
-                      }}
-                    >
+                    <p className="text-xs text-disnal-gray mt-0.5 font-medium">
                       Cantidad solicitada:{" "}
-                      <span style={{ fontWeight: "bold", color: "#333" }}>
+                      <span className="font-bold text-disnal-ink">
                         {producto.cantidad} und.
                       </span>{" "}
                       {producto.presentacion
@@ -276,21 +252,8 @@ export const AdminOrdersActive = () => {
                     </p>
                   </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                      gap: "4px",
-                    }}
-                  >
-                    <label
-                      style={{
-                        fontSize: "11px",
-                        color: "#555",
-                        fontWeight: "bold",
-                      }}
-                    >
+                  <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1.5">
+                    <label className="text-[10px] font-black uppercase tracking-wider text-disnal-gray whitespace-nowrap">
                       Precio Unitario ($):
                     </label>
                     <input
@@ -305,14 +268,15 @@ export const AdminOrdersActive = () => {
                           e.target.value,
                         )
                       }
-                      style={{
-                        padding: "6px",
-                        width: "120px",
-                        textAlign: "right",
-                      }}
                       disabled={
                         pedidoSeleccionado.estado === "Pago_En_Revision"
                       }
+                      className={`
+                        w-32 p-1.5 text-right font-mono text-sm border rounded bg-[#f8f8f8] text-disnal-ink border-black/20
+                        focus:outline-hidden focus:border-disnal-black transition-all disabled:opacity-60 disabled:cursor-not-allowed
+                      `
+                        .trim()
+                        .replace(/\s+/g, " ")}
                     />
                   </div>
                 </div>
@@ -320,99 +284,72 @@ export const AdminOrdersActive = () => {
             </div>
           </div>
 
-          <hr style={{ margin: "20px 0" }} />
+          {/* Formulario Logístico Estructurado */}
+          <div className="max-w-md space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <InputField
+                type="number"
+                label="Asignar Costo de Flete (Opcional):"
+                value={flete}
+                onChange={(e) => setFlete(e.target.value)}
+                placeholder="Ej: 45000"
+                disabled={
+                  pedidoSeleccionado.tipo_despacho === "Recogida" ||
+                  pedidoSeleccionado.estado === "Pago_En_Revision"
+                }
+                theme="light"
+              />
+              {pedidoSeleccionado.tipo_despacho === "Recogida" && (
+                <span className="inline-block text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded uppercase tracking-wider">
+                  * El cliente recoge en bodega. Flete bloqueado en $0.
+                </span>
+              )}
+            </div>
 
-          {/* Formulario Logístico de Gestión */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              maxWidth: "400px",
-            }}
-          >
-            <label>
-              <strong>Asignar Costo de Flete (Opcional):</strong>
-            </label>
-            <input
-              type="number"
-              value={flete}
-              onChange={(e) => setFlete(e.target.value)}
-              placeholder="Ej: 45000"
-              style={{ padding: "8px" }}
-              disabled={
-                pedidoSeleccionado.tipo_despacho === "Recogida" ||
-                pedidoSeleccionado.estado === "Pago_En_Revision"
-              }
-            />
-            {pedidoSeleccionado.tipo_despacho === "Recogida" && (
-              <span style={{ fontSize: "12px", color: "green" }}>
-                * El cliente recoge en bodega. Flete bloqueado en $0.
-              </span>
-            )}
-
-            <label style={{ marginTop: "10px" }}>
-              <strong>Comentarios o Instrucciones para el Cliente:</strong>
-            </label>
-            <textarea
+            <InputField
+              as="textarea"
+              label="Comentarios o Instrucciones para el Cliente:"
               value={comentarios}
               onChange={(e) => setComentarios(e.target.value)}
               placeholder="Ej: Instrucciones de pago o motivo de rechazo."
               rows={3}
-              style={{ padding: "8px" }}
+              theme="light"
             />
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+            {/* Resoluciones Operativas */}
+            <div className="flex gap-3 pt-2">
               {pedidoSeleccionado.estado === "Pago_En_Revision" ? (
-                <button
+                <Button
+                  variant="primary"
                   onClick={() => enviarResolucionAdmin("Completado")}
                   disabled={procesando}
-                  style={{
-                    background: "green",
-                    color: "white",
-                    padding: "10px",
-                    cursor: "pointer",
-                    border: "none",
-                    fontWeight: "bold",
-                  }}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 shadow-none"
                 >
                   {procesando
                     ? "Procesando..."
                     : "✅ Despachar e Iniciar Envío (Pago Válido)"}
-                </button>
+                </Button>
               ) : (
                 <>
-                  <button
+                  <Button
+                    variant="primary"
                     onClick={() => enviarResolucionAdmin("Aprobado")}
                     disabled={procesando}
-                    style={{
-                      background: "blue",
-                      color: "white",
-                      padding: "10px 20px",
-                      cursor: "pointer",
-                      border: "none",
-                      fontWeight: "bold",
-                    }}
+                    className="w-full"
                   >
                     {procesando
                       ? "Procesando..."
                       : "👍 Aprobar y Enviar Correo"}
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => enviarResolucionAdmin("Rechazado")}
                     disabled={procesando}
-                    style={{
-                      background: "red",
-                      color: "white",
-                      padding: "10px 20px",
-                      cursor: "pointer",
-                      border: "none",
-                      fontWeight: "bold",
-                    }}
+                    className="w-full !text-disnal-red border-disnal-red/30 hover:bg-disnal-red/5"
                   >
                     ❌ Rechazar Orden
-                  </button>
+                  </Button>
                 </>
               )}
             </div>

@@ -1,5 +1,5 @@
-// src/components/molecules/ChatWidget.jsx
-import { useContext, useState, useEffect, useRef } from "react";
+// src/components/molecules/ChatWidget/ChatWidget.jsx
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { ChatContext } from "@context/ChatContext";
 
 export const ChatWidget = () => {
@@ -9,7 +9,7 @@ export const ChatWidget = () => {
   const [textoMensaje, setTextoMensaje] = useState("");
   const chatEndRef = useRef(null);
 
-  // Auto-scrolling para que la ventana siempre muestre el último mensaje recibido
+  // Auto-scrolling para mantener la ventana en el último mensaje
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -18,7 +18,6 @@ export const ChatWidget = () => {
 
   const handleOpenChat = () => {
     setIsOpen(!isOpen);
-    // Si es la primera vez que abre el chat, disparamos la inicialización del socket anónimo
     if (!chatActual) {
       iniciarChatCliente();
     }
@@ -28,106 +27,66 @@ export const ChatWidget = () => {
     e.preventDefault();
     if (!textoMensaje.trim()) return;
 
-    // El chatId de un cliente anónimo en su propia pantalla siempre es su propio id
     enviarMensaje(chatActual.id, textoMensaje, "cliente");
     setTextoMensaje("");
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-        zIndex: 1000,
-        fontFamily: "sans-serif",
-      }}
-    >
-      {/* BOTÓN FLOTANTE (WIDGET CHAT) */}
+    <div className="fixed bottom-5 right-5 z-50 font-sans">
+      {/* 💬 BOTÓN FLOTANTE COHESIVO CON DISNAL */}
       <button
         onClick={handleOpenChat}
-        style={{
-          width: "60px",
-          height: "60px",
-          borderRadius: "50%",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-          fontSize: "24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        type="button"
+        aria-label={
+          isOpen
+            ? "Cerrar chat de soporte"
+            : "Abrir chat de soporte en tiempo real"
+        }
+        className={`w-15 h-15 rounded-full text-white border-0 cursor-pointer text-2xl flex items-center justify-center transition-all duration-200 shadow-[0_4px_14px_rgba(0,0,0,0.25)] hover:scale-105 active:scale-95 ${
+          isOpen ? "bg-disnal-black" : "bg-disnal-red hover:bg-disnal-red-dark"
+        }`}
       >
-        {isOpen ? "✕" : "💬"}
+        {isOpen ? (
+          <span className="animate-fade-in">✕</span>
+        ) : (
+          <svg
+            className="w-6 h-6 animate-bounce-short"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+            ></path>
+          </svg>
+        )}
       </button>
 
-      {/* VENTANA EMERGENTE DEL CHAT */}
+      {/* 🏪 VENTANA EMERGENTE DE SOPORTE B2B */}
       {isOpen && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "75px",
-            right: "0",
-            width: "320px",
-            height: "400px",
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
-        >
-          {/* Encabezado */}
-          <div
-            style={{
-              backgroundColor: "#007bff",
-              color: "white",
-              padding: "12px",
-              fontWeight: "bold",
-            }}
-          >
-            Soporte en Línea — Disnal AU
-            <span
-              style={{
-                display: "block",
-                fontSize: "10px",
-                fontWeight: "normal",
-                opacity: 0.8,
-              }}
-            >
-              {chatActual ? chatActual.nombre : "Conectando al servidor..."}
+        <div className="absolute bottom-[76px] right-0 w-80 h-[400px] bg-white border border-gray-200 rounded-xl flex flex-col overflow-hidden transition-all duration-200 animate-fade-in shadow-[0_12px_32px_rgba(0,0,0,0.15)]">
+          {/* Encabezado Institucional */}
+          <header className="bg-disnal-black text-white p-3.5 font-bold tracking-wide border-b border-white/5">
+            <h3 className="m-0 text-[13px] uppercase tracking-wider font-black text-white">
+              Soporte en Línea — Disnal
+            </h3>
+            <span className="block text-[10px] font-normal opacity-80 mt-0.5 text-gray-300">
+              {chatActual
+                ? `Agente: ${chatActual.nombre}`
+                : "Conectando al servidor logístico..."}
             </span>
-          </div>
+          </header>
 
-          {/* Cuerpo de Mensajes */}
-          <div
-            style={{
-              flex: 1,
-              padding: "10px",
-              overflowY: "auto",
-              backgroundColor: "#f8f9fa",
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-            }}
-          >
+          {/* Cuerpo de Mensajes Fluidos */}
+          <div className="flex-1 p-3 overflow-y-auto bg-gray-50 flex flex-col gap-2.5 scrollbar-thin">
             {mensajes.length === 0 ? (
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "#888",
-                  textAlign: "center",
-                  marginTop: "20px",
-                  fontStyle: "italic",
-                }}
-              >
-                ¿Tienes dudas sobre algún insumo o despacho? Escríbenos aquí en
-                tiempo real.
+              <p className="text-[12px] text-disnal-gray text-center mt-8 px-4 font-normal italic leading-relaxed">
+                ¿Tienes dudas sobre algún insumo, volumen mayorista o tiempos de
+                despacho? Escríbenos y un asesor te atenderá en tiempo real.
               </p>
             ) : (
               mensajes.map((msg, index) => {
@@ -135,26 +94,17 @@ export const ChatWidget = () => {
                 return (
                   <div
                     key={index}
-                    style={{
-                      alignSelf: esCliente ? "flex-end" : "flex-start",
-                      backgroundColor: esCliente ? "#007bff" : "#e9ecef",
-                      color: esCliente ? "white" : "black",
-                      padding: "8px 12px",
-                      borderRadius: "12px",
-                      maxWidth: "75%",
-                      fontSize: "13px",
-                      boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                    }}
+                    className={`p-[8px_12px] rounded-xl max-w-[78%] text-[13px] leading-snug shadow-xs transition-all flex flex-col ${
+                      esCliente
+                        ? "self-end bg-disnal-red text-white rounded-br-none"
+                        : "self-start bg-white text-disnal-ink border border-gray-100 rounded-bl-none"
+                    }`}
                   >
-                    <div>{msg.texto}</div>
+                    <div className="break-words font-medium">{msg.texto}</div>
                     <span
-                      style={{
-                        display: "block",
-                        fontSize: "9px",
-                        textAlign: "right",
-                        marginTop: "4px",
-                        opacity: 0.6,
-                      }}
+                      className={`block text-[9px] text-right mt-1 opacity-70 font-semibold ${
+                        esCliente ? "text-white" : "text-disnal-gray"
+                      }`}
                     >
                       {msg.hora}
                     </span>
@@ -165,43 +115,27 @@ export const ChatWidget = () => {
             <div ref={chatEndRef} />
           </div>
 
-          {/* Formulario de Entrada */}
+          {/* Formulario Operativo de Entrada */}
           <form
             onSubmit={handleEnviar}
-            style={{
-              display: "flex",
-              borderTop: "1px solid #eee",
-              padding: "8px",
-              backgroundColor: "#fff",
-            }}
+            className="flex items-center gap-2 border-t border-gray-100 p-2.5 bg-white"
           >
             <input
               type="text"
-              placeholder="Escribe tu mensaje..."
+              placeholder={
+                chatActual
+                  ? "Escribe tu consulta aquí..."
+                  : "Espere un momento..."
+              }
               value={textoMensaje}
               onChange={(e) => setTextoMensaje(e.target.value)}
               disabled={!chatActual}
-              style={{
-                flex: 1,
-                padding: "6px 10px",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                marginRight: "6px",
-                fontSize: "13px",
-              }}
+              className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-[13px] outline-none transition-colors focus:border-disnal-red bg-gray-50 text-disnal-ink disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <button
               type="submit"
               disabled={!chatActual || !textoMensaje.trim()}
-              style={{
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                padding: "6px 12px",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "13px",
-              }}
+              className="bg-disnal-black text-white font-bold border-0 p-[7px_14px] rounded-lg cursor-pointer text-[12px] uppercase tracking-wider shrink-0 transition-all duration-150 hover:bg-disnal-red disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
             >
               Enviar
             </button>

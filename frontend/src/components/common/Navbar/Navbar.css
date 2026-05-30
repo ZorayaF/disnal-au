@@ -1,55 +1,21 @@
-/* ── Navbar principal ─────────────────────────────────────── */
+/* src/components/common/Navbar/Navbar.css */
+@reference "@css";
+
 .main-navbar {
-  width: 100%;
-  height: 56px;
-  display: grid;
-  grid-template-columns: 180px 1fr auto;
-  grid-template-rows: 56px;
-  align-items: stretch;
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  z-index: 80;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
-  overflow: hidden;
+  @apply w-full h-14 grid grid-cols-[180px_1fr_auto] grid-rows-[56px] items-stretch bg-white sticky top-0 z-50 shadow-sm overflow-hidden font-sans;
 }
 
-/* ── Panel del logo ───────────────────────────────────────── */
 .main-navbar__brand {
-  grid-column: 1;
-  grid-row: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background: #ffffff;
-  padding: 0 20px;
-  text-decoration: none;
-  border-right: 1px solid #e8e8e8;
-  height: 56px;
-  overflow: hidden;
+  @apply col-start-1 row-start-1 flex items-center justify-start bg-white px-5 border-r border-disnal-line/30 h-14 overflow-hidden no-underline;
 }
 
 .main-navbar__brand img {
-  width: 100px;
-  height: auto;
-  display: block;
-  flex-shrink: 0;
+  @apply w-[100px] h-auto block shrink-0;
 }
 
-/* ── Nav links ────────────────────────────────────────────── */
 .main-navbar__nav {
-  grid-column: 2;
-  grid-row: 1;
-  display: flex;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 0;
-  padding: 0 20px;
-  background: #ffffff;
-  overflow-x: auto;
-  scrollbar-width: none;
-  height: 56px;
+  @apply col-start-2 row-start-1 flex items-center justify-start gap-0 px-5 bg-white overflow-x-auto h-14;
+  scrollbar-width: none; /* v4 prefiere manejar los modificadores de scroll directo */
 }
 
 .main-navbar__nav::-webkit-scrollbar {
@@ -57,146 +23,108 @@
 }
 
 .main-navbar__link {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  height: 56px;
-  flex: 0 0 auto;
-  color: #2a2a2a;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: color 0.18s ease;
-  padding: 0 14px;
+  @apply relative inline-flex items-center justify-center gap-1.5 h-14 shrink-0 text-disnal-ink text-[0.7rem] font-bold tracking-disnal-nav uppercase whitespace-nowrap transition-colors duration-180 px-3.5 no-underline;
 }
 
-/* Underline animado */
+/* El underline animado puro de tu wireframe original */
 .main-navbar__link::after {
   content: "";
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 10px;
-  height: 2px;
-  background: #e30613;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.2s ease;
+  @apply absolute left-3.5 right-3.5 bottom-2.5 h-[2px] bg-disnal-red scale-x-0 origin-center transition-transform duration-200;
 }
 
-.main-navbar__link:hover {
-  color: #e30613;
-}
-
-.main-navbar__link:hover::after {
-  transform: scaleX(1);
-}
-
+.main-navbar__link:hover,
 .main-navbar__link.active {
-  color: #e30613;
+  @apply text-disnal-red;
 }
 
+.main-navbar__link:hover::after,
 .main-navbar__link.active::after {
-  transform: scaleX(1);
+  @apply scale-x-100;
 }
 
-/* ── Badge del carrito ────────────────────────────────────── */
 .main-navbar__cart-badge {
-  min-width: 16px;
-  height: 16px;
-  display: inline-grid;
-  place-items: center;
-  border-radius: 999px;
-  background: #e30613;
-  color: #ffffff;
-  font-size: 0.5rem;
-  font-weight: 900;
-  line-height: 1;
-  padding: 0 3px;
+  @apply min-w-[16px] h-4 inline-grid place-items-center rounded-full bg-disnal-red text-white text-[0.5rem] font-black leading-none px-0.5;
 }
 
-/* ── Botón CTA "Cotizar ahora" ────────────────────────────── */
 .main-navbar__cta {
-  grid-column: 3;
-  grid-row: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  align-self: center;
-  margin: 0 20px;
-  padding: 0.45rem 1.1rem;
-  border-radius: 999px;
-  background: #e30613;
-  color: #ffffff;
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition:
-    background 0.18s ease,
-    border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.18s ease;
-  flex-shrink: 0;
-  border: 1.5px solid transparent;
+  @apply col-start-3 row-start-1 inline-flex items-center gap-1.5 self-center my-0 mx-5 py-1.5 px-4 rounded-full bg-disnal-red text-white text-[0.65rem] font-extrabold tracking-disnal-nav uppercase whitespace-nowrap transition-colors duration-180 shrink-0 border-[1.5px] border-transparent no-underline;
 }
 
 .main-navbar__cta:hover {
-  background: #bf0010;
+  @apply bg-disnal-red-dark;
 }
 
-.main-navbar__cta svg {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-}
-
-/* Estilos de perfil B2B adaptados al diseño original */
 .main-navbar__cta--profile {
-  background: #ffffff;
-  color: #1d4ed8;
-  border-color: #1d4ed8;
+  @apply bg-white text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white;
 }
 
-.main-navbar__cta--profile:hover {
-  background: #1d4ed8;
-  color: #ffffff;
-}
-
-.main-navbar__client-name {
-  font-weight: 600;
-}
-
-/* ── Botón hamburger (oculto en desktop) ──────────────────── */
 .main-navbar__toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 10px 14px;
-  flex-direction: column;
-  gap: 5px;
-  align-self: center;
+  @apply hidden bg-none border-0 cursor-pointer p-3 flex-col gap-1.25 self-center;
 }
 
 .main-navbar__toggle span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #1a1a1a;
-  border-radius: 2px;
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
+  @apply block w-[22px] h-[2px] bg-disnal-ink rounded-sm transition-all duration-250 ease-in-out;
 }
 
+/* 📱 CAPA RESPONSIVA AUTOMATIZADA */
+@media (max-width: 900px) {
+  .main-navbar {
+    @apply h-auto min-h-[52px] grid-cols-[1fr_auto_auto] grid-rows-[52px_auto] overflow-visible;
+  }
+  .main-navbar__brand {
+    @apply h-[52px] border-r-0 px-4;
+  }
+  .main-navbar__brand img {
+    @apply w-[90px];
+  }
+  .main-navbar__cta {
+    @apply col-start-2 row-start-1 my-0 mx-2 py-1.5 px-3 text-[0px] gap-0;
+  }
+  .main-navbar__cta svg {
+    @apply w-4 h-4;
+  }
+  .main-navbar__toggle {
+    @apply col-start-3 row-start-1 flex;
+  }
+  .main-navbar__nav {
+    @apply col-span-full row-start-2 h-auto px-4 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out;
+  }
+  .main-navbar__nav.is-open {
+    @apply max-h-[260px] py-1 px-4 border-t border-b border-gray-100;
+  }
+  .main-navbar__link {
+    @apply h-12 text-[0.72rem] px-3;
+  }
+  .main-navbar__link::after {
+    @apply left-3 right-3 bottom-2;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-navbar {
+    @apply grid-rows-[50px_auto];
+  }
+  .main-navbar__brand {
+    @apply h-12 px-3;
+  }
+  .main-navbar__brand img {
+    @apply w-[82px];
+  }
+  .main-navbar__nav.is-open {
+    @apply flex-col items-start max-h-[360px] gap-0;
+  }
+  .main-navbar__link {
+    @apply h-11 w-full justify-start px-2 border-b border-gray-50;
+  }
+  .main-navbar__link:last-child {
+    @apply border-b-0;
+  }
+  .main-navbar__link::after {
+    @apply hidden;
+  }
+}
+
+/* Animaciones nativas del botón hamburger */
 .main-navbar__toggle[aria-expanded="true"] span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
@@ -206,113 +134,3 @@
 .main-navbar__toggle[aria-expanded="true"] span:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
 }
-
-/* ── Tablet (≤ 900px) ─────────────────────────────────────── */
-@media (max-width: 900px) {
-  .main-navbar {
-    height: auto;
-    min-height: 52px;
-    grid-template-columns: 1fr auto auto;
-    grid-template-rows: 52px auto;
-    overflow: visible;
-  }
-
-  .main-navbar__brand {
-    height: 52px;
-    border-right: none;
-    padding: 0 16px;
-  }
-
-  .main-navbar__brand img {
-    width: 90px;
-  }
-
-  .main-navbar__cta {
-    grid-column: 2;
-    grid-row: 1;
-    margin: 0 8px;
-    padding: 0.4rem 0.8rem;
-    font-size: 0;
-    gap: 0;
-  }
-
-  .main-navbar__cta svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .main-navbar__toggle {
-    grid-column: 3;
-    grid-row: 1;
-    display: flex;
-  }
-
-  .main-navbar__nav {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    height: auto;
-    padding: 0 16px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-
-  .main-navbar__nav.is-open {
-    max-height: 260px;
-    padding: 4px 16px;
-    border-top: 1px solid #ebebeb;
-    border-bottom: 1px solid #ebebeb;
-  }
-
-  .main-navbar__link {
-    height: 48px;
-    font-size: 0.72rem;
-    padding: 0 12px;
-  }
-
-  .main-navbar__link::after {
-    left: 12px;
-    right: 12px;
-    bottom: 8px;
-  }
-}
-
-/* ── Móvil (≤ 480px) ──────────────────────────────────────── */
-@media (max-width: 480px) {
-  .main-navbar {
-    grid-template-rows: 50px auto;
-  }
-
-  .main-navbar__brand {
-    height: 50px;
-    padding: 0 12px;
-  }
-
-  .main-navbar__brand img {
-    width: 82px;
-  }
-
-  .main-navbar__nav.is-open {
-    flex-direction: column;
-    align-items: flex-start;
-    max-height: 360px;
-    gap: 0;
-  }
-
-  .main-navbar__link {
-    height: 44px;
-    width: 100%;
-    justify-content: flex-start;
-    padding: 0 8px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .main-navbar__link:last-child {
-    border-bottom: none;
-  }
-
-  .main-navbar__link::after {
-    display: none;
-  }
-}
-

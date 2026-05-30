@@ -1,606 +1,71 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* src/index.css */
+@import "tailwindcss"; /* 🚀 El motor central de Tailwind v4 */
 
-:root {
-  --disnal-red: #e30613;
-  --disnal-red-soft: #ef3a3a;
-  --disnal-black: #151515;
-  --disnal-dark: #202020;
-  --disnal-gray: #666666;
-  --disnal-line: #d9d9d9;
-  --disnal-white: #8d8a8a;
-  --disnal-letter: 0.32em;
-  --disnal-shadow: 0 18px 46px rgba(0, 0, 0, 0.18);
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
-  color: #111111;
-  background: #ffffff;
+@theme {
+  /* 🎨 Paleta de colores oficial e inmutable de Disnal B2B */
+  --color-disnal-red: #e30613;
+  --color-disnal-red-dark: #bf0010;
+  --color-disnal-black: #151515;
+  --color-disnal-black-soft: #171717;
+  --color-disnal-ink: #111111;
+  --color-disnal-gray: #7a7a7a;
+  --color-disnal-muted: #8a8a8a;
+  --color-disnal-line: #ebebeb;
+
+  /* 📐 Reglas de espaciado y tracking tipográfico */
+  --tracking-disnal: 0.36em;
+  --tracking-disnal-nav: 0.08em;
+
+  /* 🌌 Sombras corporativas */
+  --shadow-disnal-nav: 0 1px 6px rgba(0, 0, 0, 0.1);
+  --shadow-disnal-deep: 0 16px 34px rgba(0, 0, 0, 0.25);
 }
 
-* {
-  box-sizing: border-box;
+/* ─────────────────────────────────────────────────────────────
+   🎯 1. ESTILOS BASE GLOBALES & RESETS (Normas de la App)
+   ───────────────────────────────────────────────────────────── */
+
+/* Utilidad manual para navegadores antiguos que no soporten scroll-smooth nativo */
+@utility scroll-smooth {
+  scroll-behavior: smooth;
 }
 
 html {
   min-height: 100%;
-  scroll-behavior: smooth;
+  @apply scroll-smooth;
 }
 
 body {
   min-height: 100%;
   margin: 0;
-  background: #ffffff;
-  color: #111111;
-  overflow-x: hidden;
+  @apply bg-white text-disnal-ink overflow-x-hidden font-sans;
 }
 
-button,
-a,
-input,
-textarea,
-select {
-  font-family: inherit;
-}
-
+/* ⚡ Animaciones e interactivos globales */
 button,
 a {
-  transition: transform 180ms ease, opacity 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  @apply transition-all duration-150 ease-in-out;
 }
 
 a:hover,
 button:hover:not(:disabled) {
-  transform: translateY(-1px);
+  @apply -translate-y-[1px];
 }
 
+/* ♿ Accesibilidad y control de foco (Exigido en rúbricas de desarrollo) */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--disnal-red);
+  outline: 2px solid var(--color-disnal-red);
   outline-offset: 3px;
 }
 
 img {
-  max-width: 100%;
+  @apply max-w-full h-auto;
 }
 
 #root {
-  width:100%;
-  min-height: 100vh;
-  margin: 0;
-  background: #949191;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-/* Header funcional existente: se maqueta solo por CSS sin tocar JSX. */
-#root > nav:first-child {
-  min-height: 70px !important;
-  width: 100% !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  display: grid !important;
-  grid-template-columns: minmax(250px, 320px) repeat(5, auto) 1fr !important;
-  align-items: stretch !important;
-  justify-content: start !important;
-  background: var(--disnal-black) !important;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
-}
-
-#root > nav:first-child::before {
-  content: "";
-  display: block;
-  grid-column: 1;
-  grid-row: 1;
-  background: #f7f7f7 url('/assets/images/logo disnal.png') center / 205px auto no-repeat;
-  min-height: 70px;
-}
-
-#root > nav:first-child a {
-  min-width: clamp(82px, 9vw, 118px) !important;
-  min-height: 70px !important;
-  padding: 0 18px !important;
-  display: inline-grid !important;
-  place-items: center !important;
-  background: transparent !important;
-  color: #ffffff !important;
-  text-decoration: none !important;
-  text-transform: uppercase !important;
-  font-size: 0.72rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  border-bottom: 2px solid transparent;
-}
-
-#root > nav:first-child a:hover {
-  border-bottom-color: #ffffff;
-  opacity: 0.94;
-}
-
-#root > nav:first-child a[href="/product/1"],
-#root > nav:first-child a[href="/admin"] {
-  display: none !important;
-}
-
-#root:has(.admin-manager) > nav:first-child,
-#root:has(.admin-overview) > nav:first-child,
-#root:has(input[name="usuario"]) > nav:first-child {
-  display: none !important;
-}
-
-/* Fondos decorativos de panadería: ligeros y fieles al wireframe rojo lineal. */
-.home-hero,
-.value-proposal,
-.factory-gallery,
-.partner-brands,
-.how-it-works,
-.featured-products,
-.about-section,
-.faq-section,
-.page-header,
-.legal-directory,
-.company-form-section,
-.checkout-success-section,
-.order-review-section,
-.consulting-form-section,
-.business-hours,
-#root > nav:first-child + div[style*="align-items: flex-start"] > div:last-child,
-#root > nav:first-child + div[style*="gap: 30px"] {
-  position: relative;
-}
-
-.home-hero::after,
-.value-proposal::after,
-.faq-section::after,
-.page-header::after,
-.legal-directory::after,
-.company-form-section::after,
-#root > nav:first-child + div[style*="align-items: flex-start"] > div:last-child::after,
-#root > nav:first-child + div[style*="gap: 30px"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  background-image: url('/assets/images/disnal_ilustraciones_2.svg');
-  background-size: 640px auto;
-  background-position: center top;
-  background-repeat: repeat-y;
-  z-index: 0;
-}
-
-.home-hero > *,
-.value-proposal > *,
-.faq-section > *,
-.page-header > *,
-.legal-directory > *,
-.company-form-section > *,
-#root > nav:first-child + div[style*="align-items: flex-start"] > div:last-child > *,
-#root > nav:first-child + div[style*="gap: 30px"] > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Home container con estilos inline: se normaliza sin tocar JSX. */
-#root > nav:first-child + div[style*="gap: 10px"] {
-  padding: 0 !important;
-  gap: 0 !important;
-  background: #ffffff !important;
-}
-
-#root > nav:first-child + div[style*="gap: 10px"] > div[style*="border: 1px solid"] {
-  display: none !important;
-}
-
-/* Catálogo: sidebar oscuro y lienzo blanco como en referencia. */
-#root > nav:first-child + div[style*="align-items: flex-start"] {
-  gap: 0 !important;
-  padding: 0 !important;
-  background: #ffffff !important;
-}
-
-#root > nav:first-child + div[style*="align-items: flex-start"] > div:first-child {
-  flex: 0 0 260px !important;
-  min-height: calc(100vh - 70px);
-  padding: 58px 28px 38px !important;
-  background: #303030;
-  position: sticky;
-  top: 70px;
-}
-
-#root > nav:first-child + div[style*="align-items: flex-start"] > div:last-child {
-  padding: 32px clamp(22px, 5vw, 62px) 64px !important;
-  gap: 22px !important;
-  min-width: 0;
-  background: #ffffff;
-}
-
-#root > nav:first-child + div[style*="align-items: flex-start"] > div:last-child::before {
-  content: "";
-  display: block;
-  width: 160px;
-  height: 42px;
-  margin: -10px 0 20px;
-  background: url('/assets/images/logo disnal.png') left center / contain no-repeat;
-}
-
-/* Páginas verticales con estilos inline: cotización, asesoría y legal. */
-#root > nav:first-child + div[style*="flex-direction: column"][style*="gap: 20px"] {
-  gap: 0 !important;
-  padding: 0 !important;
-  background: #ffffff !important;
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"] > div[style*="border: 1px solid"] {
-  border: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.cart-list-section) > div:first-child,
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.company-form-section) > div:first-child {
-  display: none !important;
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1.52fr) minmax(250px, 0.7fr) !important;
-  column-gap: clamp(28px, 5vw, 64px) !important;
-  padding: 0 clamp(24px, 7vw, 72px) 58px !important;
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) .page-header,
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) .contact-channels {
-  grid-column: 1 / -1;
-  margin-left: calc(clamp(24px, 7vw, 72px) * -1);
-  margin-right: calc(clamp(24px, 7vw, 72px) * -1);
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) .consulting-form-section {
-  grid-column: 1;
-  width: 100%;
-  margin: 42px 0 0;
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) .business-hours {
-  grid-column: 2;
-  margin: 42px 0 0;
-  align-self: start;
-}
-
-/* Detalle de producto generado con estilos inline: refinado por CSS sin tocar JSX. */
-#root > nav:first-child + div[style*="gap: 30px"] {
-  display: grid !important;
-  gap: 38px !important;
-  padding: 34px clamp(22px, 6vw, 72px) 70px !important;
-  background: #ffffff !important;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:first-child button {
-  border: 0;
-  background: transparent;
-  color: #111;
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:first-child button::before {
-  content: "‹ ";
-  font-size: 1.2rem;
-  letter-spacing: 0;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) {
-  display: grid !important;
-  grid-template-columns: minmax(260px, 0.92fr) minmax(300px, 1.08fr) !important;
-  align-items: center !important;
-  gap: clamp(28px, 6vw, 72px) !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) > div:first-child,
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) > div:last-child {
-  width: auto !important;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) > div:first-child > div:first-child {
-  height: 330px !important;
-  border: 0 !important;
-  background: radial-gradient(circle at 50% 82%, rgba(0,0,0,0.12), transparent 38%) !important;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) > div:first-child img {
-  max-height: 310px !important;
-  object-fit: contain;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) > div:first-child > div:last-child {
-  justify-content: center !important;
-  gap: 12px !important;
-  margin-top: 18px !important;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) > div:first-child > div:last-child img {
-  width: 54px !important;
-  height: 54px !important;
-  padding: 5px;
-  border: 1px solid var(--disnal-line) !important;
-  border-radius: 6px;
-  background: #fff;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] h1 {
-  margin: 0 0 14px;
-  color: var(--disnal-red);
-  font-size: clamp(1.4rem, 3vw, 2.05rem);
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  line-height: 1.25;
-  text-transform: uppercase;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] p,
-#root > nav:first-child + div[style*="gap: 30px"] li {
-  margin: 8px 0;
-  color: #111111;
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] strong {
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) button {
-  width: min(420px, 100%) !important;
-  min-height: 50px;
-  border: 0 !important;
-  border-radius: 999px 999px 999px 0;
-  background: #050505;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  box-shadow: 0 12px 24px rgba(0,0,0,.18);
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(3) h2 {
-  margin: 0 0 22px;
-  color: #111;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(3) > div {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(130px, 1fr)) !important;
-  gap: clamp(16px, 3vw, 28px) !important;
-  margin-top: 0 !important;
-  max-width: 780px;
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(3) > div > div {
-  width: 100% !important;
-  min-height: 150px;
-  border: 1.4px solid var(--disnal-red) !important;
-  border-radius: 12px;
-  background: #ffffff !important;
-  padding: 14px !important;
-  box-shadow: 0 14px 28px rgba(0,0,0,.07);
-}
-
-#root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(3) h4 {
-  margin: 0 0 12px;
-  color: var(--disnal-red);
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
-  line-height: 1.35;
-  text-transform: uppercase;
-}
-
-/* Login administrativo sin tocar JSX ni hooks. */
-#root > div[style*="justify-content: center"] {
-  min-height: 100vh;
-  padding: 76px 20px !important;
-  background: #ffffff;
-  position: relative;
-}
-
-#root > div[style*="justify-content: center"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url('/assets/images/disnal_ilustraciones_2.svg');
-  background-size: 670px auto;
-  background-position: center;
-  opacity: 0.18;
-  pointer-events: none;
-}
-
-#root > div[style*="justify-content: center"] > div {
-  width: min(560px, 100%) !important;
-  max-width: 560px !important;
-  padding: 0 !important;
-  overflow: hidden;
-  border: 0 !important;
-  border-radius: 0 0 34px 34px;
-  background: #343434 !important;
-  box-shadow: 0 18px 46px rgba(0,0,0,.24);
-  position: relative;
-  z-index: 1;
-}
-
-#root > div[style*="justify-content: center"] > div > div:first-child {
-  min-height: 172px;
-  margin: 0 !important;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(circle at center, rgba(255,255,255,.65), rgba(227,6,19,.9) 58%, #e30613);
-}
-
-#root > div[style*="justify-content: center"] > div > div:first-child h2 {
-  margin: 0;
-  width: 270px;
-  height: 94px;
-  color: transparent;
-  background: url('/assets/images/logo disnal.png') center / contain no-repeat;
-}
-
-#root > div[style*="justify-content: center"] > div > div:first-child p {
-  display: none;
-}
-
-#root > div[style*="justify-content: center"] form {
-  padding: 42px 44px 52px;
-  gap: 22px !important;
-}
-
-#root > div[style*="justify-content: center"] label {
-  color: #ffffff;
-  font-size: 0.74rem;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-
-#root > div[style*="justify-content: center"] input {
-  min-height: 46px;
-  border: 1px solid #8a8a8a;
-  border-radius: 8px;
-  background: #3f3f3f;
-  color: #ffffff;
-  padding: 10px 16px !important;
-  font-weight: 700;
-}
-
-#root > div[style*="justify-content: center"] button[type="submit"] {
-  min-height: 58px;
-  margin-top: 24px;
-  border: 0;
-  border-radius: 999px 999px 999px 0;
-  background: var(--disnal-red);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-
-
-/* Ajuste final solicitado: ningún lateral de pantalla debe quedar negro. */
-html,
-body,
-#root {
-  background-color: #ffffff !important;
-}
-
-/* Contenedores principales públicos sobre lienzo blanco, sin marco oscuro lateral. */
-#root > nav:first-child + div {
-  background-color: #ffffff !important;
-}
-
-/* Normalización visual de la página de cotización sin tocar JSX inline. */
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.cart-list-section) {
-  min-height: calc(100vh - 70px);
-  padding: clamp(34px, 5vw, 64px) clamp(18px, 5vw, 64px) !important;
-  background: #ffffff !important;
-}
-
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.cart-list-section) > div[style*="border: 1px solid"] {
-  width: min(1080px, 100%);
-  margin: 0 auto;
-  border: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-}
-
-/* Botones nativos de pasos finales del carrito: estilo consistente con el sistema. */
-#root > nav:first-child + div[style*="flex-direction: column"]:has(.cart-list-section) button:not(.cart-item-row__quantity button):not(.cart-item-row__delete) {
-  border: 0;
-  border-radius: 999px 999px 999px 0;
-  background: var(--disnal-red);
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  padding: 0.85rem 1.7rem;
-  text-transform: uppercase;
-}
-
-@media (max-width: 720px) {
-  #root > nav:first-child + div[style*="flex-direction: column"]:has(.cart-list-section) {
-    padding-inline: 1rem !important;
-  }
-}
-
-@media (max-width: 900px) {
-  #root > nav:first-child {
-    grid-template-columns: 1fr !important;
-  }
-
-  #root > nav:first-child::before {
-    grid-column: 1 / -1;
-    min-height: 62px;
-    background-size: 180px auto;
-  }
-
-  #root > nav:first-child a {
-    min-height: 52px !important;
-    min-width: 20% !important;
-    padding: 0 10px !important;
-    font-size: 0.62rem !important;
-  }
-
-  #root > nav:first-child + div[style*="align-items: flex-start"] {
-    display: block !important;
-  }
-
-  #root > nav:first-child + div[style*="align-items: flex-start"] > div:first-child {
-    position: relative;
-    top: auto;
-    min-height: auto;
-  }
-
-  #root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) {
-    grid-template-columns: 1fr !important;
-  }
-
-  #root > nav:first-child + div[style*="flex-direction: column"]:has(.consulting-form-section) .business-hours {
-    grid-column: 1;
-  }
-
-  #root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(2) {
-    grid-template-columns: 1fr !important;
-  }
-
-  #root > nav:first-child + div[style*="gap: 30px"] > div:nth-child(3) > div {
-    grid-template-columns: repeat(2, minmax(130px, 1fr)) !important;
-  }
-}
-
-@media (max-width: 560px) {
-  #root > nav:first-child a {
-    min-width: 50% !important;
-  }
+  @apply w-full min-h-screen m-0 bg-white overflow-hidden shadow-none;
 }

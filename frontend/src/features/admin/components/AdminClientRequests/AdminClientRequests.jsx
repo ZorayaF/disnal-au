@@ -1,7 +1,9 @@
+// src/components/admin/AdminClientRequests.jsx
+import React from "react";
 import { Button } from "@components/ui/Button";
 
 export const AdminClientRequests = ({
-  clientes,
+  clientes = [],
   cargando,
   error,
   procesando,
@@ -20,20 +22,21 @@ export const AdminClientRequests = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-disnal-ink font-sans">
       {/* Upper sub-header bar */}
-      <div className="flex justify-between items-center bg-white p-4 rounded-lg border border-border-component shadow-sm">
+      <div className="flex justify-between items-center bg-white p-4 rounded-lg border border-disnal-line shadow-sm">
         <div>
-          <h2 className="text-lg font-bold text-text-main">
+          <h2 className="text-lg font-bold text-disnal-black tracking-tight">
             Solicitudes de Registro Pendientes
           </h2>
-          <p className="text-text-muted text-xs">
+          <p className="text-disnal-gray text-xs mt-0.5">
             Evalúe el perfil comercial de los nuevos prospectos antes de
             habilitar el acceso general.
           </p>
         </div>
         <Button
           variant="secondary"
+          size="sm"
           onClick={onRefrescar}
           disabled={cargando || procesando}
         >
@@ -43,9 +46,9 @@ export const AdminClientRequests = ({
 
       {/* Handling Loading state */}
       {cargando && (
-        <div className="text-center py-12 bg-white rounded-lg border border-border-component shadow-sm">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-text-muted text-sm">
+        <div className="text-center py-12 bg-white rounded-lg border border-disnal-line shadow-sm">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-disnal-red mx-auto mb-4"></div>
+          <p className="text-disnal-gray text-sm">
             Consultando registros de auditoría en la base de datos...
           </p>
         </div>
@@ -53,20 +56,24 @@ export const AdminClientRequests = ({
 
       {/* Handling Error state */}
       {error && !cargando && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded text-red-700 text-sm">
-          <p className="font-bold">Error de sincronización:</p>
+        <div className="bg-disnal-red/5 border-l-4 border-disnal-red p-4 rounded text-disnal-red text-sm font-medium">
+          <p className="font-black tracking-wide uppercase text-xs mb-1">
+            Error de sincronización:
+          </p>
           <p>{error}</p>
         </div>
       )}
 
       {/* Handling Empty state */}
       {!cargando && !error && clientes.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-lg border border-border-component shadow-sm">
-          <span className="text-4xl">🎉</span>
-          <h3 className="mt-4 font-semibold text-text-main text-base">
+        <div className="text-center py-16 bg-white rounded-lg border border-disnal-line shadow-sm">
+          <span className="text-4xl" role="img" aria-label="celebrate">
+            🎉
+          </span>
+          <h3 className="mt-4 font-black text-disnal-black text-base uppercase tracking-disnal-nav">
             ¡Al día! No hay solicitudes
           </h3>
-          <p className="text-text-muted text-sm mt-1">
+          <p className="text-disnal-gray text-sm mt-1">
             Todas las empresas registradas han sido auditadas correctamente.
           </p>
         </div>
@@ -74,107 +81,125 @@ export const AdminClientRequests = ({
 
       {/* Clean Table representation */}
       {!cargando && !error && clientes.length > 0 && (
-        <div className="bg-white rounded-lg border border-border-component shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-disnal-line shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-border-component text-text-muted text-xs uppercase tracking-wider">
-                  <th className="p-4 font-semibold">Empresa / Razón Social</th>
-                  <th className="p-4 font-semibold">
-                    Identificación / NIT / RUT
-                  </th>
-                  <th className="p-4 font-semibold">Contacto Directo</th>
-                  <th className="p-4 font-semibold">País/Ciudad</th>
-                  <th className="p-4 font-semibold text-center">
-                    Carpeta Fiscal
-                  </th>{" "}
-                  {/* 🆕 Nueva Cabecera */}
-                  <th className="p-4 font-semibold text-right">
-                    Resolución Instantánea
-                  </th>
+                <tr className="bg-disnal-black/[0.02] border-b border-disnal-line text-disnal-gray text-xs font-black uppercase tracking-disnal-nav">
+                  <th className="p-4">Empresa / Razón Social</th>
+                  <th className="p-4">Identificación / NIT / RUT</th>
+                  <th className="p-4">Contacto Directo</th>
+                  <th className="p-4">País/Ciudad</th>
+                  <th className="p-4 text-center">Carpeta Fiscal</th>
+                  <th className="p-4 text-right">Resolución Instantánea</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-sm text-text-main">
-                {clientes.map((cliente) => (
-                  <tr
-                    key={cliente.id}
-                    className="hover:bg-slate-50/50 transition-colors"
-                  >
-                    {/* Company identity details */}
-                    <td className="p-4">
-                      <div className="font-bold text-blue-900">
-                        {cliente.nombre_empresa ||
-                          cliente.nombreEmpresa ||
-                          cliente.nombre}
-                      </div>
-                      <div className="text-xs text-text-muted mt-0.5">
-                        Ref ID: {cliente.id}
-                      </div>
-                    </td>
+              <tbody className="divide-y divide-disnal-line/40 text-sm text-disnal-ink">
+                {clientes.map((cliente) => {
+                  const nombreEmpresa =
+                    cliente.nombre_empresa ||
+                    cliente.nombreEmpresa ||
+                    cliente.nombre ||
+                    "Sin nombre";
 
-                    {/* Identification document or Tax code */}
-                    <td className="p-4 font-mono text-xs text-gray-600">
-                      {cliente.nit_ruc ||
-                        cliente.nit ||
-                        cliente.rut ||
-                        "No especificado"}
-                    </td>
+                  const nitRuc =
+                    cliente.nit_ruc ||
+                    cliente.nit ||
+                    cliente.rut ||
+                    "No especificado";
 
-                    {/* Contact detail cluster */}
-                    <td className="p-4">
-                      <div className="font-medium">
-                        {cliente.correo || cliente.email}
-                      </div>
-                      <div className="text-xs text-text-muted">
-                        {cliente.telefono || "Sin teléfono"}
-                      </div>
-                    </td>
+                  return (
+                    <tr
+                      key={cliente.id}
+                      className="hover:bg-disnal-black/[0.01] transition-colors"
+                    >
+                      {/* Company identity details */}
+                      <td className="p-4">
+                        <div className="font-black text-disnal-black">
+                          {nombreEmpresa}
+                        </div>
+                        <div className="text-xs text-disnal-gray mt-0.5">
+                          Ref ID: {cliente.id}
+                        </div>
+                      </td>
 
-                    {/* Geolocation metadata */}
-                    <td className="p-4 text-xs text-gray-600">
-                      {cliente.direccion || "N/A"}
-                      {cliente.ciudad ? `, ${cliente.ciudad}` : ""}
-                    </td>
+                      {/* Identification document or Tax code */}
+                      <td className="p-4 font-mono text-xs text-disnal-ink/80">
+                        {nitRuc}
+                      </td>
 
-                    {/* 🆕 COLUMNA INTEGRADORA: Enlace directo al recurso de Multer en el Backend */}
-                    <td className="p-4 text-center">
-                      {cliente.url_nit ? (
-                        <a
-                          href={`http://localhost:4000${cliente.url_nit}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline bg-blue-50 px-2.5 py-1.5 rounded"
-                        >
-                          📄 Ver NIT / RUC
-                        </a>
-                      ) : (
-                        <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded font-medium">
-                          Sin archivo
-                        </span>
-                      )}
-                    </td>
+                      {/* Contact detail cluster */}
+                      <td className="p-4">
+                        <div className="font-medium text-disnal-black">
+                          {cliente.correo || cliente.email}
+                        </div>
+                        <div className="text-xs text-disnal-gray mt-0.5">
+                          {cliente.telefono || "Sin teléfono"}
+                        </div>
+                      </td>
 
-                    {/* Quick evaluation operational UI */}
-                    <td className="p-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          disabled={procesando}
-                          onClick={() => handleAction(cliente.id, "Rechazado")}
-                          className="px-3 py-1.5 border border-red-300 text-red-600 rounded text-xs font-semibold hover:bg-red-50 disabled:opacity-50 transition-all"
-                        >
-                          Rechazar
-                        </button>
-                        <button
-                          disabled={procesando}
-                          onClick={() => handleAction(cliente.id, "Aprobado")}
-                          className="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-bold hover:bg-blue-700 shadow-sm disabled:opacity-50 transition-all"
-                        >
-                          Aprobar Acceso
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      {/* Geolocation metadata */}
+                      <td className="p-4 text-xs text-disnal-gray">
+                        <div>{cliente.direccion || "N/A"}</div>
+                        {cliente.ciudad && (
+                          <div className="font-medium text-disnal-ink/70">
+                            {cliente.ciudad}
+                          </div>
+                        )}
+                      </td>
+
+                      {/* Enlace directo al recurso de Multer en el Backend */}
+                      <td className="p-4 text-center">
+                        {cliente.url_nit ? (
+                          <a
+                            href={`http://localhost:4000${cliente.url_nit}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`
+                              inline-flex items-center gap-1.5 text-xs font-black 
+                              text-disnal-black hover:text-disnal-red bg-disnal-black/[0.04] 
+                              hover:bg-disnal-red/5 px-2.5 py-1.5 rounded transition-all 
+                              uppercase tracking-wider
+                            `
+                              .trim()
+                              .replace(/\s+/g, " ")}
+                          >
+                            📄 Ver NIT / RUC
+                          </a>
+                        ) : (
+                          <span className="text-xs text-disnal-red bg-disnal-red/5 px-2.5 py-1.5 rounded font-black uppercase tracking-wider">
+                            Sin archivo
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Quick evaluation operational UI */}
+                      <td className="p-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={procesando}
+                            onClick={() =>
+                              handleAction(cliente.id, "Rechazado")
+                            }
+                            className="!text-disnal-red border-disnal-red/30 hover:bg-disnal-red/5"
+                          >
+                            Rechazar
+                          </Button>
+                          <Button
+                            variant="red"
+                            size="sm"
+                            disabled={procesando}
+                            onClick={() => handleAction(cliente.id, "Aprobado")}
+                          >
+                            Aprobar Acceso
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

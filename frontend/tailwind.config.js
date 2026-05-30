@@ -1,27 +1,34 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        // 🎨 1. COLORES SEMÁNTICOS (Grupos por jerarquía)
-        bg: {
-          main: "#f8fafc", // bg-bg-main
-          surface: "#ffffff", // bg-bg-surface
+        disnal: {
+          red: "#e30613",
+          "red-soft": "#ef3a3a",
+          black: "#151515",
+          dark: "#202020",
+          gray: "#666666",
+          line: "#d9d9d9",
+          // Mapeamos el color real de texto e inputs
+          ink: "#111111",
+          white: "#ffffff",
+          // Ajustamos los grises de fondo de tus resets
+          "gray-root": "#949191",
+          "gray-muted": "#8d8a8a",
         },
-        action: {
-          primary: "#0284c7", // bg-action-primary o text-action-primary
-          hover: "#0369a1",
-        },
-        text: {
-          title: "#0f172a", // text-text-title
-          body: "#475569", // text-text-body
-          muted: "#94a3b8",
-        },
-        border: {
-          component: "#e2e8f0", // border-border-component
-        },
+      },
+      fontFamily: {
+        sans: ["Inter", "Montserrat", "Segoe UI", "Arial", "sans-serif"],
+      },
+      letterSpacing: {
+        disnal: "0.32em",
+        "disnal-nav": "0.08em",
+      },
+      boxShadow: {
+        "disnal-deep": "0 18px 46px rgba(0, 0, 0, 0.18)",
+        "disnal-nav": "0 8px 22px rgba(0, 0, 0, 0.14)",
       },
     },
   },

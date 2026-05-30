@@ -1,54 +1,39 @@
+/* src/features/support/components/ContactChannelCard/ContactChannelCard.css */
+@reference "@css";
+
 .contact-channel-card {
-  min-height: 5.45rem;
-  display: grid;
-  grid-template-rows: auto auto auto;
-  justify-items: center;
-  align-content: start;
-  gap: 0.52rem;
-  color: #ffffff;
-  text-align: center;
-  text-decoration: none;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
-  padding: 18px 12px;
-  cursor: pointer;
+  /* 🎯 Cambiado align-content-start por content-start, text-decoration-none por no-underline y gap por píxeles exactos */
+  @apply min-h-[5.45rem] grid grid-rows-[auto_auto_auto] justify-items-center content-start gap-[8px] text-white text-center no-underline font-sans p-[18px_12px] cursor-pointer transition-all duration-200;
+  /* 🎯 Borde izquierdo por defecto en pantallas grandes */
+  @apply border-l border-white/20;
 }
 
-/* Ícono — círculo blanco con color rojo adentro (como en la imagen) */
+/* Forzamos a que el primer canal de la lista nunca tenga borde izquierdo */
+.contact-channels > :first-child .contact-channel-card {
+  @apply border-l-0;
+}
+
+/* 🎯 El círculo blanco con el ícono rojo de Disnal */
 .contact-channel-card .disnal-line-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #e30613;        /* ← rojo en lugar de #171717 */
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-  font-size: 1.2rem;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  transition: transform 0.2s ease;
+  @apply w-[52px] h-[52px] rounded-full bg-white text-disnal-red shadow-md text-[1.2rem] leading-none grid place-items-center transition-transform duration-200 ease-in-out;
 }
 
 .contact-channel-card:hover .disnal-line-icon {
-  transform: translateY(-3px);
+  @apply -translate-y-[3px];
 }
 
-/* Título */
 .contact-channel-card strong {
-  color: #ffffff;
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  line-height: 1.35;
-  text-transform: uppercase;
+  @apply text-white text-[0.62rem] font-black tracking-[0.2em] leading-[1.35] uppercase font-sans;
 }
 
-/* Descripción / subtítulo */
 .contact-channel-card span {
-  max-width: 8.4rem;
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.68rem;      /* ← un poco más grande, más legible */
-  font-weight: 400;        /* ← menos pesado, como en la imagen */
-  letter-spacing: 0;       /* ← sin letter-spacing exagerado */
-  line-height: 1.4;
-  text-transform: none;    /* ← normal, no uppercase */
+  @apply max-w-[8.4rem] text-white/90 text-[0.68rem] font-normal leading-[1.4] tracking-normal normal-case font-sans;
+}
+
+/* 📱 ADAPTACIÓN RESPONSIVA INTEGRADA: Limpia los bordes según la grilla */
+@media (max-width: 860px) {
+  .contact-channel-card {
+    /* En tabletas, al pasar a 2 columnas, removemos el borde lateral izquierdo general */
+    @apply border-l-0;
+  }
 }

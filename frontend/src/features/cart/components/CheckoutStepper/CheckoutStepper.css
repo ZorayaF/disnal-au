@@ -1,53 +1,40 @@
+/* src/features/cart/components/CheckoutStepper/CheckoutStepper.css */
+@reference "@css";
+
 .checkout-stepper {
-  width: min(720px, 92vw);
-  margin: 0 auto 34px;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: start;
-  gap: 0;
-  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
-  position: relative;
+  @apply w-full max-w-[720px] mx-auto mb-8 p-0 list-none grid grid-cols-3 items-start gap-0 relative font-sans;
 }
 
+/* 🎯 La línea discontinua superior que une las burbujas */
 .checkout-stepper::before {
-  content: '';
-  position: absolute;
-  left: 16%;
-  right: 16%;
-  top: 1.42rem;
-  border-top: 1px dashed #d7d7d7;
+  content: "";
+  @apply absolute left-[16%] right-[16%] top-[22px] border-t border-dashed border-[#d7d7d7];
 }
 
+/* Cambiado gap-3.5 a gap-[14px] para garantizar una compilación estricta y limpia en v4 */
 .checkout-stepper__item {
-  display: grid;
-  justify-items: center;
-  gap: 0.82rem;
-  position: relative;
-  z-index: 1;
+  @apply grid justify-items-center gap-[14px] relative z-10;
 }
 
 .checkout-stepper__bubble {
-  width: 2.85rem;
-  height: 2.85rem;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 0.76rem;
-  font-weight: 900;
+  @apply w-11 h-11 rounded-full bg-disnal-black text-white grid place-items-center text-[0.76rem] font-black transition-colors duration-200;
 }
 
+/* Usamos la variable de color centralizada que definimos en el config */
 .checkout-stepper__bubble--active {
-  background: #ef3434;
+  @apply bg-disnal-red;
 }
 
 .checkout-stepper__label {
-  color: #8a8a8a;
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-align: center;
+  @apply text-disnal-muted text-[0.62rem] tracking-[0.16em] uppercase text-center font-sans;
+}
+
+/* 📱 CORRECCIÓN RESPONSIVA INTEGRADA: Oculta la línea en pantallas muy pequeñas */
+@media (max-width: 620px) {
+  .checkout-stepper::before {
+    @apply hidden; /* En celulares las burbujas se ven muy juntas, ocultar la línea evita un diseño sucio */
+  }
+  .checkout-stepper {
+    @apply max-w-[92vw] mb-6;
+  }
 }

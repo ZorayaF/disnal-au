@@ -1,19 +1,48 @@
-// src/components/ui/Title.jsx
+// src/components/ui/Title/Title.jsx
+import React from "react";
 
-export const Title = ({ text, level = 1, align = "left" }) => {
-  // Clases base: fuente, color semántico, alineación y margen inferior
-  const baseClasses = `font-sans text-text-title text-${align} mb-4 font-bold`;
+// 📚 Diccionario de Alineaciones Estáticas (Evita la interpolación rota en v4)
+const ALIGN_MAPS = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+  justify: "text-justify",
+};
 
-  // Variaciones de tamaño por jerarquía
-  const levelClasses = {
-    1: "text-4xl leading-tight", // Equivale a 2.25rem (H1)
-    2: "text-3xl leading-snug", // Equivale a 1.75rem (H2)
-    3: "text-xl leading-normal", // Equivale a 1.25rem (H3)
-  };
+// 📐 Jerarquía de Tamaños y Interlineados Oficiales de Disnal
+const LEVEL_MAPS = {
+  1: "text-3xl md:text-4xl leading-tight font-black tracking-tight uppercase",
+  2: "text-2xl md:text-3xl leading-snug font-extrabold tracking-wide uppercase",
+  3: "text-lg md:text-xl leading-normal font-bold tracking-normal uppercase",
+};
 
-  const finalClasses = `${baseClasses} ${levelClasses[level]}`;
+export const Title = ({
+  text,
+  level = 1,
+  align = "left",
+  className = "",
+  ...props
+}) => {
+  // 🎯 Determinamos la etiqueta HTML semántica de forma dinámica
+  const Tag = level >= 1 && level <= 3 ? `h${level}` : "h1";
 
-  if (level === 2) return <h2 className={finalClasses}>{text}</h2>;
-  if (level === 3) return <h3 className={finalClasses}>{text}</h3>;
-  return <h1 className={finalClasses}>{text}</h1>;
+  // Obtenemos las utilidades seguras de los diccionarios estáticos
+  const alignClass = ALIGN_MAPS[align] ?? ALIGN_MAPS.left;
+  const levelClass = LEVEL_MAPS[level] ?? LEVEL_MAPS[1];
+
+  return (
+    <Tag
+      className={`
+        font-sans text-disnal-black m-0 mb-4.5 min-w-0 break-words
+        ${alignClass} 
+        ${levelClass} 
+        ${className}
+      `
+        .trim()
+        .replace(/\s+/g, " ")}
+      {...props}
+    >
+      {text}
+    </Tag>
+  );
 };
