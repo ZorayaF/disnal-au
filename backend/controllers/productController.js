@@ -1,18 +1,28 @@
-// backend/controllers/productController.js
-import { leerDB, escribirDB } from "../data/database.js";
+import db from "../config/db.js";
 
-// Obtener todos los productos (Sincronizado con la estructura del JSON)
+// Obtener todos los productos desde la base de datos SQLite
 export const obtenerProductos = (req, res) => {
-  const db = leerDB();
-  res.json({ productos: db.productos });
+  try {
+    const productos = db.prepare("SELECT * FROM productos").all();
+
+    // Mapeamos de vuelta el entero de SQLite (0/1) al booleano que espera el frontend
+    const productosFormateados = productos.map((p) => ({
+      ...p,
+      destacado: p.destacado === 1,
+    }));
+
+    res.json({ productos: productosFormateados });
+  } catch (error) {
+    console.error("❌ Error al obtener productos de SQLite:", error);
+    res.status(500).json({ error: "Error interno al recuperar el catálogo." });
+  }
 };
 
-// Crear un nuevo producto con la taxonomía completa de Figma
+// Crear un nuevo producto en la tabla relacional
 export const crearProducto = (req, res) => {
   const {
     nombre,
     cantidad,
-    imagenes,
     estado,
     categoria,
     marca,
@@ -20,7 +30,9 @@ export const crearProducto = (req, res) => {
     sku,
     descripcion,
     destacado,
-    detallesTecnicos,
+    proteina,
+    humedad,
+    imagenes, // Si el nuevo modelo solo usa un string text para imagen_url
   } = req.body;
 
   if (!nombre || cantidad === undefined) {
@@ -29,124 +41,177 @@ export const crearProducto = (req, res) => {
       .json({ error: "El nombre y la cantidad son obligatorios." });
   }
 
-  const db = leerDB();
-  const nuevoId =
-    db.productos.length > 0
-      ? Math.max(...db.productos.map((p) => p.id)) + 1
-      : 1;
+  try {
+    // Definición de valores por defecto y fallbacks seguros
+    const stockCantidad = Number(cantidad);
+    const estadoFinal =
+      estado || (stockCantidad > 0 ? "disponible" : "no disponible");
+    const esDestacado = destacado === "true" || destacado === true ? 1 : 0;
+    const itemSku = sku || `SKU-${Date.now()}`;
+    const urlImagen =
+      Array.isArray(imagenes) && imagenes.length > 0
+        ? imagenes[0]
+        : typeof imagenes === "string"
+          ? imagenes
+          : null;
 
-  const nuevoProducto = {
-    id: nuevoId,
-    nombre,
-    cantidad: Number(cantidad),
-    estado: estado || (Number(cantidad) > 0 ? "disponible" : "no disponible"),
-    categoria: categoria ? categoria.trim().toLowerCase() : "sin-categoria",
-    marca: marca || "Genérico",
-    presentacion: presentacion || "Unidad",
-    sku: sku || `SKU-${nuevoId}`,
-    descripcion: descripcion || "",
-    destacado: destacado === "true" || destacado === true,
-    detallesTecnicos: detallesTecnicos || {},
-    imagenes: Array.isArray(imagenes) ? imagenes : [],
-  };
+    const stmt = db.prepare(`
+      INSERT INTO productos (
+        nombre, estado, cantidad, categoria, marca, 
+        presentacion, sku, descripcion, destacado, proteina, humedad, imagen_url
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
 
-  db.productos.push(nuevoProducto);
-  escribirDB(db);
+    const resultado = stmt.run(
+      nombre,
+      estadoFinal,
+      stockCantidad,
+      categoria ? categoria.trim().toLowerCase() : "sin-categoria",
+      marca || "Genérico",
+      presentacion || "Unidad",
+      itemSku,
+      descripcion || "",
+      esDestacado,
+      proteina || null,
+      humedad || null,
+      urlImagen,
+    );
 
-  res
-    .status(201)
-    .json({ mensaje: "Producto creado con éxito", producto: nuevoProducto });
+    res.status(201).json({
+      mensaje: "Producto creado con éxito en SQLite",
+      productoId: resultado.lastInsertRowid,
+    });
+  } catch (error) {
+    console.error("❌ Error al crear producto en SQLite:", error);
+    if (error.message.includes("UNIQUE constraint failed: productos.sku")) {
+      return res
+        .status(400)
+        .json({ error: "El SKU ya se encuentra registrado." });
+    }
+    res.status(500).json({ error: "Error al guardar el producto." });
+  }
 };
 
-// Actualizar un producto existente (Soporta edición parcial de campos nuevos)
+// Actualizar un producto existente de forma parcial (Coalesce defensivo)
 export const actualizarProducto = (req, res) => {
   const id = Number(req.params.id);
   const {
     nombre,
     cantidad,
     estado,
-    imagenes,
     categoria,
     marca,
     presentacion,
     sku,
     descripcion,
     destacado,
-    detallesTecnicos,
+    proteina,
+    humedad,
+    imagenes,
   } = req.body;
 
-  const db = leerDB();
-  const index = db.productos.findIndex((p) => p.id === id);
+  try {
+    // 1. Obtener el producto actual para realizar la lógica cruzada de stock/estado
+    const productoActual = db
+      .prepare("SELECT * FROM productos WHERE id = ?")
+      .get(id);
 
-  if (index === -1) {
-    return res.status(404).json({ error: "Producto no encontrado." });
-  }
-
-  // 1. Actualizar textos, multimedia y atributos nuevos si vienen en la petición
-  if (nombre !== undefined) db.productos[index].nombre = nombre;
-  if (imagenes !== undefined) db.productos[index].imagenes = imagenes;
-  if (marca !== undefined) db.productos[index].marca = marca;
-  if (presentacion !== undefined)
-    db.productos[index].presentacion = presentacion;
-  if (sku !== undefined) db.productos[index].sku = sku;
-  if (descripcion !== undefined) db.productos[index].descripcion = descripcion;
-  if (detallesTecnicos !== undefined)
-    db.productos[index].detallesTecnicos = detallesTecnicos;
-
-  if (categoria !== undefined) {
-    db.productos[index].categoria = categoria
-      ? categoria.trim().toLowerCase()
-      : "sin-categoria";
-  }
-
-  if (destacado !== undefined) {
-    db.productos[index].destacado = destacado === "true" || destacado === true;
-  }
-
-  // 2. Actualizar cantidad numérica de forma segura
-  if (cantidad !== undefined) {
-    db.productos[index].cantidad = Number(cantidad);
-  }
-
-  // 3. Lógica Cruzada de Estado y Disponibilidad
-  if (estado !== undefined) {
-    if (estado === "no disponible") {
-      db.productos[index].estado = "no disponible";
-    } else {
-      const stockActual =
-        cantidad !== undefined
-          ? Number(cantidad)
-          : db.productos[index].cantidad;
-      db.productos[index].estado =
-        stockActual > 0 ? "disponible" : "no disponible";
+    if (!productoActual) {
+      return res.status(404).json({ error: "Producto no encontrado." });
     }
-  } else if (cantidad !== undefined) {
-    db.productos[index].estado =
-      Number(cantidad) > 0 ? "disponible" : "no disponible";
+
+    // 2. Determinar cantidad y estado
+    const nuevaCantidad =
+      cantidad !== undefined ? Number(cantidad) : productoActual.cantidad;
+    let nuevoEstado = productoActual.estado;
+
+    if (estado !== undefined) {
+      nuevoEstado =
+        estado === "no disponible"
+          ? "no disponible"
+          : nuevaCantidad > 0
+            ? "disponible"
+            : "no disponible";
+    } else if (cantidad !== undefined) {
+      nuevoEstado = nuevaCantidad > 0 ? "disponible" : "no disponible";
+    }
+
+    // 3. Formatear booleanos y arreglos multimedia
+    const esDestacado =
+      destacado !== undefined
+        ? destacado === "true" || destacado === true
+          ? 1
+          : 0
+        : productoActual.destacado;
+    const urlImagen =
+      imagenes !== undefined
+        ? Array.isArray(imagenes)
+          ? imagenes[0]
+          : imagenes
+        : productoActual.imagen_url;
+
+    const stmt = db.prepare(`
+      UPDATE productos SET
+        nombre = COALESCE(?, nombre),
+        cantidad = ?,
+        estado = ?,
+        categoria = COALESCE(?, categoria),
+        marca = COALESCE(?, marca),
+        presentacion = COALESCE(?, presentacion),
+        sku = COALESCE(?, sku),
+        descripcion = COALESCE(?, descripcion),
+        destacado = ?,
+        proteina = COALESCE(?, proteina),
+        humedad = COALESCE(?, humedad),
+        imagen_url = COALESCE(?, imagen_url)
+      WHERE id = ?
+    `);
+
+    stmt.run(
+      nombre || null,
+      nuevaCantidad,
+      nuevoEstado,
+      categoria ? categoria.trim().toLowerCase() : null,
+      marca || null,
+      presentacion || null,
+      sku || null,
+      descripcion || null,
+      esDestacado,
+      proteina || null,
+      humedad || null,
+      urlImagen || null,
+      id,
+    );
+
+    res.json({ mensaje: "Producto actualizado con éxito en SQLite" });
+  } catch (error) {
+    console.error("❌ Error al actualizar producto en SQLite:", error);
+    res
+      .status(500)
+      .json({ error: "Error al actualizar el producto en la base de datos." });
   }
-
-  // 4. Persistir los cambios en el archivo JSON
-  escribirDB(db);
-
-  res.json({
-    mensaje: "Producto actualizado con éxito",
-    producto: db.productos[index],
-  });
 };
 
-// Eliminar producto
+// Eliminar producto por ID
 export const eliminarProducto = (req, res) => {
   const id = Number(req.params.id);
 
-  const db = leerDB();
-  const existe = db.productos.some((p) => p.id === id);
+  try {
+    const stmt = db.prepare("DELETE FROM productos WHERE id = ?");
+    const resultado = stmt.run(id);
 
-  if (!existe) {
-    return res.status(404).json({ error: "Producto no encontrado." });
+    if (resultado.changes === 0) {
+      return res.status(404).json({ error: "Producto no encontrado." });
+    }
+
+    res.json({ mensaje: "Producto eliminado con éxito de SQLite", id });
+  } catch (error) {
+    console.error("❌ Error al eliminar producto de SQLite:", error);
+    res
+      .status(500)
+      .json({
+        error:
+          "No se puede eliminar el producto (puede estar asociado a un pedido activo).",
+      });
   }
-
-  db.productos = db.productos.filter((p) => p.id !== id);
-  escribirDB(db);
-
-  res.json({ mensaje: "Producto eliminado con éxito", id });
 };
