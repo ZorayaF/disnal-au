@@ -27,9 +27,6 @@ export const Cart = () => {
       {/* ── Encabezado ── */}
       <div className="cart-page__header">
         <h1 className="cart-page__title">Mi Carrito de Cotización</h1>
-        <p className="cart-page__subtitle">
-          Ecosistema B2B — Solicitud Directa al Panel de Administración
-        </p>
       </div>
 
       {/* ── Alerta de cambios en inventario ── */}

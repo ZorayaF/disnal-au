@@ -454,8 +454,8 @@
 }
 
 .cart-btn--back:hover:not(:disabled) {
-  color: #ffffff;
-  border-color: #666;
+  color: #be1818;
+  border-color: #3d3b3b;
   transform: translateY(-1px);
 }
 
