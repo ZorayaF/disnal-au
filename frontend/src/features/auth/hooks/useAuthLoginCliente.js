@@ -1,10 +1,10 @@
 // src/hooks/useAuthLoginCliente.js
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "@context/AuthContext"; // Importamos tu contexto de autenticación global
+import { AuthContext } from "@context/AuthContext";
 
 export const useAuthLoginCliente = () => {
-  const { loginGlobal } = useContext(AuthContext); // Extraemos la función centralizada de login
+  const { loginGlobal } = useContext(AuthContext);
   const [credenciales, setCredenciales] = useState({
     correo: "",
     contrasena: "",
@@ -31,7 +31,7 @@ export const useAuthLoginCliente = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             correo: credenciales.correo,
-            password: credenciales.contrasena, // El backend espera 'password'
+            password: credenciales.contrasena,
           }),
         },
       );
@@ -42,7 +42,6 @@ export const useAuthLoginCliente = () => {
         throw new Error(data.error || "Error al iniciar sesión corporativa");
       }
 
-      // 🟢 Pasamos la respuesta al adaptador inteligente de tu contexto original.
       // Esto guarda automáticamente en "disnal_token" y "disnal_user" en disco
       // y actualiza los estados reactivos de inmediato en toda la aplicación.
       loginGlobal(data);

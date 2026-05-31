@@ -1,13 +1,12 @@
 // src/hooks/useCompanyFormCRM.js
 import { useContext } from "react";
 import { CartContext } from "@context/CartContext";
-import { AuthContext } from "@context/AuthContext"; // 🎯 1. Conectamos al contexto de autenticación corporativa
+import { AuthContext } from "@context/AuthContext";
 import { crearEstructuraEmpresa } from "@models/Company";
 
 export const useCompanyFormCRM = (datosEmpresa, onSubmit) => {
   const { carrito, limpiarCarrito } = useContext(CartContext);
 
-  // 🎯 2. Extraemos el usuario real de la sesión activa
   const { usuario } = useContext(AuthContext);
 
   const procesarDespachoCRM = async () => {
@@ -31,7 +30,6 @@ export const useCompanyFormCRM = (datosEmpresa, onSubmit) => {
       return;
     }
 
-    // 🎯 3. Construimos el payload 100% dinámico con la sesión e inyectando datos maestros de despacho
     const payloadCotizacion = {
       idPedido: `COT-${Date.now()}`,
       cliente_id: usuario.id, // ⚡ ¡CORREGIDO! Adiós al ID 1 quemado
@@ -52,7 +50,6 @@ export const useCompanyFormCRM = (datosEmpresa, onSubmit) => {
           ? "Bogotá"
           : usuario.ciudad || "",
 
-      // 🎯 Sincronización de llaves: Mapeamos explícitamente lo que espera el backend
       items: productosACotizar.map((item) => ({
         id_producto: item.id,
         cantidad: item.cantidadEnCarrito || item.cantidad || 1,

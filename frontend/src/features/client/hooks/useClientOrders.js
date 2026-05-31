@@ -23,7 +23,7 @@ export const useClientOrders = (clienteId = 1) => {
     } catch (err) {
       setError(err.message);
     } finally {
-      setCargando(false); // ✅ CORREGIDO: Ahora se ejecuta como función
+      setCargando(false);
     }
   }, [clienteId]);
 

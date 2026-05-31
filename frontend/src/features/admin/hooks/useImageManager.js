@@ -27,7 +27,7 @@ export const useImageManager = (imagenes = [], setImagenes) => {
   const eliminarImagen = (index) => {
     const imagenAEliminar = imagenes[index];
 
-    // 🌟 OPTIMIZACIÓN: Si la imagen es un archivo local, liberamos la URL de memoria RAM
+    //  OPTIMIZACIÓN: Si la imagen es un archivo local, liberamos la URL de memoria RAM
     if (imagenAEliminar instanceof File && imagenAEliminar.previewUrl) {
       URL.revokeObjectURL(imagenAEliminar.previewUrl);
     }

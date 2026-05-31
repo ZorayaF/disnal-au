@@ -159,6 +159,7 @@ A continuación se muestra el diseño relacional del Core de la aplicación (Cli
 erDiagram
     CLIENTES ||--o{ PEDIDOS : "realiza"
     PEDIDOS ||--|{ DETALLES_PEDIDO : "contiene"
+    PRODUCTOS ||--o{ DETALLES_PEDIDO : "es_incluido"
 
     CLIENTES {
         INTEGER id PK
@@ -195,6 +196,22 @@ erDiagram
         TEXT presentacion
         INTEGER cantidad
         REAL precio_unitario
+    }
+
+    PRODUCTOS {
+        INTEGER id PK
+        TEXT nombre
+        TEXT estado
+        INTEGER cantidad
+        TEXT categoria
+        TEXT marca
+        TEXT presentacion
+        TEXT sku UK
+        TEXT descripcion
+        INTEGER destacado
+        TEXT proteina
+        TEXT humedad
+        TEXT imagen_url
     }
 
 ```

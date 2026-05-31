@@ -2,14 +2,14 @@ import { useState } from "react";
 import { API_BASE_URL } from "@config/api";
 
 const INITIAL_FORM_STATE = {
-  nombre_empresa: "", // 🎯 Ajustado a la llave exacta del backend
-  nit_ruc: "", // 🎯 Ajustado a la llave exacta del backend
-  correo: "", // 🎯 Ajustado a la llave exacta del backend
-  password: "", // 🆕 Agregado campo para que el cliente cree su clave
+  nombre_empresa: "",
+  nit_ruc: "",
+  correo: "",
+  password: "",
   telefono: "",
-  direccion: "", // Mapeado con tu BD
-  ciudad: "", // Mapeado con tu BD
-  nitFile: null, // 🆕 Espacio en memoria para almacenar el archivo físico del NIT
+  direccion: "",
+  ciudad: "",
+  nitFile: null,
 };
 
 export const useClientRegister = () => {
@@ -65,7 +65,7 @@ export const useClientRegister = () => {
 
     setCargando(true);
     try {
-      // 🎯 1. Construcción del contenedor FormData (Multer-ready)
+      //  1. Construcción del contenedor FormData (Multer-ready)
       const datosFormulario = new FormData();
       datosFormulario.append("nit_ruc", formulario.nit_ruc);
       datosFormulario.append("nombre_empresa", formulario.nombre_empresa);
@@ -78,7 +78,7 @@ export const useClientRegister = () => {
       // El nombre del campo "nit" debe coincidir EXACTAMENTE con tu routes: upload.single("nit")
       datosFormulario.append("nit", formulario.nitFile);
 
-      // 🎯 2. Fetch ajustado con el prefijo real de tu server.js y SIN headers manuales
+      //  2. Fetch ajustado con el prefijo real de tu server.js y SIN headers manuales
       const respuesta = await fetch(`${API_BASE_URL}/clientes/auth/registrar`, {
         method: "POST",
         body: datosFormulario, // El navegador inyecta el boundary 'multipart/form-data' automáticamente

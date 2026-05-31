@@ -45,7 +45,7 @@ export const crearPedidoCRM = (req, res) => {
       pedidoData.ciudad_envio || null,
     );
 
-    // 🎯 1. Preparamos un statement para buscar los datos reales del producto en el almacén
+    //  1. Preparamos un statement para buscar los datos reales del producto en el almacén
     const stmtConsultarInfoProd = db.prepare(
       "SELECT nombre, presentacion FROM productos WHERE id = ?",
     );
@@ -59,7 +59,7 @@ export const crearPedidoCRM = (req, res) => {
     for (const item of listaItems) {
       const targetId = String(item.id_producto || item.producto_id || item.id);
 
-      // 🎯 2. Consultamos de forma segura la base de datos del servidor
+      //  2. Consultamos de forma segura la base de datos del servidor
       const productoMaestro = stmtConsultarInfoProd.get(targetId);
 
       if (!productoMaestro) {
@@ -67,12 +67,12 @@ export const crearPedidoCRM = (req, res) => {
         throw new Error(`PRODUCTO_NO_EXISTE_CATALOGO:${targetId}`);
       }
 
-      // 🎯 3. Insertamos usando los datos maestros oficiales del Backend. Adiós al NOT NULL constraint error.
+      //  3. Insertamos usando los datos maestros oficiales del Backend.
       stmtDetalle.run(
         pedidoData.id,
         targetId,
-        productoMaestro.nombre, // ⚡ Resuelto: Traído de la BD, nunca será NULL
-        productoMaestro.presentacion || item.presentacion || null, // Fallback seguro
+        productoMaestro.nombre,
+        productoMaestro.presentacion || item.presentacion || null,
         parseInt(item.cantidad || item.cantidadEnCarrito || 1, 10),
       );
     }
@@ -101,11 +101,9 @@ export const crearPedidoCRM = (req, res) => {
 
     if (error.message.startsWith("PRODUCTO_NO_EXISTE_CATALOGO")) {
       const [_, idProd] = error.message.split(":");
-      return res
-        .status(404)
-        .json({
-          error: `El producto con ID ${idProd} no pertenece al catálogo activo.`,
-        });
+      return res.status(404).json({
+        error: `El producto con ID ${idProd} no pertenece al catálogo activo.`,
+      });
     }
 
     res.status(500).json({

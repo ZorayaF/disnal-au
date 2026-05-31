@@ -2,7 +2,7 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@context/AuthContext";
-import { loginAdmin } from "@services/authService"; // Asegúrate de que este servicio apunte al nuevo endpoint de Express
+import { loginAdmin } from "@services/authService";
 
 const CREDENCIALES_INICIALES = {
   usuario: "",
@@ -18,7 +18,7 @@ export const useAuthLogin = () => {
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(false);
 
-  // 🛡️ Redirección automática si el administrador ya tiene una sesión activa
+  //  Redirección automática si el administrador ya tiene una sesión activa
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/admin", { replace: true });
@@ -48,13 +48,10 @@ export const useAuthLogin = () => {
     }
 
     try {
-      // 🟢 Consumimos el servicio que consulta la tabla 'usuarios' con bcrypt en SQLite
       const data = await loginAdmin(usuario, contrasena);
 
-      // 🟢 Pasamos la respuesta completa al adaptador de tu AuthContext
       loginGlobal(data);
 
-      // Redirigimos al panel de administración relacional de forma segura
       navigate("/admin", { replace: true });
     } catch (err) {
       setError(err.message || "Error de conexión con el servidor.");

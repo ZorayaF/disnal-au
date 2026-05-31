@@ -6,12 +6,11 @@ import { Server } from "socket.io";
 import { inicializarChatSocket } from "./sockets/chatSocket.js";
 import { initDatabase } from "./config/db.js";
 
-// Rutas Actuales (Multi-rol)
 import authClienteRoutes from "./routes/authClienteRoutes.js";
 import authAdminRoutes from "./routes/authAdminRoutes.js";
 import adminClienteRoutes from "./routes/adminClienteRoutes.js";
 import pedidoRoutes from "./routes/pedidoRoutes.js";
-import productRoutes from "./routes/productRoutes.js"; // ⚠️ Asegúrate que este archivo ahora use la nueva DB
+import productRoutes from "./routes/productRoutes.js";
 
 dotenv.config();
 

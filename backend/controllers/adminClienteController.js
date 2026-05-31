@@ -12,13 +12,24 @@ export const obtenerClientesAdmin = (req, res) => {
     const parametros = [];
 
     if (estado) {
+      const estadoFormateado =
+        estado.charAt(0).toUpperCase() + estado.slice(1).toLowerCase();
+
+      // Validación defensiva de estados válidos en tu lógica B2B
+      const estadosValidos = ["Pendiente", "Aprobado", "Rechazado"];
+      if (!estadosValidos.includes(estadoFormateado)) {
+        return res
+          .status(400)
+          .json({ error: "El estado de filtro proporcionado no es válido." });
+      }
+
       consulta += " WHERE estado = ?";
-      parametros.push(estado);
+      parametros.push(estadoFormateado);
     }
 
     consulta += " ORDER BY id DESC";
 
-    const clientes = db.prepare(consulta).all(...parametros);
+    const clientes = db.prepare(consulta).all(parametros);
     res.json(clientes);
   } catch (error) {
     console.error("❌ Error al obtener clientes para el CRM:", error);
@@ -65,10 +76,8 @@ export const evaluarClienteB2B = (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error en la transacción de auditoría de cliente:", error);
-    res
-      .status(500)
-      .json({
-        error: "Error interno al procesar el cambio de estatus corporativo.",
-      });
+    res.status(500).json({
+      error: "Error interno al procesar el cambio de estatus corporativo.",
+    });
   }
 };

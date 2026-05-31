@@ -1,6 +1,5 @@
-// backend/routes/productRoutes.js
 import express from "express";
-import { upload } from "../config/multer.js"; // Importamos el middleware
+import { upload } from "../config/multer.js"; // Tu middleware Multer configurado
 import {
   obtenerProductos,
   crearProducto,
@@ -10,28 +9,17 @@ import {
 
 const router = express.Router();
 
-// Enpoint exclusivo para subir hasta 5 imágenes simultáneamente
-router.post("/upload-images", upload.array("imagenes", 5), (req, res) => {
-  try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ error: "No se han subido archivos." });
-    }
-
-    // Mapeamos los archivos procesados para generar sus URLs accesibles
-    const urls = req.files.map(
-      (file) => `http://localhost:4000/uploads/${file.filename}`,
-    );
-
-    // Devolvemos el arreglo con las URLs al frontend
-    res.json({ imagenes: urls });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
+// 1. Obtener catálogo (Ruta pública/comercial)
 router.get("/", obtenerProductos);
-router.post("/", crearProducto);
-router.put("/:id", actualizarProducto);
+
+// 2. Crear Producto (Soporta Multipart/Form-Data para texto + archivo local)
+// Usamos upload.single("imagen") porque tu base de datos SQLite almacena un único string (imagen_url)
+router.post("/", upload.single("imagen"), crearProducto);
+
+// 3. Actualizar Producto (Soporta edición parcial de textos o archivos físicos)
+router.put("/:id", upload.single("imagen"), actualizarProducto);
+
+// 4. Eliminar Producto por ID
 router.delete("/:id", eliminarProducto);
 
 export default router;

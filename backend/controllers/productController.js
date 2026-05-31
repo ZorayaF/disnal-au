@@ -3,12 +3,16 @@ import db from "../config/db.js";
 // Obtener todos los productos desde la base de datos SQLite
 export const obtenerProductos = (req, res) => {
   try {
-    const productos = db.prepare("SELECT * FROM productos").all();
+    const productos = db
+      .prepare("SELECT * FROM productos ORDER BY id DESC")
+      .all();
 
-    // Mapeamos de vuelta el entero de SQLite (0/1) al booleano que espera el frontend
+    // 🟢 OPTIMIZACIÓN: Estructuramos la respuesta de forma híbrida
+    // Mapeamos el booleano y devolvemos la url tanto en string como metida en un array
     const productosFormateados = productos.map((p) => ({
       ...p,
       destacado: p.destacado === 1,
+      imagenes: p.imagen_url ? [p.imagen_url] : [], // ✨ Compatibilidad automática con tu frontend actual
     }));
 
     res.json({ productos: productosFormateados });
@@ -32,7 +36,7 @@ export const crearProducto = (req, res) => {
     destacado,
     proteina,
     humedad,
-    imagenes, // Si el nuevo modelo solo usa un string text para imagen_url
+    url_manual, // 🆕 Campo opcional por si pegan un enlace directo en texto
   } = req.body;
 
   if (!nombre || cantidad === undefined) {
@@ -42,18 +46,32 @@ export const crearProducto = (req, res) => {
   }
 
   try {
-    // Definición de valores por defecto y fallbacks seguros
     const stockCantidad = Number(cantidad);
     const estadoFinal =
       estado || (stockCantidad > 0 ? "disponible" : "no disponible");
-    const esDestacado = destacado === "true" || destacado === true ? 1 : 0;
+    const esDestacado =
+      destacado === "true" || destacado === true || destacado === 1 ? 1 : 0;
     const itemSku = sku || `SKU-${Date.now()}`;
-    const urlImagen =
-      Array.isArray(imagenes) && imagenes.length > 0
-        ? imagenes[0]
-        : typeof imagenes === "string"
-          ? imagenes
-          : null;
+
+    // 🟢 LÓGICA MULTIMEDIA INTELIGENTE PARA CREACIÓN
+    let urlImagenFinal = null;
+
+    if (req.file) {
+      // Caso A: El usuario arrastró/subió un archivo real binario
+      urlImagenFinal = `http://localhost:4000/uploads/${req.file.filename}`;
+    } else if (url_manual && url_manual.trim() !== "") {
+      // Caso B: El usuario pegó una dirección web externa en el input de URL
+      urlImagenFinal = url_manual.trim();
+    } else if (req.body.imagenes) {
+      // Caso C: Fallback por si el front sigue enviando el campo antiguo
+      const imgs = req.body.imagenes;
+      urlImagenFinal =
+        Array.isArray(imgs) && imgs.length > 0
+          ? imgs[0]
+          : typeof imgs === "string"
+            ? imgs
+            : null;
+    }
 
     const stmt = db.prepare(`
       INSERT INTO productos (
@@ -74,7 +92,7 @@ export const crearProducto = (req, res) => {
       esDestacado,
       proteina || null,
       humedad || null,
-      urlImagen,
+      urlImagenFinal,
     );
 
     res.status(201).json({
@@ -92,7 +110,7 @@ export const crearProducto = (req, res) => {
   }
 };
 
-// Actualizar un producto existente de forma parcial (Coalesce defensivo)
+// Actualizar un producto existente de forma parcial (Lógica híbrida)
 export const actualizarProducto = (req, res) => {
   const id = Number(req.params.id);
   const {
@@ -107,11 +125,11 @@ export const actualizarProducto = (req, res) => {
     destacado,
     proteina,
     humedad,
-    imagenes,
+    url_manual,
   } = req.body;
 
   try {
-    // 1. Obtener el producto actual para realizar la lógica cruzada de stock/estado
+    // 1. Obtener el producto de referencia actual
     const productoActual = db
       .prepare("SELECT * FROM productos WHERE id = ?")
       .get(id);
@@ -120,7 +138,7 @@ export const actualizarProducto = (req, res) => {
       return res.status(404).json({ error: "Producto no encontrado." });
     }
 
-    // 2. Determinar cantidad y estado
+    // 2. Determinar cantidad y estado de manera cruzada
     const nuevaCantidad =
       cantidad !== undefined ? Number(cantidad) : productoActual.cantidad;
     let nuevoEstado = productoActual.estado;
@@ -136,56 +154,96 @@ export const actualizarProducto = (req, res) => {
       nuevoEstado = nuevaCantidad > 0 ? "disponible" : "no disponible";
     }
 
-    // 3. Formatear booleanos y arreglos multimedia
+    // 3. Formatear booleanos
     const esDestacado =
       destacado !== undefined
-        ? destacado === "true" || destacado === true
+        ? destacado === "true" || destacado === true || destacado === 1
           ? 1
           : 0
         : productoActual.destacado;
-    const urlImagen =
-      imagenes !== undefined
-        ? Array.isArray(imagenes)
-          ? imagenes[0]
-          : imagenes
-        : productoActual.imagen_url;
+
+    // 4. 🟢 LÓGICA MULTIMEDIA INTELIGENTE PARA ACTUALIZACIÓN
+    let urlImagenFinal = productoActual.imagen_url; // Por defecto mantenemos la que ya está
+
+    if (req.file) {
+      // Si subieron un archivo nuevo, pisamos la anterior
+      urlImagenFinal = `http://localhost:4000/uploads/${req.file.filename}`;
+    } else if (url_manual !== undefined) {
+      // Si mutaron el input de texto (incluso si lo vaciaron)
+      urlImagenFinal =
+        url_manual && url_manual.trim() !== "" ? url_manual.trim() : null;
+    } else if (req.body.imagenes !== undefined) {
+      const imgs = req.body.imagenes;
+      urlImagenFinal =
+        Array.isArray(imgs) && imgs.length > 0
+          ? imgs[0]
+          : typeof imgs === "string"
+            ? imgs
+            : null;
+    }
+
+    // 5. Variables de asignación directa
+    const nuevoNombre = nombre !== undefined ? nombre : productoActual.nombre;
+    const nuevaCategoria =
+      categoria !== undefined
+        ? categoria
+          ? categoria.trim().toLowerCase()
+          : "sin-categoria"
+        : productoActual.categoria;
+    const nuevaMarca = marca !== undefined ? marca : productoActual.marca;
+    const nuevaPresentacion =
+      presentacion !== undefined ? presentacion : productoActual.presentacion;
+    const nuevoSku = sku !== undefined ? sku : productoActual.sku;
+    const nuevaDescripcion =
+      descripcion !== undefined ? descripcion : productoActual.descripcion;
+    const nuevaProteina =
+      proteina !== undefined ? proteina : productoActual.proteina;
+    const nuevaHumedad =
+      humedad !== undefined ? humedad : productoActual.humedad;
 
     const stmt = db.prepare(`
       UPDATE productos SET
-        nombre = COALESCE(?, nombre),
+        nombre = ?,
         cantidad = ?,
         estado = ?,
-        categoria = COALESCE(?, categoria),
-        marca = COALESCE(?, marca),
-        presentacion = COALESCE(?, presentacion),
-        sku = COALESCE(?, sku),
-        descripcion = COALESCE(?, descripcion),
+        categoria = ?,
+        marca = ?,
+        presentacion = ?,
+        sku = ?,
+        descripcion = ?,
         destacado = ?,
-        proteina = COALESCE(?, proteina),
-        humedad = COALESCE(?, humedad),
-        imagen_url = COALESCE(?, imagen_url)
+        proteina = ?,
+        humedad = ?,
+        imagen_url = ?
       WHERE id = ?
     `);
 
     stmt.run(
-      nombre || null,
+      nuevoNombre,
       nuevaCantidad,
       nuevoEstado,
-      categoria ? categoria.trim().toLowerCase() : null,
-      marca || null,
-      presentacion || null,
-      sku || null,
-      descripcion || null,
+      nuevaCategoria,
+      nuevaMarca,
+      nuevaPresentacion,
+      nuevoSku,
+      nuevaDescripcion,
       esDestacado,
-      proteina || null,
-      humedad || null,
-      urlImagen || null,
+      nuevaProteina,
+      nuevaHumedad,
+      urlImagenFinal,
       id,
     );
 
     res.json({ mensaje: "Producto actualizado con éxito en SQLite" });
   } catch (error) {
     console.error("❌ Error al actualizar producto en SQLite:", error);
+    if (error.message.includes("UNIQUE constraint failed: productos.sku")) {
+      return res
+        .status(400)
+        .json({
+          error: "El SKU ya se encuentra registrado por otro producto.",
+        });
+    }
     res
       .status(500)
       .json({ error: "Error al actualizar el producto en la base de datos." });
@@ -207,11 +265,9 @@ export const eliminarProducto = (req, res) => {
     res.json({ mensaje: "Producto eliminado con éxito de SQLite", id });
   } catch (error) {
     console.error("❌ Error al eliminar producto de SQLite:", error);
-    res
-      .status(500)
-      .json({
-        error:
-          "No se puede eliminar el producto (puede estar asociado a un pedido activo).",
-      });
+    res.status(500).json({
+      error:
+        "No se puede eliminar el producto (puede estar asociado a un pedido activo).",
+    });
   }
 };

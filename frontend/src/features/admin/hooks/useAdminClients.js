@@ -10,7 +10,6 @@ export const useAdminClients = () => {
     setCargandoClientes(true);
     setErrorClientes(null);
     try {
-      // 🎯 Ajusta aquí si tu server.js tiene prefijos como /api/admin/clientes
       const respuesta = await fetch(
         `${API_BASE_URL}/admin/clientes?estado=${estadoFiltro}`,
       );
@@ -23,7 +22,6 @@ export const useAdminClients = () => {
         );
       }
 
-      // 🎯 CONTROL DEFENSIVO: Nos aseguramos de que lo que guardamos sea un Array real.
       // Si el backend envía { productos: [...] } o un objeto de error, lo manejamos con fallback a []
       if (Array.isArray(datos)) {
         setClientes(datos);

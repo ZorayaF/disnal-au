@@ -24,7 +24,6 @@ export const useProductDetail = () => {
           throw new Error("No se pudo obtener la lista de productos.");
         }
 
-        // 🌟 CORRECCIÓN 1: Comparación flexible pasando ambos lados a String
         // Evita que falle si un ID viene como número y el otro como texto
         const encontrado = todosLosProductos.find(
           (p) => String(p.id) === String(id),
@@ -62,7 +61,6 @@ export const useProductDetail = () => {
     };
 
     cargarInformacion();
-    // 🌟 CORRECCIÓN 2: Removemos 'navigate' de las dependencias para romper el bucle infinito
   }, [id]);
 
   const volverAtras = () => navigate(-1);

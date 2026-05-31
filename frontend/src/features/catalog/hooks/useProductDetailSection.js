@@ -5,7 +5,6 @@ import { CartContext } from "@context/CartContext";
 export const useProductDetailSection = (producto) => {
   const { agregarProducto, carrito } = useContext(CartContext);
 
-  // 🌟 MEJORA FIGMA: Estado local para capturar la variante o formato elegido por el panadero
   const [presentacionSeleccionada, setPresentacionSeleccionada] = useState("");
 
   // Sincronizamos la presentación por defecto cuando el producto termine de cargar desde la API
@@ -31,7 +30,6 @@ export const useProductDetailSection = (producto) => {
   const manejarAgregar = () => {
     if (!producto) return;
 
-    // 🌟 ENLACE DE DATOS: Pasamos el producto combinado con la presentación final elegida en la UI
     agregarProducto({
       ...producto,
       presentacion: presentacionSeleccionada, // Sobrescribe la presentación si el usuario la cambió en el selector

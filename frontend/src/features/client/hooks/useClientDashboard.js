@@ -5,7 +5,6 @@ import { AuthContext } from "@context/AuthContext";
 export const useClientDashboard = () => {
   const [activeTab, setActiveTab] = useState("pedidos");
 
-  // 🎯 CORREGIDO: Tu AuthContext expone exactamente la variable 'usuario'
   const { logoutGlobal, usuario } = useContext(AuthContext);
 
   // Mapeamos 'usuario' a 'clienteLogueado' para mantener la legibilidad semántica en el dashboard
@@ -34,7 +33,7 @@ export const useClientDashboard = () => {
 
   // Lógica matemática B2B integrada mediante useMemo
   const pedidosFiltrados = useMemo(() => {
-    // 🛡️ Capa defensiva: si el ID es 0 o la data aún no carga, evitamos romper el filter
+    //  Capa defensiva: si el ID es 0 o la data aún no carga, evitamos romper el filter
     if (!pedidos || !Array.isArray(pedidos)) return [];
 
     return pedidos
@@ -86,6 +85,6 @@ export const useClientDashboard = () => {
     enviarComprobante,
     refrescarPedidos,
     ejecutarCerrarSesion,
-    clienteLogueado, // 🎯 Exposto limpiamente al Front
+    clienteLogueado,
   };
 };

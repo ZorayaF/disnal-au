@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState, useCallback } from "react";
 import { CartContext } from "@context/CartContext";
 import { obtenerProductos } from "@services/productService";
-import { AuthContext } from "@context/AuthContext"; // 🎯 1. Importamos tu contexto global de sesión
+import { AuthContext } from "@context/AuthContext";
 
 export const useCartCheckout = () => {
   const { carrito, limpiarCarrito, setCarrito } = useContext(CartContext);
 
-  // 🎯 2. Extraemos el 'usuario' autenticado desde el AuthContext
+  //   Extraemos el 'usuario' autenticado desde el AuthContext
   const { usuario } = useContext(AuthContext);
 
   const [notificaciones, setNotificaciones] = useState([]);
@@ -23,7 +23,7 @@ export const useCartCheckout = () => {
     necesidades_especificas: "",
   });
 
-  // 🎯 3. ESCUDO DE AUTO-RELLENO LOGÍSTICO: Previene campos vacíos inyectando la data del cliente logueado
+  //  ESCUDO DE AUTO-RELLENO LOGÍSTICO: Previene campos vacíos inyectando la data del cliente logueado
   useEffect(() => {
     if (usuario) {
       setDatosEnvio((prev) => ({
@@ -110,7 +110,7 @@ export const useCartCheckout = () => {
 
   const avanzarPaso = (proximoPaso) => setStep(proximoPaso);
 
-  // 🎯 FUNCIÓN CORREGIDA: Despacha el pedido formal al CRM utilizando el ID dinámico real
+  //  FUNCIÓN CORREGIDA: Despacha el pedido formal al CRM utilizando el ID dinámico real
   const enviarPedidoCRM = async () => {
     // Capa de seguridad B2B: Prevenir envíos si la sesión expiró o es inválida
     if (!usuario || !usuario.id) {
@@ -131,7 +131,6 @@ export const useCartCheckout = () => {
       return;
     }
 
-    // 🎯 CORREGIDO: Se inyecta el ID real del distribuidor autenticado en la sesión
     const cliente_id = usuario.id;
     const idPedido = crypto.randomUUID(); // Generamos el ID único del pedido
 

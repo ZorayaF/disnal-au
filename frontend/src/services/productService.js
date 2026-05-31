@@ -1,5 +1,4 @@
-// frontend/src/services/productService.js
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL } from "@config/api";
 
 // 1. Obtener todos los productos (Para el catálogo y el administrador)
 export const obtenerProductos = async () => {
@@ -16,15 +15,12 @@ export const obtenerProductos = async () => {
   }
 };
 
-// 2. Crear un nuevo producto (Solo Admin)
-export const crearProducto = async (productoData) => {
+// 2. Crear un nuevo producto (Recibe un objeto FormData atómico)
+export const crearProducto = async (formData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/productos`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(productoData), // Recibe { nombre, cantidad }
+      body: formData,
     });
 
     const data = await response.json();
@@ -36,15 +32,12 @@ export const crearProducto = async (productoData) => {
   }
 };
 
-// 3. Actualizar un producto existente (Solo Admin)
-export const actualizarProducto = async (id, camposAActualizar) => {
+// 3. Actualizar un producto existente (Recibe un objeto FormData atómico)
+export const actualizarProducto = async (id, formData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(camposAActualizar), // Puede recibir { nombre, cantidad, estado }
+      body: formData,
     });
 
     const data = await response.json();
