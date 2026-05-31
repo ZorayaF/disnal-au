@@ -27,14 +27,16 @@ export const useProductDetailSection = (producto) => {
     ? cantidadActual >= producto.cantidad
     : false;
 
-  const manejarAgregar = () => {
-    if (!producto) return;
+  const manejarAgregar = (cantidad = 1) => {
+  if (!producto) return;
 
+  for (let i = 0; i < cantidad; i++) {
     agregarProducto({
       ...producto,
-      presentacion: presentacionSeleccionada, // Sobrescribe la presentación si el usuario la cambió en el selector
+      presentacion: presentacionSeleccionada,
     });
-  };
+  }
+};
 
   return {
     cantidadActual,
@@ -45,4 +47,6 @@ export const useProductDetailSection = (producto) => {
     setPresentacionSeleccionada, // Se la pasamos al selector (<select> o botones) en la vista de Figma
     manejarAgregar,
   };
+
+  
 };

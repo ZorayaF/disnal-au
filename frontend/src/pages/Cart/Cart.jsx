@@ -30,8 +30,20 @@ export const Cart = () => {
       }}
     >
       <div>
-        <h1>Mi Carrito de Cotización</h1>
-        <p>Ecosistema B2B - Solicitud Directa al Panel de Administración</p>
+        <h1 style={{
+            margin: 0,
+            fontSize: "clamp(1.3rem, 2.5vw, 1.7rem)",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            lineHeight: 1.1,
+            color: "#111111",
+            paddingBottom: "10px",
+            borderBottom: "3px solid #e30613",
+            display: "inline-block"
+          }}>
+            Mi Carrito de Cotización
+        </h1>
       </div>
 
       {notificaciones.length > 0 && step === 1 && (
