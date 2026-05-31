@@ -5,7 +5,7 @@ import {
   actualizarEstadoPedido,
   subirComprobanteCliente,
 } from "../controllers/pedidoController.js";
-// 🔑 IMPORTANTE: Importación nombrada usando llaves { upload }
+//  IMPORTANTE: Importación nombrada usando llaves { upload }
 import { upload } from "../config/multer.js";
 
 const router = express.Router();

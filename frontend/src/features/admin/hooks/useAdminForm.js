@@ -6,10 +6,8 @@ import {
 } from "@models/Product";
 
 export const useAdminForm = (productoAEditar, onGuardar) => {
-  // Manejamos un único estado controlado por nuestro molde centralizado
   const [formValues, setFormValues] = useState(DEFAULT_PRODUCT_STATE);
 
-  // Sincroniza el formulario si el administrador selecciona un producto para editar
   useEffect(() => {
     if (productoAEditar) {
       setFormValues(crearEstructuraProducto(productoAEditar));
@@ -18,7 +16,6 @@ export const useAdminForm = (productoAEditar, onGuardar) => {
     }
   }, [productoAEditar]);
 
-  // Manejador dinámico universal para cualquier tipo de input (text, number, checkbox)
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -30,16 +27,22 @@ export const useAdminForm = (productoAEditar, onGuardar) => {
 
   const enviarFormulario = (e) => {
     e.preventDefault();
+
+    // Validación básica antes de despachar
     if (!formValues.nombre.trim() || formValues.cantidad === "") return;
 
-    // Enviamos el objeto completamente estructurado a través del callback
-    onGuardar(crearEstructuraProducto(formValues));
+    onGuardar(formValues);
+
+    // Si es un producto nuevo, puedes limpiar el formulario restableciendo el estado
+    if (!productoAEditar) {
+      setFormValues(DEFAULT_PRODUCT_STATE);
+    }
   };
 
   return {
     formValues,
     handleInputChange,
     enviarFormulario,
-    setFormValues, // Por si se necesita limpiar manualmente las imágenes externamente
+    setFormValues,
   };
 };

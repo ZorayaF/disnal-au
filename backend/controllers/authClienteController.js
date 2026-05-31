@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import db from "../config/db.js";
 
 /**
@@ -15,14 +16,12 @@ export const registrarCliente = async (req, res) => {
     ciudad,
   } = req.body;
 
-  // Validación básica de campos de texto obligatorios
   if (!nit_ruc || !nombre_empresa || !correo || !password || !telefono) {
     return res
       .status(400)
       .json({ error: "Todos los campos de texto son obligatorios." });
   }
 
-  // 🆕 Validación B2B: Verificar que el cliente haya adjuntado su documento legal (NIT/RUC)
   if (!req.file) {
     return res.status(400).json({
       error:
@@ -30,11 +29,9 @@ export const registrarCliente = async (req, res) => {
     });
   }
 
-  // Formateamos la URL del recurso estático guardado por tu middleware Multer
   const urlNit = `/uploads/${req.file.filename}`;
 
   try {
-    // 1. Verificar si el NIT/RUC o el Correo ya existen para evitar duplicados
     const clienteExistente = db
       .prepare("SELECT id FROM clientes WHERE nit_ruc = ? OR correo = ?")
       .get(nit_ruc, correo);
@@ -46,11 +43,9 @@ export const registrarCliente = async (req, res) => {
       });
     }
 
-    // 2. Encriptar la contraseña de forma segura (Buenas prácticas de OWASP)
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // 3. Insertar el cliente en la base de datos SQLite con estado 'Pendiente' por defecto
     const stmt = db.prepare(`
       INSERT INTO clientes (nit_ruc, nombre_empresa, correo, password_hash, telefono, direccion, ciudad, url_nit, estado)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')
@@ -67,17 +62,18 @@ export const registrarCliente = async (req, res) => {
       urlNit,
     );
 
-    // ✅ Corregido el status de 21 a 201 estándar para creación exitosa de recursos
     res.status(201).json({
       mensaje:
         "Solicitud de cuenta corporativa recibida con éxito. Nuestro equipo validará su NIT y le notificará por correo electrónico en breve.",
     });
   } catch (error) {
     console.error("❌ Error al registrar cliente corporativo:", error);
-    res.status(500).json({
-      error:
-        "Error interno del servidor al procesar el registro de la empresa.",
-    });
+    res
+      .status(500)
+      .json({
+        error:
+          "Error interno del servidor al procesar el registro de la empresa.",
+      });
   }
 };
 
@@ -103,7 +99,18 @@ export const loginCliente = async (req, res) => {
         .json({ error: "Credenciales corporativas inválidas." });
     }
 
-    // 2. 🆕 VALIDACIÓN DE SEGURIDAD B2B: Control estricto de accesos según el estado de la auditoría
+    const passwordCorrecto = await bcrypt.compare(
+      password,
+      cliente.password_hash,
+    );
+
+    if (!passwordCorrecto) {
+      return res
+        .status(400)
+        .json({ error: "Credenciales corporativas inválidas." });
+    }
+
+    // 3. Control estricto de accesos una vez comprobada la identidad (Protección Anti-enumeración)
     if (cliente.estado === "Pendiente") {
       return res.status(403).json({
         error:
@@ -118,21 +125,23 @@ export const loginCliente = async (req, res) => {
       });
     }
 
-    // 3. Comparar el hash de la contraseña de forma segura
-    const passwordCorrecto = await bcrypt.compare(
-      password,
-      cliente.password_hash,
+    // 4.  GENERAR EL TOKEN JWT COMERCIAL
+    const SECRET_KEY =
+      process.env.SECRET_KEY || "llave_por_defecto_si_no_hay_env";
+    const token = jwt.sign(
+      {
+        id: cliente.id,
+        correo: cliente.correo,
+        rol: "cliente",
+      },
+      SECRET_KEY,
+      { expiresIn: "24h" },
     );
 
-    if (!passwordCorrecto) {
-      return res
-        .status(400)
-        .json({ error: "Credenciales corporativas inválidas." });
-    }
-
-    // 4. Responder con los datos públicos del cliente
+    // 5. Devolver el Token junto a la información pública
     res.json({
       mensaje: "Autenticación exitosa",
+      token,
       cliente: {
         id: cliente.id,
         nombre_empresa: cliente.nombre_empresa,
@@ -144,12 +153,18 @@ export const loginCliente = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error en el proceso de login corporativo:", error);
-    res.status(500).json({
-      error:
-        "Error interno en el servidor durante la autenticación de la empresa.",
-    });
+    res
+      .status(500)
+      .json({
+        error:
+          "Error interno en el servidor durante la autenticación de la empresa.",
+      });
   }
 };
+
+/**
+ * Actualizar datos maestros de forma segura
+ */
 export const actualizarDatosCliente = async (req, res) => {
   const { id, telefono, direccion, ciudad } = req.body;
 

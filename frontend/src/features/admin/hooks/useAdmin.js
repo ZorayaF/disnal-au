@@ -1,9 +1,7 @@
-// src/hooks/useAdmin.js
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "@config/api";
-import { crearEstructuraProducto } from "@models/Product"; // Importamos el modelo
+import { crearEstructuraProducto } from "@models/Product";
 import {
   obtenerProductos,
   crearProducto,
@@ -21,7 +19,14 @@ export const useAdmin = () => {
   const cargarInventario = () => {
     obtenerProductos()
       .then((data) => {
-        setProductos(data.productos || data);
+        // Tu API optimizada ya inyecta el array "imagenes" listo para la UI
+        const listaCruda = data.productos || data;
+
+        const listaFormateada = Array.isArray(listaCruda)
+          ? listaCruda.map((prod) => crearEstructuraProducto(prod))
+          : [];
+
+        setProductos(listaFormateada);
       })
       .catch((err) =>
         console.error("Error al cargar el inventario comercial:", err),
@@ -39,62 +44,57 @@ export const useAdmin = () => {
 
   const gestionarGuardar = async (datosFormulario) => {
     try {
-      const urlsFinales = [];
-      const archivosLocales = [];
+      // 1. Instanciamos FormData para poder mandar textos y archivos juntos
+      const formData = new FormData();
+
+      // 2. Adjuntamos los campos de texto estandarizados al FormData
+      formData.append("nombre", datosFormulario.nombre);
+      formData.append("cantidad", Number(datosFormulario.cantidad));
+      formData.append("estado", datosFormulario.estado);
+      formData.append("categoria", datosFormulario.categoria);
+      formData.append("marca", datosFormulario.marca);
+      formData.append("presentacion", datosFormulario.presentacion);
+      formData.append("sku", datosFormulario.sku);
+      formData.append("descripcion", datosFormulario.descripcion);
+      formData.append("destacado", datosFormulario.destacado ? 1 : 0);
+      if (datosFormulario.proteina)
+        formData.append("proteina", datosFormulario.proteina);
+      if (datosFormulario.humedad)
+        formData.append("humedad", datosFormulario.humedad);
+
+      // 3.  EVALUACIÓN MULTIMEDIA INTEGRADA: Buscamos qué tipo de imagen tenemos
+      let archivoFisico = null;
+      let urlManualTexto = "";
 
       datosFormulario.imagenes.forEach((img) => {
         if (img instanceof File) {
-          archivosLocales.push(img);
-        } else {
-          urlsFinales.push(img);
+          archivoFisico = img; // Capturamos el archivo arrastrado/subido
+        } else if (typeof img === "string") {
+          urlManualTexto = img; // Capturamos la URL escrita a mano
         }
       });
 
-      if (archivosLocales.length > 0) {
-        const formData = new FormData();
-        archivosLocales.forEach((file) => {
-          formData.append("imagenes", file);
-        });
-
-        const respuestaImagenes = await fetch(
-          `${API_BASE_URL}/productos/upload-images`,
-          {
-            method: "POST",
-            body: formData,
-          },
-        );
-
-        const resultadoImagenes = await respuestaImagenes.json();
-
-        if (!respuestaImagenes.ok) {
-          throw new Error(
-            resultadoImagenes.error ||
-              "Fallo en la carga masiva de imágenes al servidor.",
-          );
-        }
-
-        urlsFinales.push(...resultadoImagenes.imagenes);
+      // 4. Inyectamos las variables correspondientes según lo encontrado
+      if (archivoFisico) {
+        // "imagen" hace match con upload.single("imagen") en tu nueva ruta Express
+        formData.append("imagen", archivoFisico);
+      } else if (urlManualTexto) {
+        // "url_manual" hace match con el req.body.url_manual de tu controlador
+        formData.append("url_manual", urlManualTexto);
       }
 
-      // Estructuramos y limpiamos el producto final usando el modelo centralizado
-      const productoListoParaGuardar = crearEstructuraProducto({
-        ...datosFormulario,
-        imagenes: urlsFinales,
-      });
-
+      // 5. Despachamos de forma directa al servicio (el payload ahora es el FormData)
       if (productoEnEdicion) {
-        await actualizarProducto(
-          productoEnEdicion.id,
-          productoListoParaGuardar,
-        );
+        await actualizarProducto(productoEnEdicion.id, formData);
         setProductoEnEdicion(null);
       } else {
-        await crearProducto(productoListoParaGuardar);
+        await crearProducto(formData);
       }
 
+      // 6. Sincronizamos la interfaz de inmediato
       cargarInventario();
     } catch (error) {
-      alert(error.message);
+      alert(error.message || "Error al intentar guardar el insumo.");
     }
   };
 

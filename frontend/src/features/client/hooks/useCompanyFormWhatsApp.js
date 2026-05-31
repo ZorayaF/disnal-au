@@ -1,4 +1,5 @@
 // src/hooks/useCompanyFormWhatsApp.js
+// Formulario para versión anterior de logica basada en WhatsApp
 import { useContext } from "react";
 import { CartContext } from "@context/CartContext";
 import { crearEstructuraEmpresa } from "@models/Company";

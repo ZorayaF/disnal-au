@@ -2,13 +2,12 @@
 import { useState, useMemo } from "react";
 
 export const useCatalogFilters = (productos = [], onAplicarFiltros) => {
-  // 1. 🌟 TAXONOMÍAS DINÁMICAS (Procesadas en tiempo real sin romper el renderizado)
+  // 1.  TAXONOMÍAS DINÁMICAS (Procesadas en tiempo real sin romper el renderizado)
   const {
     categoriasDisponibles,
     marcasDisponibles,
     presentacionesDisponibles,
   } = useMemo(() => {
-    // 🌟 CORRECCIÓN 1: Si no hay productos, devolvemos arreglos vacíos limpios de inmediato
     if (!Array.isArray(productos) || productos.length === 0) {
       return {
         categoriasDisponibles: [],
@@ -17,7 +16,6 @@ export const useCatalogFilters = (productos = [], onAplicarFiltros) => {
       };
     }
 
-    // 🌟 CORRECCIÓN 2: Primero declaramos e inicializamos las constantes únicas arriba
     const categoriasUnicas = [
       ...new Set(productos.map((p) => p.categoria).filter(Boolean)),
     ];
@@ -28,7 +26,6 @@ export const useCatalogFilters = (productos = [], onAplicarFiltros) => {
       ...new Set(productos.map((p) => p.presentacion).filter(Boolean)),
     ];
 
-    // 🌟 CORRECCIÓN 3: PACTADO - id y nombre usan el string limpio de la base de datos (Sin toLowerCase ni replace)
     return {
       categoriasDisponibles: categoriasUnicas.map((cat) => ({
         id: cat,

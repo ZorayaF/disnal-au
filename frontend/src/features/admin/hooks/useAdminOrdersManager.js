@@ -17,7 +17,6 @@ export const useAdminOrdersManager = () => {
   const [comentarios, setComentarios] = useState("");
   const [procesando, setProcesando] = useState(false);
 
-  // 🎯 NUEVO: Mover el estado de precios de productos al manager para persistencia limpia
   const [preciosProductos, setPreciosProductos] = useState({});
 
   // Segmentación optimizada de datos usando useMemo
@@ -123,11 +122,11 @@ export const useAdminOrdersManager = () => {
     pedidoSeleccionado,
     flete,
     comentarios,
-    preciosProductos, // 🎯 Exponer estado
+    preciosProductos,
     procesando,
     setFlete,
     setComentarios,
-    mantenerCambioPrecioProducto, // 🎯 Exponer mutador
+    mantenerCambioPrecioProducto,
     iniciarEvaluacion,
     cerrarDetallePedido,
     enviarResolucionAdmin,

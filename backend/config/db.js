@@ -2,7 +2,7 @@
 import Database from "better-sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
-import bcrypt from "bcryptjs"; // Importamos bcrypt para encriptar la clave del admin
+import bcrypt from "bcryptjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -78,11 +78,10 @@ export const initDatabase = () => {
       fecha TEXT NOT NULL,
       necesidades_especificas TEXT,
       estado TEXT DEFAULT 'Pendiente',
-      -- 🆕 Campos Logísticos B2B
-      tipo_despacho TEXT NOT NULL,     -- 'Recogida', 'Contraentrega', 'Gestionado por Distribuidora'
-      direccion_envio TEXT,            -- Puede ser NULL si es Recogida en Bodega
-      ciudad_envio TEXT,               -- Clave para que el admin cotice con la transportadora
-      costo_flete REAL DEFAULT 0.0,    -- 0.0 por defecto (se actualiza si es Gestionado)
+      tipo_despacho TEXT NOT NULL,     
+      direccion_envio TEXT,            
+      ciudad_envio TEXT,               
+      costo_flete REAL DEFAULT 0.0,    
       url_comprobante TEXT,
       comentarios_admin TEXT,
       FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE RESTRICT
@@ -96,7 +95,7 @@ export const initDatabase = () => {
     CREATE TABLE IF NOT EXISTS detalles_pedido (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       pedido_id TEXT NOT NULL,
-      producto_id TEXT NOT NULL,
+      producto_id INTEGER NOT NULL,
       nombre_producto TEXT NOT NULL,
       presentacion TEXT,
       cantidad INTEGER NOT NULL,
@@ -107,7 +106,7 @@ export const initDatabase = () => {
   ).run();
 
   // -------------------------------------------------------------
-  // 🌟 INYECCIÓN DE SEMILLAS E INFRAESTRUCTURA DE PRUEBAS
+  //  INYECCIÓN DE SEMILLAS E INFRAESTRUCTURA DE PRUEBAS
   // -------------------------------------------------------------
 
   // Semilla de Administrador Seguro (Contraseña encriptada)
