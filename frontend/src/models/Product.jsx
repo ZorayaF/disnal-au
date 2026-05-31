@@ -15,10 +15,7 @@ export const DEFAULT_PRODUCT_STATE = {
   detallesTecnicos: {},
 };
 
-// Función de fábrica para limpiar y asegurar la estructura de datos
 export const crearEstructuraProducto = (datos = {}) => {
-  // Si los datos vienen de SQLite, vendrán como 'imagen_url' (string).
-  // Lo convertimos en el array 'imagenes' que espera tu ImageManager.jsx
   let listaImagenes = datos.imagenes || [];
 
   if (datos.imagen_url && (!datos.imagenes || datos.imagenes.length === 0)) {
@@ -28,8 +25,6 @@ export const crearEstructuraProducto = (datos = {}) => {
   return {
     ...DEFAULT_PRODUCT_STATE,
     ...datos,
-
-    // Mapeamos de forma segura ambas propiedades para que convivan en el frontend
     imagenes: Array.isArray(listaImagenes) ? listaImagenes : [listaImagenes],
     imagen_url:
       datos.imagen_url ||
@@ -37,7 +32,11 @@ export const crearEstructuraProducto = (datos = {}) => {
         ? datos.imagenes[0]
         : ""),
 
-    // Aseguramos conversión de tipos correctos
+    detallesTecnicos:
+      typeof datos.detallesTecnicos === "string"
+        ? JSON.parse(datos.detallesTecnicos)
+        : datos.detallesTecnicos || {},
+
     cantidad:
       datos.cantidad !== undefined && datos.cantidad !== ""
         ? Number(datos.cantidad)

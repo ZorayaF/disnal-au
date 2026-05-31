@@ -1,11 +1,11 @@
 // src/features/admin/components/AdminManager.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAdminForm } from "@/features/admin/hooks/useAdminForm";
 import { ImageManager } from "@/features/admin/components/ImageManager";
 import { InputField } from "@components/ui/InputField/InputField";
 import { Button } from "@components/ui/Button/Button";
 
-const categorias = [
+const categoriasPredefinidas = [
   "Harinas",
   "Azúcares y Endulzantes",
   "Grasas y Mantecas",
@@ -20,15 +20,28 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
     formValues,
     setFormValues,
     handleInputChange,
+    setCustomValue,
+    agregarAtributoDinamico,
+    modificarAtributoDinamico,
+    eliminarAtributoDinamico,
     enviarFormulario,
-    resetForm,
-    error,
-    successMessage,
     guardando,
   } = useAdminForm(productoAEditar, onGuardar);
 
+  // Control local para saber si mostramos un Input de texto o un Select de categorías
+  const [crearNuevaCategoria, setCrearNuevaCategoria] = useState(false);
+
+  // Efecto preventivo: Si editamos un insumo con categoría personalizada, activamos el input libre
+  useEffect(() => {
+    if (
+      formValues.categoria &&
+      !categoriasPredefinidas.includes(formValues.categoria)
+    ) {
+      setCrearNuevaCategoria(true);
+    }
+  }, [formValues.categoria]);
+
   const cancelar = () => {
-    resetForm();
     onCancelar?.();
   };
 
@@ -40,7 +53,6 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
       }));
       return;
     }
-
     setFormValues((prev) => ({ ...prev, imagenes: nextImages }));
   };
 
@@ -62,24 +74,6 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
       </header>
 
       <form className="space-y-6" onSubmit={enviarFormulario} noValidate>
-        {/* Feedback Messages */}
-        {error && (
-          <div
-            className="bg-disnal-red/5 border-l-4 border-disnal-red p-3 rounded text-disnal-red text-xs font-bold"
-            role="alert"
-          >
-            {error}
-          </div>
-        )}
-        {successMessage && (
-          <div
-            className="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded text-emerald-800 text-xs font-bold"
-            role="status"
-          >
-            {successMessage}
-          </div>
-        )}
-
         {/* Input Grid System */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField
@@ -93,22 +87,51 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
             theme="light"
           />
 
-          <InputField
-            as="select"
-            label="Categoría"
-            name="categoria"
-            value={formValues.categoria}
-            onChange={handleInputChange}
-            disabled={guardando}
-            theme="light"
-          >
-            <option value="">Seleccionar</option>
-            {categorias.map((categoria) => (
-              <option key={categoria} value={categoria}>
-                {categoria}
-              </option>
-            ))}
-          </InputField>
+          {/* Gestor de Categorías Dinámico */}
+          <div className="flex flex-col space-y-1.5">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold uppercase tracking-wider text-disnal-gray">
+                Categoría
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setCrearNuevaCategoria(!crearNuevaCategoria);
+                  setCustomValue("categoria", ""); // Reseteamos el campo al cambiar de interfaz
+                }}
+                className="text-[11px] text-disnal-red font-black uppercase tracking-wider hover:underline cursor-pointer"
+              >
+                {crearNuevaCategoria ? "Ver catálogo base" : "＋ Crear Nueva"}
+              </button>
+            </div>
+
+            {crearNuevaCategoria ? (
+              <InputField
+                name="categoria"
+                value={formValues.categoria}
+                onChange={handleInputChange}
+                placeholder="Escribe la nueva categoría..."
+                disabled={guardando}
+                theme="light"
+              />
+            ) : (
+              <InputField
+                as="select"
+                name="categoria"
+                value={formValues.categoria}
+                onChange={handleInputChange}
+                disabled={guardando}
+                theme="light"
+              >
+                <option value="">Seleccionar</option>
+                {categoriasPredefinidas.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </InputField>
+            )}
+          </div>
 
           <InputField
             type="number"
@@ -156,6 +179,91 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
             theme="light"
           />
 
+          {/* 🟢 SECCIÓN INTERACTIVA CLAVE-VALOR (Ficha Técnica Elástica) */}
+          <div className="md:col-span-2 border-t border-dashed border-disnal-line/60 pt-4 mt-2">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xs font-black uppercase tracking-wider text-disnal-black">
+                Ficha Técnica Personalizada
+              </h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  agregarAtributoDinamico(`Atributo-${Date.now()}`, "")
+                }
+                className="!text-disnal-red border-disnal-red hover:bg-disnal-red/5 text-[11px] font-black uppercase shadow-2xs"
+              >
+                ＋ Añadir Atributo
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {Object.entries(formValues.detallesTecnicos || {}).map(
+                ([clave, valor], index) => {
+                  // Si el ID temporal autogenerado está presente, limpiamos el marcador visual para que esté en blanco
+                  const claveLimpia = clave.startsWith("Atributo-")
+                    ? ""
+                    : clave;
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 bg-disnal-black/[0.01] p-2 border border-disnal-line/40 rounded shadow-3xs"
+                    >
+                      <div className="flex-1">
+                        <InputField
+                          placeholder="Propiedad (Ej: Proteína, Humedad, Grasa)"
+                          value={claveLimpia}
+                          onChange={(e) =>
+                            modificarAtributoDinamico(
+                              clave,
+                              e.target.value,
+                              valor,
+                            )
+                          }
+                          disabled={guardando}
+                          theme="light"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <InputField
+                          placeholder="Valor asignado (Ej: 40g, 13% Máx)"
+                          value={valor}
+                          onChange={(e) =>
+                            modificarAtributoDinamico(
+                              clave,
+                              clave,
+                              e.target.value,
+                            )
+                          }
+                          disabled={guardando}
+                          theme="light"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => eliminarAtributoDinamico(clave)}
+                        disabled={guardando}
+                        className="!text-disnal-red border-disnal-line hover:bg-disnal-red/5 h-10 px-3 cursor-pointer"
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                  );
+                },
+              )}
+
+              {Object.keys(formValues.detallesTecnicos || {}).length === 0 && (
+                <p className="text-xs text-disnal-gray italic text-center py-3 bg-disnal-black/[0.01] border border-dashed border-disnal-line rounded">
+                  No se han registrado atributos técnicos extras para este
+                  insumo.
+                </p>
+              )}
+            </div>
+          </div>
+
           <InputField
             as="textarea"
             label="Descripción comercial"
@@ -169,16 +277,7 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
             theme="light"
           />
 
-          {/* Custom Checkbox integration compatible with Tailwind v4 layout */}
-          <label
-            className={`
-            md:col-span-2 flex items-center gap-3 p-3 bg-disnal-black/[0.02] 
-            border border-disnal-line/60 rounded cursor-pointer select-none 
-            hover:bg-disnal-black/[0.04] transition-colors mt-2
-          `
-              .trim()
-              .replace(/\s+/g, " ")}
-          >
+          <label className="md:col-span-2 flex items-center gap-3 p-3 bg-disnal-black/[0.02] border border-disnal-line/60 rounded cursor-pointer select-none hover:bg-disnal-black/[0.04] transition-colors mt-2">
             <input
               type="checkbox"
               name="destacado"
@@ -201,7 +300,7 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
           />
         </div>
 
-        {/* Action Buttons using layout design pattern */}
+        {/* Action Buttons */}
         <div className="flex justify-end gap-3 border-t border-disnal-line/60 pt-4 mt-6">
           <Button
             type="button"
@@ -211,7 +310,7 @@ export const AdminManager = ({ productoAEditar, onGuardar, onCancelar }) => {
             disabled={guardando}
             className="!text-disnal-gray border-disnal-line hover:bg-disnal-black/5"
           >
-            Limpiar
+            Cancelar
           </Button>
 
           <Button

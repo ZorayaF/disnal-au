@@ -16,13 +16,52 @@ export const useAdminForm = (productoAEditar, onGuardar) => {
     }
   }, [productoAEditar]);
 
+  // Manejador dinámico universal para inputs estándar (text, number, checkbox, select)
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormValues((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  // Permite mutar propiedades directamente de forma manual (útil para limpiar imágenes o cambiar selectores)
+  const setCustomValue = (name, value) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 🟢 NUEVO: Manejadores dinámicos para la Ficha Técnica Clave-Valor
+  const agregarAtributoDinamico = (clave = "", valor = "") => {
+    setFormValues((prev) => ({
+      ...prev,
+      detallesTecnicos: {
+        ...prev.detallesTecnicos,
+        [clave]: valor,
+      },
+    }));
+  };
+
+  const modificarAtributoDinamico = (antiguaClave, nuevaClave, valor) => {
+    setFormValues((prev) => {
+      const copiaDetalles = { ...prev.detallesTecnicos };
+      // Si el usuario edita el nombre de la propiedad (la clave), transferimos el valor y borramos la vieja
+      if (antiguaClave !== nuevaClave) {
+        delete copiaDetalles[antiguaClave];
+      }
+      copiaDetalles[nuevaClave] = valor;
+      return { ...prev, detallesTecnicos: copiaDetalles };
+    });
+  };
+
+  const eliminarAtributoDinamico = (clave) => {
+    setFormValues((prev) => {
+      const copiaDetalles = { ...prev.detallesTecnicos };
+      delete copiaDetalles[clave];
+      return { ...prev, detallesTecnicos: copiaDetalles };
+    });
   };
 
   const enviarFormulario = (e) => {
@@ -31,9 +70,9 @@ export const useAdminForm = (productoAEditar, onGuardar) => {
     // Validación básica antes de despachar
     if (!formValues.nombre.trim() || formValues.cantidad === "") return;
 
+    // Despachamos el estado vivo tal cual para que useAdmin.js procese el FormData
     onGuardar(formValues);
 
-    // Si es un producto nuevo, puedes limpiar el formulario restableciendo el estado
     if (!productoAEditar) {
       setFormValues(DEFAULT_PRODUCT_STATE);
     }
@@ -42,6 +81,10 @@ export const useAdminForm = (productoAEditar, onGuardar) => {
   return {
     formValues,
     handleInputChange,
+    setCustomValue,
+    agregarAtributoDinamico,
+    modificarAtributoDinamico,
+    eliminarAtributoDinamico,
     enviarFormulario,
     setFormValues,
   };
