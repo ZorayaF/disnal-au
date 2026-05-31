@@ -209,8 +209,7 @@ erDiagram
         TEXT sku UK
         TEXT descripcion
         INTEGER destacado
-        TEXT proteina
-        TEXT humedad
+        TEXT detalles_tecnicos "DEFAULT '{}'"
         TEXT imagen_url
     }
 
