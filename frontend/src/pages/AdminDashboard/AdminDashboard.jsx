@@ -27,7 +27,7 @@ export const AdminDashboard = () => {
     seleccionarParaEditar,
   } = useAdmin();
 
-  // 🎯 CORREGIDO: Sincronización exacta con las propiedades del hook useAdminClients
+  // CORREGIDO: Sincronización exacta con las propiedades del hook useAdminClients
   const {
     clientes, // Mapea con la lista interna (Pendientes, Aprobados, etc.)
     cargandoClientes,
@@ -39,7 +39,7 @@ export const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-bg-main p-6 md:p-10 font-sans space-y-10">
       {/* SECCIÓN: Cabecera e Identidad Visual */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-component pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 ">
         <div>
           <Title text="Panel de Administración General" level={1} />
           <p className="text-text-muted text-sm mt-1">
@@ -61,33 +61,33 @@ export const AdminDashboard = () => {
           onClick={() => setActiveTab("inventario")}
           className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors ${
             activeTab === "inventario"
-              ? "border-b-2 border-blue-600 text-blue-600 font-bold"
+              ? "border-b-2 border-[#e30613] text-[#e30613] font-bold"
               : "text-text-muted hover:text-text-main"
           }`}
         >
-          📦 Gestión de Inventario
+           Gestión de Inventario
         </button>
 
         <button
           onClick={() => setActiveTab("ordenes")}
           className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors ${
             activeTab === "ordenes"
-              ? "border-b-2 border-blue-600 text-blue-600 font-bold"
+              ? "border-b-2 border-[#e30613] text-[#e30613] font-bold"
               : "text-text-muted hover:text-text-main"
           }`}
         >
-          📋 Gestión de Órdenes B2B
+         Gestión de Órdenes 
         </button>
 
         <button
           onClick={() => setActiveTab("soporte")}
           className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors ${
             activeTab === "soporte"
-              ? "border-b-2 border-blue-600 text-blue-600 font-bold"
+              ? "border-b-2 border-[#e30613] text-[#e30613] font-bold"
               : "text-text-muted hover:text-text-main"
           }`}
         >
-          💬 Soporte en Vivo
+         Soporte en Vivo
         </button>
 
         {/* TAB ELEMENT CON BADGE DE NOTIFICACIÓN DE SOLICITUDES */}
@@ -98,14 +98,14 @@ export const AdminDashboard = () => {
           }}
           className={`pb-2 px-4 font-medium text-sm whitespace-nowrap transition-colors relative ${
             activeTab === "clientes"
-              ? "border-b-2 border-blue-600 text-blue-600 font-bold"
+              ? "border-b-2 border-[#e30613] text-[#e30613] font-bold"
               : "text-text-muted hover:text-text-main"
           }`}
         >
-          👥 Registro de Clientes
+          Registro de Clientes
           {/* El globo rojo se pintará dinámicamente si hay registros en cola */}
           {clientes?.length > 0 && activeTab !== "clientes" && (
-            <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-sm">
+            <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/3 bg-[#e30613] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-sm">
               {clientes.length}
             </span>
           )}
@@ -142,21 +142,21 @@ export const AdminDashboard = () => {
               onClick={() => setSubTabOrdenes("activas")}
               className={`flex-1 py-1.5 px-3 rounded text-xs font-semibold transition-all ${
                 subTabOrdenes === "activas"
-                  ? "bg-white text-blue-600 shadow-sm"
+                  ? "bg-white text-[#e30613] shadow-sm"
                   : "text-gray-500 hover:text-gray-900"
               }`}
             >
-              📥 Entrantes
+              Entrantes
             </button>
             <button
               onClick={() => setSubTabOrdenes("historial")}
               className={`flex-1 py-1.5 px-3 rounded text-xs font-semibold transition-all ${
                 subTabOrdenes === "historial"
-                  ? "bg-white text-blue-600 shadow-sm"
+                  ? "bg-white text-[#e30613] shadow-sm"
                   : "text-gray-500 hover:text-gray-900"
               }`}
             >
-              📜 Historial
+              Historial
             </button>
           </div>
 
@@ -180,12 +180,12 @@ export const AdminDashboard = () => {
       {/* 5. SECCIÓN AUDITORÍA B2B: Conectada con los datos reales */}
       {activeTab === "clientes" && (
         <AdminClientRequests
-          clientes={clientes} // 🎯 Actualizado
-          cargando={cargandoClientes} // 🎯 Actualizado
-          error={errorClientes} // 🎯 Actualizado
+          clientes={clientes} // Actualizado
+          cargando={cargandoClientes} // Actualizado
+          error={errorClientes} //  Actualizado
           procesando={false} // Pasamos false porque el botón maneja su deshabilitación local por item
-          onResolver={procesarAuditoriaCliente} // 🎯 Actualizado
-          onRefrescar={() => refrescarClientes("Pendiente")} // 🎯 Actualizado
+          onResolver={procesarAuditoriaCliente} // Actualizado
+          onRefrescar={() => refrescarClientes("Pendiente")} // Actualizado
         />
       )}
     </div>
