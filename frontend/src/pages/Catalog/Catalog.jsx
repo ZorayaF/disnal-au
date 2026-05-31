@@ -28,6 +28,13 @@ export const Catalog = () => {
     criterioOrden,
   );
 
+  // Agrega esta función junto a los otros estados
+  const limpiarFiltros = () => {
+    setFiltrosActivos({ categorias: [], marcas: [], presentaciones: [] });
+    setTerminoBusqueda("");
+    setCriterioOrden("alfabetico-az");
+  };
+
   return (
     <div
       style={{
@@ -66,6 +73,7 @@ export const Catalog = () => {
           filtros={filtrosActivos}
           terminoBusqueda={terminoBusqueda}
           criterioOrden={criterioOrden}
+          onLimpiarFiltros={limpiarFiltros} 
         />
       </div>
     </div>

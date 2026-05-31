@@ -1,0 +1,504 @@
+/* ================================================================
+   CART — Cart.css  |  Disnal AU — Sistema de Cotización CRM
+   Referencia visual: /pages/Login/Login.css + index.css @theme
+   ================================================================ */
+
+/* ─────────────────────────────────────────────────────────────
+   1. PÁGINA RAÍZ
+   ───────────────────────────────────────────────────────────── */
+
+.cart-page {
+  min-height: 100vh;
+  background: #f0f0f0;
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 5vw, 32px);
+  font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. ENCABEZADO DE SECCIÓN
+   ───────────────────────────────────────────────────────────── */
+
+.cart-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cart-page__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #111111;
+  text-transform: uppercase;
+}
+
+.cart-page__subtitle {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. ALERTAS (Notificaciones & Error)
+   ───────────────────────────────────────────────────────────── */
+
+.cart-alert {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.cart-alert--warning {
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid rgba(255, 165, 0, 0.45);
+  color: #7a4a00;
+}
+
+.cart-alert--error {
+  background: rgba(227, 6, 19, 0.08);
+  border: 1px solid rgba(227, 6, 19, 0.38);
+  color: #e30613;
+}
+
+.cart-alert__title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cart-alert ul {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. CONTENEDOR PRINCIPAL DE PASOS (dark card)
+   ───────────────────────────────────────────────────────────── */
+
+.cart-panel {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+/* Barra de encabezado roja (igual que login-card__header) */
+.cart-panel__header {
+  background: linear-gradient(145deg, #e30613 0%, #b80010 100%);
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cart-panel__header::after {
+  content: '';
+  position: absolute;
+  top: -28px;
+  right: -28px;
+  width: 110px;
+  height: 110px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cart-panel__step-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.cart-panel__step-title {
+  color: #ffffff;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+/* Ícono decorativo del encabezado (camión, etc.) */
+.cart-panel__header-icon {
+  color: rgba(255, 255, 255, 0.75);
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Cuerpo oscuro del panel */
+.cart-panel__body {
+  background: #ffffff;
+  padding: clamp(24px, 4vw, 36px) clamp(20px, 4vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Estado de carga */
+.cart-panel__loading {
+  color: #888;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding: 32px 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. PASO 2 — FORMULARIO LOGÍSTICO
+   ───────────────────────────────────────────────────────────── */
+
+.shipping-step {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Grupo de campo (label + control) ── */
+.shipping-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shipping-field__label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #000000;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.shipping-field__label svg {
+  width: 14px;
+  height: 14px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+/* ── Select ── */
+.shipping-field__select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 40px 12px 16px;
+  background: #eaeaea;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  color: #000000;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  outline: none;
+}
+
+.shipping-field__select:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.15);
+}
+
+.shipping-field__select option {
+  background: #2e2e2e;
+  color: #fff;
+}
+
+/* ── Fila de dos columnas para ciudad / dirección ── */
+.shipping-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 520px) {
+  .shipping-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Input de texto (ciudad, dirección) ── */
+.shipping-field__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.shipping-field__input-icon {
+  position: absolute;
+  left: 14px;
+  width: 15px;
+  height: 15px;
+  color: #666;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.shipping-field__input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px 12px 42px;
+  background: #eaeaea;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  color: #000000;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.shipping-field__input::placeholder {
+  color: #555;
+}
+
+.shipping-field__input:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.15);
+}
+
+/* ── Textarea de notas ── */
+.shipping-field__textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px 16px;
+  background:#eaeaea;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  color: #000000;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 400;
+  resize: vertical;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.shipping-field__textarea::placeholder {
+  color: #555;
+}
+
+.shipping-field__textarea:focus {
+  border-color: #e30613;
+  box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.15);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6. PASO 3 — REVISIÓN FINAL
+   ───────────────────────────────────────────────────────────── */
+
+.review-step {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+
+.review-step__desc {
+  color: #888;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.review-summary {
+  width: 100%;
+  background: #eaeaea;
+  border: 1px dashed #3e3e3e;
+  border-radius: 12px;
+  padding: 20px 22px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-summary__title {
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #e30613;
+  margin: 0 0 4px 0;
+}
+
+.review-summary__row {
+  display: flex;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.review-summary__key {
+  color: #888;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.review-summary__val {
+  color: #000000;
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. PASO 4 — CONFIRMACIÓN CRM
+   ───────────────────────────────────────────────────────────── */
+
+.confirm-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.confirm-step__icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #22c55e;
+}
+
+.confirm-step__title {
+  color: #22c55e;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.confirm-step__desc {
+  color: #888;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. BARRA DE ACCIONES (botones Atrás / Continuar)
+   ───────────────────────────────────────────────────────────── */
+
+.cart-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #2e2e2e;
+  flex-wrap: wrap;
+}
+
+/* Botón secundario — Atrás */
+.cart-btn--back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: 1px solid #3a3a3a;
+  border-radius: 999px;
+  padding: 12px 22px;
+  color: #888;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.cart-btn--back:hover:not(:disabled) {
+  color: #be1818;
+  border-color: #3d3b3b;
+  transform: translateY(-1px);
+}
+
+.cart-btn--back svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Botón primario — Continuar / Confirmar */
+.cart-btn--primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  background: #e30613;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(227, 6, 19, 0.35);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.cart-btn--primary:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.cart-btn--primary:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.cart-btn--primary svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
