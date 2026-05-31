@@ -8,19 +8,16 @@ const LOGO_SRC = "/assets/images/logo disnal.png";
 
 export const Navbar = () => {
   const { totalItems } = useContext(CartContext);
-  const { usuario, isAuthenticated } = useContext(AuthContext);
+  const { usuario, isAuthenticated, logoutGlobal: cerrarSesion } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // Evaluamos si el usuario se encuentra explorando rutas del panel administrativo
   const esZonaAdmin = location.pathname.startsWith("/admin");
 
-  // 📝 CONSTRUCCIÓN DECLARATIVA DEL MENÚ SEGÚN EL ROL REAL
   const navItems = [
     { label: "Inicio", to: "/", end: true },
     { label: "Catálogo", to: "/catalog" },
 
-    // 🏢 RUTA EXCLUSIVA CLIENTE: Cotización y Panel de Compras B2B
     ...(isAuthenticated && usuario?.rol === "cliente"
       ? [
           { label: "Cotización", to: "/cart", isCart: true },
@@ -28,7 +25,6 @@ export const Navbar = () => {
         ]
       : []),
 
-    // 🛠️ RUTA EXCLUSIVA ADMIN: Se activa dinámicamente si el rol es 'admin'
     ...(isAuthenticated && usuario?.rol === "admin"
       ? [{ label: "Panel Administración", to: "/admin" }]
       : []),
@@ -49,7 +45,7 @@ export const Navbar = () => {
         <img src={LOGO_SRC} alt="Disnal" />
       </NavLink>
 
-      {/* Links de navegación dinámicos — columna 2 */}
+      {/* Links de navegación — columna 2 */}
       <nav
         id="main-nav"
         className={`main-navbar__nav ${isOpen ? "is-open" : ""}`}
@@ -78,79 +74,109 @@ export const Navbar = () => {
         ))}
       </nav>
 
-      {/* ── CTA Iniciar Sesión / Perfil Dinámico Activo — Columna 3 ── */}
-      {isAuthenticated && usuario ? (
-        <NavLink
-          // Verificación de enrutamiento seguro para Administradores o Clientes
-          to={
-            usuario.rol === "admin" ||
-            usuario.usuario?.toLowerCase() === "admin" ||
-            esZonaAdmin
-              ? "/admin"
-              : "/mi-panel"
-          }
-          onClick={() => setIsOpen(false)}
-          className={`main-navbar__cta ${
-            usuario.rol === "admin" ||
-            usuario.usuario?.toLowerCase() === "admin" ||
-            esZonaAdmin
-              ? ""
-              : "main-navbar__cta--profile"
-          }`}
-          aria-label={`Ver panel de ${usuario.usuario}`}
-          style={
-            usuario.rol === "admin" ||
-            usuario.usuario?.toLowerCase() === "admin" ||
-            esZonaAdmin
-              ? { background: "#1e293b", borderColor: "#1e293b" }
-              : {}
-          }
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            className="w-3.5 h-3.5 shrink-0"
+      {/* ── CTA columna 3 ── */}
+      <div className="main-navbar__actions">
+        {isAuthenticated && usuario ? (
+          <>
+            {/* Botón perfil/empresa */}
+            <NavLink
+              to={
+                usuario.rol === "admin" ||
+                usuario.usuario?.toLowerCase() === "admin" ||
+                esZonaAdmin
+                  ? "/admin"
+                  : "/mi-panel"
+              }
+              onClick={() => setIsOpen(false)}
+              className={`main-navbar__cta ${
+                usuario.rol === "admin" ||
+                usuario.usuario?.toLowerCase() === "admin" ||
+                esZonaAdmin
+                  ? ""
+                  : "main-navbar__cta--profile"
+              }`}
+              aria-label={`Ver panel de ${usuario.usuario}`}
+              style={
+                usuario.rol === "admin" ||
+                usuario.usuario?.toLowerCase() === "admin" ||
+                esZonaAdmin
+                  ? { background: "#1e293b", borderColor: "#1e293b" }
+                  : {}
+              }
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="w-3.5 h-3.5 shrink-0"
+              >
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span className="font-semibold whitespace-nowrap">
+                {usuario.nombre_empresa || usuario.usuario || "Usuario B2B"}
+              </span>
+            </NavLink>
+
+            {/* Botón cerrar sesión — solo visible cuando hay sesión activa */}
+            <button
+              onClick={() => {
+                cerrarSesion();
+                setIsOpen(false);
+              }}
+              className="main-navbar__cta main-navbar__cta--logout"
+              aria-label="Cerrar sesión"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="w-3.5 h-3.5 shrink-0"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span>Cerrar sesión</span>
+            </button>
+          </>
+        ) : (
+          /* Guest — Iniciar sesión */
+          <NavLink
+            className="main-navbar__cta"
+            to={esZonaAdmin ? "/admin/login" : "/login-cliente"}
+            onClick={() => setIsOpen(false)}
+            aria-label="Iniciar Sesión"
           >
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          <span className="font-semibold whitespace-nowrap">
-            {/* Si es cliente pintamos su razón social (usuario), si es admin su identificador */}
-            {usuario.nombre_empresa || usuario.usuario || "Usuario B2B"}
-          </span>
-        </NavLink>
-      ) : (
-        /* Guest View / Not Logged In — Botón corregido sin duplicaciones */
-        <NavLink
-          className="main-navbar__cta"
-          to={esZonaAdmin ? "/admin/login" : "/login-cliente"}
-          onClick={() => setIsOpen(false)}
-          aria-label="Iniciar Sesión"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            className="w-3.5 h-3.5 shrink-0"
-          >
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 01-8 0" />
-          </svg>
-          <span>Iniciar Sesión</span>
-        </NavLink>
-      )}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              className="w-3.5 h-3.5 shrink-0"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            <span>Iniciar Sesión</span>
+          </NavLink>
+        )}
+      </div>
 
       {/* Hamburger */}
       <button

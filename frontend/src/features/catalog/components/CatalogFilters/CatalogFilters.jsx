@@ -13,25 +13,37 @@ const FilterGroup = ({ title, items, selected, onToggle }) => (
       </p>
     ) : (
       items.map((item) => (
-        <label
-          key={item.id}
-          className={`
-            flex items-center gap-3 min-h-[2.6rem] p-[0.5rem_0.85rem] rounded-[10px] 
-            bg-[#2a2a2a] hover:bg-[#333333] cursor-pointer transition-colors duration-160 ease-in-out
-          `
-            .trim()
-            .replace(/\s+/g, " ")}
-        >
+       <label
+        key={item.id}
+        className={`
+          flex items-center gap-3
+          min-h-[48px]
+          px-4 py-3
+          rounded-xl
+          border border-[#ececec]
+          bg-white
+          hover:border-[#e30613]
+          hover:shadow-sm
+          cursor-pointer
+          transition-all duration-200
+        `}
+      >
           <input
-            type="checkbox"
-            checked={selected.includes(item.id)}
-            onChange={() => onToggle(item.id)}
-            className="w-4 h-4 accent-disnal-red shrink-0 cursor-pointer"
-          />
-          <span className="text-neutral-100 text-[0.72rem] font-medium capitalize tracking-wide select-none">
+          type="checkbox"
+          checked={selected.includes(item.id)}
+          onChange={() => onToggle(item.id)}
+          className="
+            w-4 h-4
+            accent-red-600
+            shrink-0
+            cursor-pointer
+          "
+        />
+          <span className="text-[#111827] text-sm font-medium capitalize select-none">
             {item.nombre}
           </span>
         </label>
+        
       ))
     )}
   </fieldset>
@@ -89,5 +101,26 @@ export const CatalogFilters = ({ productos, onAplicarFiltros }) => {
         onToggle={togglePresentacion}
       />
     </section>
+    
   );
+  
 };
+<button
+  type="button"
+  className="
+    mt-4
+    w-full
+    h-11
+    rounded-xl
+    border
+    border-[#e30613]
+    text-[#e30613]
+    font-semibold
+    text-sm
+    hover:bg-[#e30613]
+    hover:text-white
+    transition-all
+  "
+>
+  Limpiar filtros
+</button>
