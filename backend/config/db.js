@@ -33,19 +33,18 @@ export const initDatabase = () => {
   db.prepare(
     `
     CREATE TABLE IF NOT EXISTS productos (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nombre TEXT NOT NULL,
-      estado TEXT DEFAULT 'disponible',
-      cantidad INTEGER NOT NULL,
-      categoria TEXT,
-      marca TEXT,
-      presentacion TEXT,
-      sku TEXT UNIQUE,
-      descripcion TEXT,
-      destacado INTEGER DEFAULT 0, -- 0 = false, 1 = true en SQLite
-      proteina TEXT,
-      humedad TEXT,
-      imagen_url TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    estado TEXT DEFAULT 'disponible',
+    cantidad INTEGER NOT NULL,
+    categoria TEXT,
+    marca TEXT,
+    presentacion TEXT,
+    sku TEXT UNIQUE,
+    descripcion TEXT,
+    destacado INTEGER DEFAULT 0, -- 0 = false, 1 = true en SQLite
+    imagen_url TEXT,
+    detalles_tecnicos TEXT DEFAULT '{}'
     )
   `,
   ).run();
@@ -141,28 +140,45 @@ export const initDatabase = () => {
   const existeProducto = db
     .prepare("SELECT COUNT(*) as total FROM productos")
     .get();
+
   if (existeProducto.total === 0) {
-    console.log("🌾 Migrando catálogo de productos inicial...");
-    db.prepare(
-      `
-      INSERT INTO productos (id, nombre, estado, cantidad, categoria, marca, presentacion, sku, descripcion, destacado, proteina, humedad, imagen_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `,
-    ).run(
+    console.log(
+      "🌾 Migrando catálogo de productos inicial con atributos dinámicos...",
+    );
+
+    // 1. Estructuramos la ficha técnica personalizada en un objeto limpio
+    const detallesHojaldre = {
+      Proteína: "12.5%",
+      Humedad: "14%",
+      "Fuerza (W)": "300 (Alta Fuerza)", // ¡Aprovechamos para meter un atributo técnico extra!
+      "Gluten Húmedo": "32%",
+    };
+
+    // 2. Preparamos el Query apuntando a la nueva columna 'detalles_tecnicos'
+    const stmt = db.prepare(`
+    INSERT INTO productos (
+      id, nombre, estado, cantidad, categoria, marca, 
+      presentacion, sku, descripcion, destacado, imagen_url, detalles_tecnicos
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+    // 3. Ejecutamos la inserción pasando el objeto serializado como String JSON
+    stmt.run(
       1,
       "Harina de Trigo Especial Hojaldre (25kg)",
       "disponible",
       44,
-      "Harinas",
+      "harinas", // Normalizado en minúsculas como lo hace ahora tu controlador
       "Haz de Oros",
       "Bulto",
       "HAR-HOJ-25KG",
       "Harina de trigo de alta fuerza, ideal para panadería y pastelería que requiera excelente laminado.",
-      1, // true
-      "12.5%",
-      "14%",
+      1, // destacado = true
       "https://images.unsplash.com/photo-1574085733277-851d9d856a3a?q=80&w=500",
+      JSON.stringify(detallesHojaldre), // 🟢 Aquí viaja la ficha técnica unificada
     );
+
+    console.log("✅ Semilla de productos ejecutada con éxito.");
   }
 
   console.log("✅ Base de datos relacional SQLite inicializada con éxito.");

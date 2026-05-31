@@ -57,10 +57,10 @@ export const useAdmin = () => {
       formData.append("sku", datosFormulario.sku);
       formData.append("descripcion", datosFormulario.descripcion);
       formData.append("destacado", datosFormulario.destacado ? 1 : 0);
-      if (datosFormulario.proteina)
-        formData.append("proteina", datosFormulario.proteina);
-      if (datosFormulario.humedad)
-        formData.append("humedad", datosFormulario.humedad);
+      formData.append(
+        "detallesTecnicos",
+        JSON.stringify(datosFormulario.detallesTecnicos || {}),
+      );
 
       // 3.  EVALUACIÓN MULTIMEDIA INTEGRADA: Buscamos qué tipo de imagen tenemos
       let archivoFisico = null;

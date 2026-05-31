@@ -1,19 +1,32 @@
 import db from "../config/db.js";
 
-// Obtener todos los productos desde la base de datos SQLite
+// 1. Obtener todos los productos desde la base de datos SQLite
 export const obtenerProductos = (req, res) => {
   try {
     const productos = db
       .prepare("SELECT * FROM productos ORDER BY id DESC")
       .all();
 
-    // 🟢 OPTIMIZACIÓN: Estructuramos la respuesta de forma híbrida
-    // Mapeamos el booleano y devolvemos la url tanto en string como metida en un array
-    const productosFormateados = productos.map((p) => ({
-      ...p,
-      destacado: p.destacado === 1,
-      imagenes: p.imagen_url ? [p.imagen_url] : [], // ✨ Compatibilidad automática con tu frontend actual
-    }));
+    // Estructuramos la respuesta de forma híbrida
+    const productosFormateados = productos.map((p) => {
+      // Parseamos la cadena de texto JSON que viene de la columna detalles_tecnicos
+      let detalles = {};
+      try {
+        detalles = p.detalles_tecnicos ? JSON.parse(p.detalles_tecnicos) : {};
+      } catch (e) {
+        console.error(
+          "Error parseando detalles_tecnicos del producto ID:",
+          p.id,
+        );
+      }
+
+      return {
+        ...p,
+        destacado: p.destacado === 1,
+        imagenes: p.imagen_url ? [p.imagen_url] : [], // Compatibilidad automática con tu frontend actual
+        detallesTecnicos: detalles, // El frontend recibe su objeto limpio y dinámico
+      };
+    });
 
     res.json({ productos: productosFormateados });
   } catch (error) {
@@ -22,7 +35,7 @@ export const obtenerProductos = (req, res) => {
   }
 };
 
-// Crear un nuevo producto en la tabla relacional
+// 2. Crear un nuevo producto en la tabla relacional
 export const crearProducto = (req, res) => {
   const {
     nombre,
@@ -34,9 +47,8 @@ export const crearProducto = (req, res) => {
     sku,
     descripcion,
     destacado,
-    proteina,
-    humedad,
-    url_manual, // 🆕 Campo opcional por si pegan un enlace directo en texto
+    url_manual,
+    detallesTecnicos, // Capturamos el mapa dinámico de claves-valores
   } = req.body;
 
   if (!nombre || cantidad === undefined) {
@@ -53,17 +65,14 @@ export const crearProducto = (req, res) => {
       destacado === "true" || destacado === true || destacado === 1 ? 1 : 0;
     const itemSku = sku || `SKU-${Date.now()}`;
 
-    // 🟢 LÓGICA MULTIMEDIA INTELIGENTE PARA CREACIÓN
+    // LÓGICA MULTIMEDIA INTELIGENTE PARA CREACIÓN
     let urlImagenFinal = null;
 
     if (req.file) {
-      // Caso A: El usuario arrastró/subió un archivo real binario
       urlImagenFinal = `http://localhost:4000/uploads/${req.file.filename}`;
     } else if (url_manual && url_manual.trim() !== "") {
-      // Caso B: El usuario pegó una dirección web externa en el input de URL
       urlImagenFinal = url_manual.trim();
     } else if (req.body.imagenes) {
-      // Caso C: Fallback por si el front sigue enviando el campo antiguo
       const imgs = req.body.imagenes;
       urlImagenFinal =
         Array.isArray(imgs) && imgs.length > 0
@@ -73,11 +82,17 @@ export const crearProducto = (req, res) => {
             : null;
     }
 
+    // SERIALIZACIÓN: Convertimos el objeto que venga del front a texto plano para SQLite
+    const stringDetalles =
+      typeof detallesTecnicos === "string"
+        ? detallesTecnicos
+        : JSON.stringify(detallesTecnicos || {});
+
     const stmt = db.prepare(`
       INSERT INTO productos (
         nombre, estado, cantidad, categoria, marca, 
-        presentacion, sku, descripcion, destacado, proteina, humedad, imagen_url
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        presentacion, sku, descripcion, destacado, imagen_url, detalles_tecnicos
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const resultado = stmt.run(
@@ -90,9 +105,8 @@ export const crearProducto = (req, res) => {
       itemSku,
       descripcion || "",
       esDestacado,
-      proteina || null,
-      humedad || null,
       urlImagenFinal,
+      stringDetalles,
     );
 
     res.status(201).json({
@@ -110,7 +124,7 @@ export const crearProducto = (req, res) => {
   }
 };
 
-// Actualizar un producto existente de forma parcial (Lógica híbrida)
+// 3. Actualizar un producto existente de forma parcial (Lógica híbrida)
 export const actualizarProducto = (req, res) => {
   const id = Number(req.params.id);
   const {
@@ -123,13 +137,12 @@ export const actualizarProducto = (req, res) => {
     sku,
     descripcion,
     destacado,
-    proteina,
-    humedad,
     url_manual,
+    detallesTecnicos,
   } = req.body;
 
   try {
-    // 1. Obtener el producto de referencia actual
+    // Obtener el producto de referencia actual
     const productoActual = db
       .prepare("SELECT * FROM productos WHERE id = ?")
       .get(id);
@@ -138,7 +151,7 @@ export const actualizarProducto = (req, res) => {
       return res.status(404).json({ error: "Producto no encontrado." });
     }
 
-    // 2. Determinar cantidad y estado de manera cruzada
+    // Determinar cantidad y estado de manera cruzada
     const nuevaCantidad =
       cantidad !== undefined ? Number(cantidad) : productoActual.cantidad;
     let nuevoEstado = productoActual.estado;
@@ -154,7 +167,7 @@ export const actualizarProducto = (req, res) => {
       nuevoEstado = nuevaCantidad > 0 ? "disponible" : "no disponible";
     }
 
-    // 3. Formatear booleanos
+    // Formatear booleanos
     const esDestacado =
       destacado !== undefined
         ? destacado === "true" || destacado === true || destacado === 1
@@ -162,14 +175,12 @@ export const actualizarProducto = (req, res) => {
           : 0
         : productoActual.destacado;
 
-    // 4. 🟢 LÓGICA MULTIMEDIA INTELIGENTE PARA ACTUALIZACIÓN
-    let urlImagenFinal = productoActual.imagen_url; // Por defecto mantenemos la que ya está
+    // LÓGICA MULTIMEDIA INTELIGENTE PARA ACTUALIZACIÓN
+    let urlImagenFinal = productoActual.imagen_url;
 
     if (req.file) {
-      // Si subieron un archivo nuevo, pisamos la anterior
       urlImagenFinal = `http://localhost:4000/uploads/${req.file.filename}`;
     } else if (url_manual !== undefined) {
-      // Si mutaron el input de texto (incluso si lo vaciaron)
       urlImagenFinal =
         url_manual && url_manual.trim() !== "" ? url_manual.trim() : null;
     } else if (req.body.imagenes !== undefined) {
@@ -182,7 +193,16 @@ export const actualizarProducto = (req, res) => {
             : null;
     }
 
-    // 5. Variables de asignación directa
+    // MANEJO DE SERIALIZACIÓN DINÁMICA DE ATRIBUTOS
+    let stringDetalles = productoActual.detalles_tecnicos;
+    if (detallesTecnicos !== undefined) {
+      stringDetalles =
+        typeof detallesTecnicos === "string"
+          ? detallesTecnicos
+          : JSON.stringify(detallesTecnicos || {});
+    }
+
+    // Variables de asignación directa o coalescencia manual
     const nuevoNombre = nombre !== undefined ? nombre : productoActual.nombre;
     const nuevaCategoria =
       categoria !== undefined
@@ -196,10 +216,6 @@ export const actualizarProducto = (req, res) => {
     const nuevoSku = sku !== undefined ? sku : productoActual.sku;
     const nuevaDescripcion =
       descripcion !== undefined ? descripcion : productoActual.descripcion;
-    const nuevaProteina =
-      proteina !== undefined ? proteina : productoActual.proteina;
-    const nuevaHumedad =
-      humedad !== undefined ? humedad : productoActual.humedad;
 
     const stmt = db.prepare(`
       UPDATE productos SET
@@ -212,9 +228,8 @@ export const actualizarProducto = (req, res) => {
         sku = ?,
         descripcion = ?,
         destacado = ?,
-        proteina = ?,
-        humedad = ?,
-        imagen_url = ?
+        imagen_url = ?,
+        detalles_tecnicos = ?
       WHERE id = ?
     `);
 
@@ -228,9 +243,8 @@ export const actualizarProducto = (req, res) => {
       nuevoSku,
       nuevaDescripcion,
       esDestacado,
-      nuevaProteina,
-      nuevaHumedad,
       urlImagenFinal,
+      stringDetalles,
       id,
     );
 
@@ -238,11 +252,9 @@ export const actualizarProducto = (req, res) => {
   } catch (error) {
     console.error("❌ Error al actualizar producto en SQLite:", error);
     if (error.message.includes("UNIQUE constraint failed: productos.sku")) {
-      return res
-        .status(400)
-        .json({
-          error: "El SKU ya se encuentra registrado por otro producto.",
-        });
+      return res.status(400).json({
+        error: "El SKU ya se encuentra registrado por otro producto.",
+      });
     }
     res
       .status(500)
@@ -250,7 +262,7 @@ export const actualizarProducto = (req, res) => {
   }
 };
 
-// Eliminar producto por ID
+// 4. Eliminar producto por ID
 export const eliminarProducto = (req, res) => {
   const id = Number(req.params.id);
 
