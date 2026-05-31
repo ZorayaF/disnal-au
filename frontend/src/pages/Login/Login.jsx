@@ -1,190 +1,85 @@
-import { useAuthLogin } from "@/features/auth/hooks/useAuthLogin";
+// src/pages/Login.jsx
 import { Link } from "react-router-dom";
-import "./Login.css";
-
-const LOGO_SRC = "/assets/images/png logo disnal.png";
 
 export const Login = () => {
-  const { credenciales, handleInputChange, error, cargando, handleSubmit } =
-    useAuthLogin();
-
   return (
-    <div className="login-page">
-      <div className="login-card">
-        {/* ── Header rojo con logo ── */}
-        <div className="login-card__header">
-          <img src={LOGO_SRC} alt="Disnal AU" className="login-card__logo" />
-          <p className="login-card__subtitle">
-            Distribuidora Nacional de Alimentos
-          </p>
-        </div>
+    <div className="w-full max-w-md p-4 text-center bg-white text-gray-900">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+          Bienvenido a Disnal
+        </h1>
+        <p className="mt-2 text-sm text-gray-500">
+          Por favor selecciona tu tipo de cuenta para continuar
+        </p>
+      </div>
 
-        {/* ── Cuerpo oscuro ── */}
-        <div className="login-card__body">
-          {/* Error */}
-          {error && (
-            <div className="login-card__error">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {error}
-            </div>
-          )}
-
-          {/* Botón volver */}
-          <Link to="/" className="login-back-btn">
+      <div className="flex flex-col gap-4">
+        {/* Enlace Cliente */}
+        <Link
+          to="/login-cliente"
+          className="group relative flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 text-left transition-all hover:border-red-500 hover:shadow-lg"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white">
             <svg
-              viewBox="0 0 24 24"
+              className="h-6 w-6"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ width: 14, height: 14 }}
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Volver al inicio
-          </Link>
-
-          {/* Formulario */}
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: 20 }}
-          >
-            {/* Campo: Usuario */}
-            <div className="login-field">
-              <label className="login-field__label" htmlFor="login-usuario">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                Usuario
-              </label>
-              <div className="login-field__input-wrap">
-                <svg
-                  className="login-field__input-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                <input
-                  id="login-usuario"
-                  className="login-field__input"
-                  type="text"
-                  name="usuario"
-                  placeholder="Ej: admin"
-                  value={credenciales.usuario}
-                  onChange={handleInputChange}
-                  disabled={cargando}
-                  autoComplete="username"
-                />
-              </div>
-            </div>
-
-            {/* Campo: Contraseña */}
-            <div className="login-field">
-              <label className="login-field__label" htmlFor="login-contrasena">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                Contraseña
-              </label>
-              <div className="login-field__input-wrap">
-                <svg
-                  className="login-field__input-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <input
-                  id="login-contrasena"
-                  className="login-field__input"
-                  type="password"
-                  name="contrasena"
-                  placeholder="••••••••"
-                  value={credenciales.contrasena}
-                  onChange={handleInputChange}
-                  disabled={cargando}
-                  autoComplete="current-password"
-                />
-              </div>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="login-card__submit"
-              disabled={cargando}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" y1="12" x2="3" y2="12" />
-              </svg>
-              {cargando ? "Verificando..." : "Iniciar Sesión"}
-            </button>
-          </form>
-
-          {/* Footer */}
-          <div className="login-card__footer">
-            <svg
               viewBox="0 0 24 24"
-              fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
             >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
             </svg>
-            <p>Acceso exclusivo para usuarios autorizados.</p>
           </div>
-        </div>
+          <div>
+            <h3 className="font-bold text-gray-900">Portal de Clientes</h3>
+            <p className="text-xs text-gray-500">
+              Pedidos, facturas comerciales y catálogo completo.
+            </p>
+          </div>
+        </Link>
+
+        {/* Enlace Admin */}
+        <Link
+          to="/admin/login"
+          className="group relative flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 text-left transition-all hover:border-red-500 hover:shadow-lg"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 text-gray-600 transition-colors group-hover:bg-zinc-800 group-hover:text-white">
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">Acceso Administrativo</h3>
+            <p className="text-xs text-gray-500">
+              Control logístico y configuración del sistema.
+            </p>
+          </div>
+        </Link>
       </div>
+
+      <p className="mt-6 text-xs text-gray-400">
+        ¿No tienes cuenta corporativa?{" "}
+        <Link
+          to="/signup"
+          className="font-semibold text-red-600 hover:underline"
+        >
+          Regístrate aquí
+        </Link>
+      </p>
     </div>
   );
 };

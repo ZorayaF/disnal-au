@@ -1,4 +1,3 @@
-// src/components/ui/LineIcon/LineIcon.jsx
 const ICONS = {
   whatsapp: (
     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -101,45 +100,39 @@ const ICONS = {
     </svg>
   ),
   scale: (
-     <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="12" y1="3" x2="12" y2="21" />
-    <line x1="6" y1="7" x2="18" y2="7" />
-
-    {/* Plato izquierdo */}
-    <path d="M4 7l-2 4h4L4 7z" />
-    <path d="M2 11a2 2 0 0 0 4 0" />
-
-    {/* Plato derecho */}
-    <path d="M20 7l-2 4h4l-2-4z" />
-    <path d="M18 11a2 2 0 0 0 4 0" />
-
-    {/* Base */}
-    <path d="M8 21h8" />
-  </svg>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="12" y1="3" x2="12" y2="21" />
+      <line x1="6" y1="7" x2="18" y2="7" />
+      <path d="M4 7l-2 4h4L4 7z" />
+      <path d="M2 11a2 2 0 0 0 4 0" />
+      <path d="M20 7l-2 4h4l-2-4z" />
+      <path d="M18 11a2 2 0 0 0 4 0" />
+      <path d="M8 21h8" />
+    </svg>
   ),
   cookie: (
- <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-4-4 4 4 0 0 1-4-4 4 4 0 0 1-2-2z"/>
-    <path d="M8.5 8.5h.01"/>
-    <path d="M16 15.5h.01"/>
-    <path d="M12 12h.01"/>
-    <path d="M11 17h.01"/>
-    <path d="M7 14h.01"/>
-  </svg>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-4-4 4 4 0 0 1-4-4 4 4 0 0 1-2-2z" />
+      <path d="M8.5 8.5h.01" />
+      <path d="M16 15.5h.01" />
+      <path d="M12 12h.01" />
+      <path d="M11 17h.01" />
+      <path d="M7 14h.01" />
+    </svg>
   ),
   quality: (
     <svg
@@ -384,18 +377,8 @@ export const LineIcon = ({
   <span
     aria-label={ariaLabel}
     aria-hidden={ariaLabel ? undefined : true}
-    className={`
-      className="
-      w-11 h-11 rounded-full bg-red-600 text-white
-      inline-grid place-items-center text-[1.42rem] leading-none 
-      shadow-[0_12px_28px_rgba(0,0,0,0.12)] shrink-0 select-none
-      [&>svg]:w-[55%] [&>svg]:h-[55%] [&>svg]:block
-      ${className}
-    `
-      .trim()
-      .replace(/\s+/g, " ")}
+    className={`inline-block select-none [&>svg]:w-full [&>svg]:h-full [&>svg]:block ${className}`}
   >
     {ICONS[name] ?? ICONS.document}
   </span>
 );
-

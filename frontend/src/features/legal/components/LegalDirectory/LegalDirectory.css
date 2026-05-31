@@ -11,11 +11,11 @@
 }
 
 .legal-directory__band h2 {
-  @apply m-0 text-disnal-black text-[clamp(0.9rem,2vw,1.15rem)] font-black tracking-[0.18em] leading-[1.4] uppercase font-sans;
+  @apply m-0 text-white text-[clamp(0.9rem,2vw,1.15rem)] font-black tracking-[0.18em] leading-[1.4] uppercase font-sans;
 }
 
 .legal-directory__band p {
-  @apply mt-2.5 mx-0 mb-0 text-disnal-black text-[0.62rem] font-medium tracking-[0.28em] leading-[1.6] uppercase font-sans;
+  @apply mt-2.5 mx-0 mb-0 text-white text-[0.62rem] font-medium tracking-[0.28em] leading-[1.6] uppercase font-sans;
 }
 
 /* ── Grilla Elástica y Centrada ── */

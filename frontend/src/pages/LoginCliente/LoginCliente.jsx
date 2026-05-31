@@ -8,7 +8,7 @@ export const LoginCliente = () => {
     <AuthFormSection
       {...authProps}
       tituloInput="Correo Empresarial"
-      placeholderInput="Ej: compras@empresa.com"
+      placeholderInput="compras@empresa.com"
       nameInput="correo"
     />
   );

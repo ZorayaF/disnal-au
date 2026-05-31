@@ -1,52 +1,44 @@
-// src/sections/AuthFormSection.jsx
-import React from "react";
+// src/features/auth/components/AuthFormSection.jsx
 import { Link } from "react-router-dom";
-import { InputField } from "@components/ui/InputField/InputField";
-import { Button } from "@components/ui/Button/Button";
 
 const LOGO_SRC = "/assets/images/png logo disnal.png";
 
 export const AuthFormSection = ({
-  tituloInput,
-  placeholderInput,
-  nameInput,
   credenciales,
   handleInputChange,
   error,
   cargando,
   handleSubmit,
+  tituloInput,
+  placeholderInput,
+  nameInput,
 }) => {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-disnal-dark p-4 font-sans select-none">
-      <div className="w-full max-w-md bg-disnal-black rounded-lg overflow-hidden border border-disnal-line/10 shadow-disnal-deep">
-        {/* ── Header rojo con logo ── */}
-        <div className="bg-disnal-red p-6 text-center flex flex-col items-center justify-center gap-2">
+    <div className="w-full max-w-md p-2">
+      {/* Eliminadas las variantes dark: de la tarjeta */}
+      <div className="overflow-hidden rounded-2xl bg-white shadow-xl border border-gray-300">
+        {/* Card Header */}
+        <div className="bg-white p-6 text-center border-b border-gray-300">
           <img
             src={LOGO_SRC}
             alt="Disnal AU"
-            className="h-14 w-auto object-contain drop-shadow-md"
+            className="mx-auto h-16 w-auto object-contain"
           />
-          <p className="text-white/90 text-xs font-black uppercase tracking-disnal">
+          <p className="mt-2 text-sm font-bold tracking-wide text-gray-800">
             Distribuidora Nacional de Alimentos
           </p>
         </div>
 
-        {/* ── Cuerpo oscuro ── */}
-        <div className="p-6 space-y-6">
-          {/* Alerta de Error */}
+        {/* Card Body */}
+        <div className="p-6 sm:p-8">
           {error && (
-            <div
-              className="flex items-center gap-2 bg-disnal-red/10 border-l-4 border-disnal-red p-3 rounded text-red-300 text-xs font-bold"
-              role="alert"
-            >
+            <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
               <svg
-                className="w-4 h-4 shrink-0"
+                className="h-5 w-5 shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
               >
                 <circle cx="12" cy="12" r="10" />
                 <line x1="12" y1="8" x2="12" y2="12" />
@@ -56,164 +48,101 @@ export const AuthFormSection = ({
             </div>
           )}
 
-          {/* Botón volver */}
+          {/* Enlace volver */}
           <Link
-            to="/"
-            className={`
-              inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider 
-              text-disnal-gray hover:text-white transition-colors
-            `
-              .trim()
-              .replace(/\s+/g, " ")}
+            to="/login"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-red-600 transition-colors mb-5"
           >
             <svg
-              className="w-3.5 h-3.5"
+              className="h-4 w-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
             >
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            Volver al inicio
+            Cambiar tipo de acceso
           </Link>
 
           {/* Formulario */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-5"
-            noValidate
-          >
-            {/* Campo Dinámico: Usuario o Correo (Mapeado a login oscuro administrativo) */}
-            <InputField
-              id="login-dinamico"
-              type="text"
-              name={nameInput}
-              label={tituloInput}
-              placeholder={placeholderInput}
-              value={credenciales[nameInput] || ""}
-              onChange={handleInputChange}
-              disabled={cargando}
-              autoComplete="username"
-              theme="dark"
-              required
-              icon={
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Input Dinámico */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                className="text-xs font-bold uppercase tracking-wider text-gray-600 flex items-center gap-1.5"
+                htmlFor="dynamic-input"
+              >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4 text-gray-400"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
                 >
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-              }
-            />
+                {tituloInput}
+              </label>
+              <input
+                id="dynamic-input"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 px-4 text-sm text-gray-900 outline-none transition-all focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 disabled:opacity-50"
+                type={nameInput === "correo" ? "email" : "text"}
+                name={nameInput}
+                placeholder={placeholderInput}
+                value={credenciales[nameInput] || ""}
+                onChange={handleInputChange}
+                disabled={cargando}
+                autoComplete={nameInput === "correo" ? "email" : "username"}
+                required
+              />
+            </div>
 
-            {/* Campo Fijo: Contraseña */}
-            <InputField
-              id="login-contrasena"
-              type="password"
-              name="contrasena"
-              label="Contraseña"
-              placeholder="••••••••"
-              value={credenciales.contrasena || ""}
-              onChange={handleInputChange}
-              disabled={cargando}
-              autoComplete="current-password"
-              theme="dark"
-              required
-              icon={
+            {/* Input Contraseña */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                className="text-xs font-bold uppercase tracking-wider text-gray-600 flex items-center gap-1.5"
+                htmlFor="login-contrasena"
+              >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4 text-gray-400"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
                 >
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-              }
-            />
+                Contraseña
+              </label>
+              <input
+                id="login-contrasena"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 px-4 text-sm text-gray-900 outline-none transition-all focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 disabled:opacity-50"
+                type="password"
+                name="contrasena"
+                placeholder="••••••••"
+                value={credenciales.contrasena || ""}
+                onChange={handleInputChange}
+                disabled={cargando}
+                autoComplete="current-password"
+                required
+              />
+            </div>
 
-            {/* Submit mediante botón maestro */}
-            <Button
+            {/* Botón de Enviar */}
+            <button
               type="submit"
-              variant="primary"
-              size="lg"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-red-700 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 shadow-md shadow-red-600/10"
               disabled={cargando}
-              className="w-full justify-center gap-2 mt-2"
             >
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" y1="12" x2="3" y2="12" />
-              </svg>
               {cargando ? "Verificando..." : "Iniciar Sesión"}
-            </Button>
+            </button>
           </form>
 
-          {/* ── SECCIÓN: Redirección Alta de Clientes B2B ── */}
-          <div className="mt-6 pt-5 border-t border-dashed border-white/10 text-center space-y-2">
-            <p className="text-disnal-gray text-xs font-medium">
-              ¿Su empresa aún no comercializa con nosotros?
-            </p>
-            <Link
-              to="/signup"
-              className={`
-                inline-flex items-center justify-center gap-1.5 text-sm font-black 
-                text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-wider
-              `
-                .trim()
-                .replace(/\s+/g, " ")}
-            >
-              <svg
-                className="w-3.5 h-3.5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="8.5" cy="7" r="4" />
-                <line x1="20" y1="8" x2="20" y2="14" />
-                <line x1="23" y1="11" x2="17" y2="11" />
-              </svg>
-              Solicitar Alta Comercial B2B
-            </Link>
-          </div>
-
-          {/* Footer Informativo Resguardado */}
-          <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-wider text-disnal-gray/70 pt-2">
-            <svg
-              className="w-3.5 h-3.5 shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+          {/* Footer Informativo */}
+          <div className="mt-6 flex items-center justify-center gap-2 border-t border-gray-100 pt-4 text-center text-xs text-gray-400">
             <p>Acceso exclusivo para usuarios autorizados.</p>
           </div>
         </div>
