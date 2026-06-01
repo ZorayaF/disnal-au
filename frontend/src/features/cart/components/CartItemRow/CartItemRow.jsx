@@ -50,15 +50,30 @@ export const CartItemRow = ({ item, onIncrement, onDecrement, onRemove }) => {
       </div>
 
       {/* Acción de descarte */}
-      <Button
-        className="cart-item-row__delete"
-        variant="ghost"
-        size="sm"
-        onClick={() => onRemove(item.id)}
-        aria-label={`Eliminar ${item.nombre}`}
-      >
-        <LineIcon name="trash" />
-      </Button>
+      {/* Acción de descarte */}
+<button
+  type="button"
+  className="cart-item-row__delete"
+  onClick={() => onRemove(item.id)}
+  aria-label={`Eliminar ${item.nombre}`}
+>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    width="18"
+    height="18"
+  >
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+    <path d="M10 11v6" />
+    <path d="M14 11v6" />
+    <path d="M9 6V4h6v2" />
+  </svg>
+</button>
     </article>
   );
 };
