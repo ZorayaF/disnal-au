@@ -2,7 +2,7 @@
 @reference "@css";
 
 .main-navbar {
-  @apply w-full h-14 grid grid-cols-[180px_1fr_auto] grid-rows-[56px] items-stretch bg-white sticky top-0 z-50 shadow-sm overflow-hidden font-sans;
+  @apply w-full h-14 grid grid-cols-[180px_1fr_auto] grid-rows-[56px] items-stretch bg-white sticky top-0 z-50 shadow-sm font-sans;
 }
 
 .main-navbar__brand {
