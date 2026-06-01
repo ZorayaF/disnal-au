@@ -353,14 +353,28 @@ export const ClientOrderCard = ({
               return (
                 <div key={idx} style={{ display: "contents" }}>
                   {idx > 0 && (
-                    <div
-                      className={`coc__connector ${isDone ? "coc__connector--done" : ""}`}
-                    />
+                    <div className={`coc__connector ${isDone ? "coc__connector--done" : ""}`} />
                   )}
-                  <div
-                    className={`coc__step ${isActive ? "coc__step--active" : ""} ${isDone ? "coc__step--done" : ""}`}
-                  >
-                    <div className="coc__step-circle">{step.icon}</div>
+                  <div className={`coc__step ${isActive ? "coc__step--active" : ""} ${isDone ? "coc__step--done" : ""}`}>
+                    <div className="coc__step-circle">
+                      {isDone ? (
+                        // Chulo verde para pasos completados
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                          strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      ) : isActive ? (
+                        // Reloj rojo para paso activo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                          strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10" />
+                          <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                      ) : (
+                        // Ícono original para pasos futuros
+                        step.icon
+                      )}
+                    </div>
                     <span className="coc__step-label">{step.label}</span>
                   </div>
                 </div>
@@ -374,23 +388,28 @@ export const ClientOrderCard = ({
 
         {/* Pending notice */}
         {!pedido.preciosListos && (
-          <div className="coc__pending-notice">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12" />
+          <div className="coc__pending-notice coc__pending-notice--warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
             </svg>
             <div>
               <strong>Cotización pendiente de aprobación</strong>
-              <p>
-                El total final se calculará cuando el asesor asigne los precios
-                de los bultos/insumos.
-              </p>
+              <p>El total final se calculará cuando el asesor asigne los precios de los bultos/insumos.</p>
+            </div>
+          </div>
+        )}
+
+        {pedido.preciosListos && (
+          <div className="coc__pending-notice coc__pending-notice--success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <div>
+              <strong>Cotización aprobada</strong>
+              <p>Los precios han sido asignados. Puedes proceder con el pago.</p>
             </div>
           </div>
         )}

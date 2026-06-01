@@ -61,24 +61,28 @@ export const CartProvider = ({ children }) => {
   };
 
   // 5. CÁLCULOS AUTOMÁTICOS: Totales de la orden
-  const totalItems = carrito.reduce(
-    (acc, item) => acc + item.cantidadEnCarrito,
-    0,
-  );
+  // 5. CÁLCULOS AUTOMÁTICOS: Totales de la orden
+const totalItems = carrito.reduce(
+  (acc, item) => acc + item.cantidadEnCarrito,
+  0,
+);
+
+const totalProductos = carrito.length; // 👈 nuevo
 
   return (
-    <CartContext.Provider
-      value={{
-        carrito,
-        setCarrito,
-        agregarProducto,
-        restarProducto,
-        eliminarProducto,
-        limpiarCarrito,
-        totalItems,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+  <CartContext.Provider
+    value={{
+      carrito,
+      setCarrito,
+      agregarProducto,
+      restarProducto,
+      eliminarProducto,
+      limpiarCarrito,
+      totalItems,
+      totalProductos, // 👈 nuevo
+    }}
+  >
+    {children}
+  </CartContext.Provider>
+);
 };
