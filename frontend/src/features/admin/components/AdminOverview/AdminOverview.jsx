@@ -144,11 +144,12 @@ export const AdminOverview = ({ productos = [], onEditar, onEliminar }) => {
                 <div className="flex justify-center md:justify-end gap-2">
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost" // 🎯 Elegimos ghost para desaparecer el fondo y bordes
                     size="sm"
                     onClick={() => onEditar(product)}
                     aria-label={`Editar ${product.nombre}`}
-                    className="border-disnal-line hover:bg-disnal-black/5 !p-2 min-h-0"
+                    /* 🎯 Forzamos que el texto/icono sea negro (!text-black) y quitamos rellenos raros */
+                    className="!text-black !p-2 min-h-0 cursor-pointer hover:!bg-black/5 rounded-lg transition-colors"
                   >
                     <LineIcon name="edit" className="w-3.5 h-3.5" />
                   </Button>

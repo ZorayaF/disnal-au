@@ -1,4 +1,3 @@
-// src/context/CartContext.jsx
 import { createContext, useState, useEffect } from "react";
 
 export const CartContext = createContext();
@@ -50,17 +49,31 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // 3. FUNCIÓN: Eliminar un artículo por completo
+  // 🎯 3. NUEVA FUNCIÓN: Actualizar cantidad manualmente desde el Input de teclado
+  const actualizarCantidad = (id, nuevaCantidad) => {
+    setCarrito((prevCart) =>
+      prevCart.map((item) => {
+        if (item.id === id) {
+          // Si el usuario escribe algo mayor al stock real de la distribuidora, lo topamos al máximo
+          const cantidadValidada = Math.min(nuevaCantidad, item.cantidad);
+          return { ...item, cantidadEnCarrito: Math.max(1, cantidadValidada) };
+        }
+        return item;
+      }),
+    );
+  };
+
+  // 4. FUNCIÓN: Eliminar un artículo por completo
   const eliminarProducto = (id) => {
     setCarrito((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  // 4. FUNCIÓN: Limpiar la canasta
+  // 5. FUNCIÓN: Limpiar la canasta
   const limpiarCarrito = () => {
     setCarrito([]);
   };
 
-  // 5. CÁLCULOS AUTOMÁTICOS: Totales de la orden
+  // 6. CÁLCULOS AUTOMÁTICOS: Totales de la orden
   const totalItems = carrito.reduce(
     (acc, item) => acc + item.cantidadEnCarrito,
     0,
@@ -73,6 +86,7 @@ export const CartProvider = ({ children }) => {
         setCarrito,
         agregarProducto,
         restarProducto,
+        actualizarCantidad, // 👈 Exportamos la nueva función para los inputs
         eliminarProducto,
         limpiarCarrito,
         totalItems,
