@@ -1,11 +1,8 @@
 // src/features/cart/components/CartItemRow/CartItemRow.jsx
-import { Button } from "@components/ui/Button/Button";
-import { LineIcon } from "@components/ui/LineIcon/LineIcon";
 import "./CartItemRow.css";
 
 const FALLBACK_IMAGE = "/assets/images/harina de trigo.png";
 
-// CORREGIDO: Añadimos 'onUpdateQuantity' a la firma de las props recibidas
 export const CartItemRow = ({
   item,
   onIncrement,
@@ -34,27 +31,24 @@ export const CartItemRow = ({
         </div>
       </div>
 
-      {/* Control de Cantidades Mayoristas */}
+      {/* Control de Cantidades */}
       <div
-        className="cart-item-row__quantity flex items-center justify-between px-3 py-1.5 border border-neutral-200 rounded-full bg-neutral-50 w-fit"
+        className="cart-item-row__quantity"
         aria-label={`Cantidad de ${item.nombre}`}
       >
-        {/* Botón de Restar */}
         <button
           type="button"
           onClick={() => onDecrement(item.id)}
           disabled={item.cantidadEnCarrito <= 1}
-          className="w-7 h-7 rounded-full border border-neutral-300 bg-white flex items-center justify-center text-neutral-600 font-bold text-sm transition-all hover:border-red-600 hover:text-red-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           aria-label="Restar cantidad"
         >
           −
         </button>
 
-        {/*  INPUT NUMÉRICO SINCRONIZADO */}
         <input
           type="number"
           min="1"
-          max={item.cantidad || 999} //  CORREGIDO: Usamos 'item.cantidad' que viene directo de tu base de datos SQLite
+          max={item.cantidad || 999}
           value={item.cantidadEnCarrito}
           onChange={(e) => {
             const valor = parseInt(e.target.value, 10);
@@ -62,15 +56,12 @@ export const CartItemRow = ({
               onUpdateQuantity?.(item.id, valor);
             }
           }}
-          className="w-12 text-center font-black text-[#0b0b0b] bg-transparent border-0 outline-none p-0 font-sans text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
 
-        {/* Botón de Sumar */}
         <button
           type="button"
           onClick={() => onIncrement(item.id)}
-          disabled={item.cantidadEnCarrito >= (item.cantidad || 999)} // 🎯 CORREGIDO: Tope dinámico al stock real
-          className="w-7 h-7 rounded-full border border-neutral-300 bg-white flex items-center justify-center text-neutral-600 font-bold text-sm transition-all hover:border-red-600 hover:text-red-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+          disabled={item.cantidadEnCarrito >= (item.cantidad || 999)}
           aria-label="Sumar cantidad"
         >
           +
@@ -78,15 +69,29 @@ export const CartItemRow = ({
       </div>
 
       {/* Acción de descarte */}
-      <Button
+      <button
+        type="button"
         className="cart-item-row__delete"
-        variant="ghost"
-        size="sm"
         onClick={() => onRemove(item.id)}
         aria-label={`Eliminar ${item.nombre}`}
       >
-        <LineIcon name="trash" />
-      </Button>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          width="18"
+          height="18"
+        >
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+          <path d="M10 11v6" />
+          <path d="M14 11v6" />
+          <path d="M9 6V4h6v2" />
+        </svg>
+      </button>
     </article>
   );
 };
