@@ -20,8 +20,17 @@ export const Consulting = () => {
         padding: "20px",
       }}
     >
-      {/* Banner superior reutilizable */}
-      <PageHeader />
+      {/* ── ENCABEZADO DE LA PÁGINA ── */}
+      <div className="flex flex-col gap-1 border-b border-neutral-100 pb-4 mb-2">
+        <h1 className="text-xl sm:text-2xl font-black text-neutral-900 uppercase tracking-wide m-0">
+          Panel de Atención y Consultas
+        </h1>
+        <p className="text-xs text-neutral-500 font-medium m-0 leading-relaxed">
+          Bienvenido al centro de soporte de Disnal AU. Cualquier usuario o
+          aliado comercial puede radicar sus inquietudes o contactar
+          directamente a nuestros asesores.
+        </p>
+      </div>
 
       {/* Canales de contacto directos (Tarjetas de Wpp, Mail, etc.) */}
       <ContactChannels />
