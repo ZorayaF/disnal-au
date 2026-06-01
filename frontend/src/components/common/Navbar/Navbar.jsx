@@ -8,7 +8,11 @@ const LOGO_SRC = "/assets/images/logo disnal.png";
 
 export const Navbar = () => {
   const { totalItems } = useContext(CartContext);
-  const { usuario, isAuthenticated, logoutGlobal: cerrarSesion } = useContext(AuthContext);
+  const {
+    usuario,
+    isAuthenticated,
+    logoutGlobal: cerrarSesion,
+  } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -18,7 +22,8 @@ export const Navbar = () => {
     { label: "Inicio", to: "/", end: true },
     { label: "Catálogo", to: "/catalog" },
 
-    ...(isAuthenticated && usuario?.rol === "cliente"
+    // 🎯 CORREGIDO: Cambiamos 'cliente' por 'client' para hacer match con el AuthContext
+    ...(isAuthenticated && usuario?.rol === "client"
       ? [
           { label: "Cotización", to: "/cart", isCart: true },
           { label: "Mi Panel B2B", to: "/mi-panel" },
@@ -81,25 +86,17 @@ export const Navbar = () => {
             {/* Botón perfil/empresa */}
             <NavLink
               to={
-                usuario.rol === "admin" ||
-                usuario.usuario?.toLowerCase() === "admin" ||
-                esZonaAdmin
-                  ? "/admin"
-                  : "/mi-panel"
+                usuario.rol === "admin" || esZonaAdmin ? "/admin" : "/mi-panel"
               }
               onClick={() => setIsOpen(false)}
               className={`main-navbar__cta ${
-                usuario.rol === "admin" ||
-                usuario.usuario?.toLowerCase() === "admin" ||
-                esZonaAdmin
+                usuario.rol === "admin" || esZonaAdmin
                   ? ""
                   : "main-navbar__cta--profile"
               }`}
               aria-label={`Ver panel de ${usuario.usuario}`}
               style={
-                usuario.rol === "admin" ||
-                usuario.usuario?.toLowerCase() === "admin" ||
-                esZonaAdmin
+                usuario.rol === "admin" || esZonaAdmin
                   ? { background: "#1e293b", borderColor: "#1e293b" }
                   : {}
               }
@@ -123,7 +120,7 @@ export const Navbar = () => {
               </span>
             </NavLink>
 
-            {/* Botón cerrar sesión — solo visible cuando hay sesión activa */}
+            {/* Botón cerrar sesión */}
             <button
               onClick={() => {
                 cerrarSesion();

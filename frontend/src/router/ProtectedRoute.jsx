@@ -1,25 +1,32 @@
-// src/components/router/ProtectedRoute.jsx
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "@context/AuthContext"; // Ajusta las subcarpetas según tu árbol real
+import { AuthContext } from "@context/AuthContext";
 
-export const ProtectedRoute = () => {
-  const { isAuthenticated, cargando } = useContext(AuthContext);
+export const ProtectedRoute = ({ allowedRoles }) => {
+  const { isAuthenticated, usuario, cargando } = useContext(AuthContext);
 
-  // Muestra un estado de carga plano para validar si el contexto se queda atascado aquí
   if (cargando) {
     return (
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <p>Cargando sistema de seguridad...</p>
+      <div className="w-full max-w-md mx-auto my-12 p-6 text-center bg-white rounded-xl flex flex-col items-center gap-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-red-600"></div>
+        <p className="text-sm font-medium text-gray-500 font-sans">
+          Verificando credenciales de acceso...
+        </p>
       </div>
     );
   }
 
-  // Si no está autenticado, lo rebota al login de forma limpia
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // Si está autenticado, da paso al panel de administración
+  if (allowedRoles && !allowedRoles.includes(usuario?.rol)) {
+    return usuario?.rol === "admin" ? (
+      <Navigate to="/admin" replace />
+    ) : (
+      <Navigate to="/mi-panel" replace />
+    );
+  }
+
   return <Outlet />;
 };

@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Outlet,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { Home } from "@pages/Home";
 import { Catalog } from "@pages/Catalog";
 import { ProductView } from "@pages/ProductView";
@@ -22,7 +16,7 @@ import { LoginCliente } from "@pages/LoginCliente";
 import { ClientDashboard } from "@pages/ClientDashboard";
 import { RegisterPage } from "@pages/RegisterPage";
 
-// Layout wrapper for standard public pages
+// 1. Layout para páginas públicas generales (E-commerce / Marketing)
 const PublicLayout = () => {
   return (
     <div className="bg-white text-gray-900 min-h-screen flex flex-col">
@@ -36,13 +30,27 @@ const PublicLayout = () => {
   );
 };
 
-// Base layout for auth pages (keeps Navbar but ditches chat & footer)
+// 2. Layout para las pantallas de Auth (Login, Registro, etc.)
 const AuthLayout = () => {
   return (
     <div className="bg-white text-gray-900 min-h-screen flex flex-col">
       <Navbar />
-      {/* Forzamos fondo blanco y eliminamos el 'dark:bg-zinc-950' */}
       <main className="flex-1 grid place-items-center bg-white">
+        <Outlet />
+      </main>
+    </div>
+  );
+};
+
+{
+  /* 🛠️ NUEVO LAYOUT CORE: Asegura el Navbar en el Panel Administrativo y de Cliente */
+}
+const DashboardLayout = () => {
+  return (
+    <div className="bg-white text-gray-900 min-h-screen flex flex-col">
+      <Navbar />
+      {/* Contenedor flexible para dar un padding limpio a los paneles sin romper sus diseños */}
+      <main className="flex-1 w-full max-w-(--size-xl) mx-auto p-4 sm:p-6 lg:p-8">
         <Outlet />
       </main>
     </div>
@@ -52,7 +60,7 @@ const AuthLayout = () => {
 const RouterContent = () => {
   return (
     <Routes>
-      {/* 1. PUBLIC MARKETING & E-COMMERCE PAGES */}
+      {/* 1. PAGINAS PÚBLICAS Y CATÁLOGO */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
@@ -62,7 +70,7 @@ const RouterContent = () => {
         <Route path="/legal" element={<Legal />} />
       </Route>
 
-      {/* 2. AUTHENTICATION HUB (No Footer/Chat) */}
+      {/* 2. EMBUDO DE AUTENTICACIÓN */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/login-cliente" element={<LoginCliente />} />
@@ -70,15 +78,17 @@ const RouterContent = () => {
         <Route path="/signup" element={<RegisterPage />} />
       </Route>
 
-      {/* 3. PROTECTED DASHBOARDS */}
-      {/* Client Dashboard Area */}
-      <Route element={<ProtectedRoute allowedRoles={["client"]} />}>
-        <Route path="/mi-panel" element={<ClientDashboard />} />
-      </Route>
+      {/* 3. PÁNELES PRIVADOS PROTEGIDOS (Garantizan Navbar permanente) */}
+      <Route element={<DashboardLayout />}>
+        {/* Panel de Clientes */}
+        <Route element={<ProtectedRoute allowedRoles={["client"]} />}>
+          <Route path="/mi-panel" element={<ClientDashboard />} />
+        </Route>
 
-      {/* Admin Dashboard Area */}
-      <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-        <Route path="/admin" element={<AdminDashboard />} />
+        {/* Panel Administrativo */}
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Route>
       </Route>
     </Routes>
   );
