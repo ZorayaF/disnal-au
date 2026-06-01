@@ -4,7 +4,7 @@ import { Hero } from "@/features/marketing/components/Hero";
 import { ValueProposal } from "@/features/marketing/components/ValueProposal";
 import { PartnerBrands } from "@/features/catalog/components/PartnerBrands";
 import { HowItWorks } from "@/features/marketing/components/HowItWorks";
-import { FeaturedProducts } from "@/features/catalog/components/FeaturedProducts"; // 👈 nuevo
+import { FeaturedProducts } from "@/features/catalog/components/FeaturedProducts"; // nuevo
 import { FaqSection } from "@/features/marketing/components/FaqSection";
 import { AboutSection } from "@/features/marketing/components/AboutSection";
 import { FactoryGallery } from "@/features/marketing/components/FactoryGallery";
@@ -28,7 +28,7 @@ export const Home = () => {
       <FactoryGallery />
       <PartnerBrands />
       <HowItWorks />
-      <FeaturedProducts /> {/* 👈 va justo después de HowItWorks, como en el diseño */}
+      <FeaturedProducts /> {/*  va justo después de HowItWorks, como en el diseño */}
       <AboutSection />
       <FaqSection />
     </div>

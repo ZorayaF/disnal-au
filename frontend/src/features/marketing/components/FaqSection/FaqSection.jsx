@@ -5,7 +5,7 @@ const faqs = [
   {
     question: "¿Cómo solicito una cotización?",
     answer:
-      "Agrega productos al carrito, revisa tu lista y completa los datos de empresa. Un asesor recibirá tu solicitud por WhatsApp.",
+      "Agrega productos al carrito, revisa tu lista y completa los datos de empresa. Un asesor recibirá tu solicitud.",
   },
   {
     question: "¿Cuánto tiempo tardan en responder?",
