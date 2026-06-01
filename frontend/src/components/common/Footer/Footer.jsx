@@ -28,10 +28,10 @@ const CONTACT_ITEMS = [
     ),
     content: (
       <a
-        href="tel:+576011234567"
+        href="tel:+573133769094"
         className="text-disnal-gray text-[0.82rem] leading-normal no-underline hover:text-white transition-colors duration-200"
       >
-        Silvia +57 (601) 123 4567
+        3133769094
       </a>
     ),
   },
@@ -52,10 +52,10 @@ const CONTACT_ITEMS = [
     ),
     content: (
       <a
-        href="mailto:comercial@disnalau.com"
+        href="mailto:disnalau@outlook.com"
         className="text-disnal-gray text-[0.82rem] leading-normal no-underline hover:text-white transition-colors duration-200"
       >
-        comercial@disnalau.com
+        disnalau@outlook.com
       </a>
     ),
   },
@@ -106,7 +106,7 @@ const CONTACT_ITEMS = [
 const SOCIAL_LINKS = [
   {
     label: "Facebook",
-    href: "https://facebook.com",
+    href: "https://www.facebook.com/disnal.au#",
     icon: (
       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -115,7 +115,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: "Instagram",
-    href: "https://instagram.com",
+    href: "https://www.instagram.com/disnalau?igsh=MW44ZGc1Nmw1ZnZ2OA==",
     icon: (
       <svg
         className="w-3.5 h-3.5"
