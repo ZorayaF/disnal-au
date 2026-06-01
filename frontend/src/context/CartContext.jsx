@@ -49,7 +49,7 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // 🎯 3. NUEVA FUNCIÓN: Actualizar cantidad manualmente desde el Input de teclado
+  //  3. NUEVA FUNCIÓN: Actualizar cantidad manualmente desde el Input de teclado
   const actualizarCantidad = (id, nuevaCantidad) => {
     setCarrito((prevCart) =>
       prevCart.map((item) => {
@@ -73,7 +73,7 @@ export const CartProvider = ({ children }) => {
     setCarrito([]);
   };
 
-  // 6. CÁLCULOS AUTOMÁTICOS: Totales de la orden
+  // 5. CÁLCULOS AUTOMÁTICOS: Totales de la orden
   const totalItems = carrito.reduce(
     (acc, item) => acc + item.cantidadEnCarrito,
     0,
@@ -86,7 +86,6 @@ export const CartProvider = ({ children }) => {
         setCarrito,
         agregarProducto,
         restarProducto,
-        actualizarCantidad, // 👈 Exportamos la nueva función para los inputs
         eliminarProducto,
         limpiarCarrito,
         totalItems,

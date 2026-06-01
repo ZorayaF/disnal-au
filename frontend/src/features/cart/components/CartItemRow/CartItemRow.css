@@ -50,12 +50,11 @@
 
 /* 🗑️ Botón de eliminación */
 .cart-item-row__delete {
-  @apply min-w-[42px] min-h-[42px] grid place-items-center rounded-full p-0;
+  @apply min-w-[42px] min-h-[42px] grid place-items-center rounded-full p-0 border-0 bg-disnal-red text-white cursor-pointer transition-colors duration-150;
 }
 
-/* Ajustado el porcentaje de opacidad a formato estricto v4 */
-.cart-item-row__delete .disnal-line-icon {
-  @apply w-[1.9rem] h-[1.9rem] rounded-full shadow-none bg-disnal-red/[0.08] text-disnal-red text-[1rem] flex items-center justify-center;
+.cart-item-row__delete:hover {
+  @apply bg-disnal-red-dark;
 }
 
 /* 📱 CAPA RESPONSIVA NATIVA */

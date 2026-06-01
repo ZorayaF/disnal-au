@@ -5,7 +5,7 @@ import "./CartItemRow.css";
 
 const FALLBACK_IMAGE = "/assets/images/harina de trigo.png";
 
-// 🎯 CORREGIDO: Añadimos 'onUpdateQuantity' a la firma de las props recibidas
+// CORREGIDO: Añadimos 'onUpdateQuantity' a la firma de las props recibidas
 export const CartItemRow = ({
   item,
   onIncrement,
@@ -50,11 +50,11 @@ export const CartItemRow = ({
           −
         </button>
 
-        {/* 🎯 INPUT NUMÉRICO SINCRONIZADO */}
+        {/*  INPUT NUMÉRICO SINCRONIZADO */}
         <input
           type="number"
           min="1"
-          max={item.cantidad || 999} // 🎯 CORREGIDO: Usamos 'item.cantidad' que viene directo de tu base de datos SQLite
+          max={item.cantidad || 999} //  CORREGIDO: Usamos 'item.cantidad' que viene directo de tu base de datos SQLite
           value={item.cantidadEnCarrito}
           onChange={(e) => {
             const valor = parseInt(e.target.value, 10);
@@ -79,13 +79,13 @@ export const CartItemRow = ({
 
       {/* Acción de descarte */}
       <Button
+        className="cart-item-row__delete"
         variant="ghost"
         size="sm"
         onClick={() => onRemove(item.id)}
         aria-label={`Eliminar ${item.nombre}`}
-        className="!p-1 min-h-0 cursor-pointer hover:!bg-red-50 hover:!text-red-600 rounded-lg transition-colors cart-item-row__delete"
       >
-        <LineIcon name="trash" className="h-4 w-4 shrink-0" />
+        <LineIcon name="trash" />
       </Button>
     </article>
   );
