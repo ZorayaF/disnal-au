@@ -1,90 +1,10 @@
-import { useState } from "react";
-import { ClientOrderDetail } from "../ClientOrderDetail";
+// src/features/orders/components/ClientOrderCard.jsx
+import React, { useState } from "react";
+import { OrderOverview } from "./OrderOverview";
+import { OrderLogisticsActions } from "./OrderLogisticsActions";
+import { OrderStepper } from "./OrderStepper";
+import { OrderItemsDetail } from "./OrderItemsDetail";
 import "./ClientOrderCard.css";
-
-const ESTADO_STEP = {
-  Pendiente: 0,
-  Aprobado: 1,
-  Pago_En_Revision: 2,
-  Completado: 4,
-  Rechazado: -1,
-};
-
-const STEPS = [
-  {
-    label: "Esperando\nRevisión",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </svg>
-    ),
-  },
-  {
-    label: "En Proceso",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-      </svg>
-    ),
-  },
-  {
-    label: "En Tránsito",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="1" y="3" width="15" height="13" />
-        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-        <circle cx="5.5" cy="18.5" r="2.5" />
-        <circle cx="18.5" cy="18.5" r="2.5" />
-      </svg>
-    ),
-  },
-  {
-    label: "Entregado",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-    ),
-  },
-  // {
-  //   label: "Finalizado",
-  //   icon: (
-  //     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-  //       <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" />
-  //     </svg>
-  //   ),
-  // },
-];
 
 export const ClientOrderCard = ({
   pedido,
@@ -94,364 +14,148 @@ export const ClientOrderCard = ({
   onCambioArchivo,
   onSubirComprobante,
   subiendoComprobante,
-  obtenerBadgeEstado,
 }) => {
-  const [copiado, setCopiado] = useState(false);
-  const activeStep = ESTADO_STEP[pedido.estado] ?? 0;
-
-  const copiarId = (e) => {
-    e.stopPropagation();
-    navigator.clipboard?.writeText(pedido.id);
-    setCopiado(true);
-    setTimeout(() => setCopiado(false), 1500);
-  };
+  // 🎯 NUEVO ESTADO LOCAL: Controla de forma aislada la lista de insumos
+  const [verProductos, setVerProductos] = useState(false);
 
   return (
-    <div className={`coc ${estaExpandido ? "coc--expanded" : ""}`}>
-      {/* ── HEADER ROW ── */}
-      <div
-        className="coc__header"
-        onClick={() => onAlternarExpansion(pedido.id)}
-      >
-        {/* ID Solicitud */}
-        <div className="coc__meta-col">
-          <div className="coc__meta-icon-wrap">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
-          </div>
-          <div>
-            <span className="coc__label">ID SOLICITUD</span>
-            <code className="coc__id-code">
-              {pedido.id?.slice(0, 26)}…
-              <button
-                className="coc__copy-btn"
-                onClick={copiarId}
-                title="Copiar ID"
-              >
-                {copiado ? (
+    <div
+      className={`bg-white border border-neutral-200 rounded-2xl shadow-md overflow-hidden font-sans transition-all duration-200 ${estaExpandido ? "ring-1 ring-neutral-200 shadow-lg" : ""}`}
+    >
+      {/* ══ MÓDULO 1: INFORMACIÓN GENERAL (HEADER PRINCIPAL) ══ */}
+      {/* 🎯 Este botón expande/compacta la sección COMPLETA de la tarjeta */}
+      <OrderOverview
+        pedido={pedido}
+        estaExpandido={estaExpandido}
+        onAlternarExpansion={onAlternarExpansion}
+      />
+
+      {/* ── CUERPO DEL PANEL DESPLEGABLE (CONTROLADO POR EL HEADER) ── */}
+      {estaExpandido && (
+        <div className="p-4 sm:p-6 bg-white border-t border-neutral-100 transition-all">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-6 items-start">
+            {/* ════ COLUMNA IZQUIERDA: ACCIONES Y ESTADO OPERATIVO ════ */}
+            <div className="flex flex-col gap-5 w-full">
+              {/* Módulo del Stepper (Estado de Proceso) */}
+              <div className="bg-neutral-50/50 border border-neutral-100 rounded-2xl p-4 sm:p-5 shadow-xs">
+                <OrderStepper estado={pedido.estado} />
+              </div>
+
+              {/* Módulo del Dropzone / Carga del Comprobante Financiero */}
+              <OrderLogisticsActions
+                pedido={pedido}
+                archivoSeleccionado={archivoSeleccionado}
+                onCambioArchivo={onCambioArchivo}
+                onSubirComprobante={onSubirComprobante}
+                subiendoComprobante={subiendoComprobante}
+              />
+            </div>
+
+            {/* ════ COLUMNA DERECHA: LOGÍSTICA Y DESGLOSE DE PRODUCTOS ════ */}
+            <div className="flex flex-col gap-4 w-full h-full lg:border-l lg:border-neutral-100 lg:pl-6">
+              {/* Ficha resumida de Logística de despacho */}
+              <div className="bg-neutral-50/30 border border-neutral-200/50 rounded-xl p-4 flex flex-col gap-1.5">
+                <div className="flex items-center gap-2 text-neutral-400 text-[10px] font-black uppercase tracking-wider">
                   <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#16a34a"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                ) : (
-                  <svg
+                    className="w-3.5 h-3.5 text-neutral-500"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
-                    <rect x="9" y="9" width="13" height="13" rx="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
                   </svg>
+                  Ficha de Entrega B2B
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-neutral-800">
+                    {pedido.tipo_despacho}
+                  </span>
+                  {pedido.tipo_despacho !== "Recogida" && (
+                    <span className="text-[11px] font-medium text-neutral-500 mt-0.5 leading-tight">
+                      {pedido.direccion_envio}{" "}
+                      <span className="text-neutral-400">
+                        ({pedido.ciudad_envio})
+                      </span>
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* 🎯 CONTROL EXCLUSIVO DE PRODUCTOS 🎯 */}
+              <div className="w-full">
+                {verProductos ? (
+                  <div className="border border-neutral-200 rounded-xl overflow-hidden bg-neutral-50/20 max-h-[340px] overflow-y-auto relative">
+                    {/* Botón flotante superior para cerrar SOLO los productos de forma rápida */}
+                    <button
+                      onClick={() => setVerProductos(false)}
+                      className="absolute top-2 right-2 z-10 bg-white/90 hover:bg-red-600 text-neutral-600 hover:text-white px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-md border border-neutral-200 transition-colors cursor-pointer shadow-xs"
+                    >
+                      ✕ Ocultar Lista
+                    </button>
+
+                    <OrderItemsDetail
+                      pedido={pedido}
+                      estaExpandido={verProductos}
+                    />
+                  </div>
+                ) : (
+                  /* Botón interactivo para desplegar únicamente la sección de los insumos */
+                  <button
+                    type="button"
+                    onClick={() => setVerProductos(true)}
+                    className="w-full py-6 px-4 bg-neutral-50 hover:bg-neutral-100/70 text-neutral-500 border border-neutral-200 rounded-xl border-dashed text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-2 group"
+                  >
+                    <svg
+                      className="w-5 h-5 text-neutral-400 group-hover:text-red-600 transition-colors"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-black uppercase text-neutral-700 tracking-wide">
+                        Ver desglose de insumos
+                      </span>
+                      <span className="text-[10px] font-medium text-neutral-400 mt-0.5">
+                        Haga clic para abrir la lista de artículos cotizados
+                      </span>
+                    </div>
+                  </button>
                 )}
-              </button>
-            </code>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Costo de Flete */}
-        <div className="coc__meta-col">
-          <div className="coc__meta-icon-wrap">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* ── BOTÓN DE PIE DE TARJETA: Cierra todo el bloque general ── */}
+          <div className="flex justify-center border-t border-neutral-100 pt-4 mt-5">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 bg-neutral-100 hover:bg-neutral-200/80 text-neutral-600 text-xs font-black tracking-wider uppercase px-5 py-2.5 rounded-full cursor-pointer transition-colors"
+              onClick={() => {
+                onAlternarExpansion(pedido.id);
+                setVerProductos(false); // Reseteamos el estado de productos al cerrar la tarjeta grande
+              }}
             >
-              <rect x="1" y="3" width="15" height="13" />
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-              <circle cx="5.5" cy="18.5" r="2.5" />
-              <circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
-          </div>
-          <div>
-            <span className="coc__label">COSTO DE FLETE</span>
-            <span className="coc__value">
-              {pedido.costo_flete > 0
-                ? `$${pedido.costo_flete.toLocaleString()}`
-                : "$0"}
-            </span>
-          </div>
-        </div>
-
-        {/* Total Cotizado */}
-        <div className="coc__meta-col">
-          <div className="coc__meta-icon-wrap">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="12" y1="1" x2="12" y2="23" />
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-          </div>
-          <div>
-            <span className="coc__label">TOTAL COTIZADO</span>
-            <span
-              className={`coc__value ${!pedido.preciosListos ? "coc__value--pending" : ""}`}
-            >
-              {pedido.preciosListos
-                ? `$${pedido.total.toLocaleString()}`
-                : "Por cotizar"}
-            </span>
-          </div>
-        </div>
-
-        {/* Emisión + chevron */}
-        <div className="coc__meta-col coc__meta-col--right">
-          <div className="coc__meta-icon-wrap">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-          </div>
-          <div>
-            <span className="coc__label">EMISIÓN</span>
-            <span className="coc__value">{pedido.fecha}</span>
-          </div>
-          <div className="coc__chevron">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      {/* ── BODY ── */}
-      <div className="coc__body">
-        {/* Second row: Logística + Referencia + Subir comprobante */}
-        <div className="coc__info-row">
-          <div className="coc__info-block">
-            <div className="coc__info-icon-row">
               <svg
+                className="w-3.5 h-3.5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeWidth="2.5"
               >
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                <polyline points="18 15 12 9 6 15" />
               </svg>
-              <span className="coc__label">LOGÍSTICA SOLICITADA</span>
-            </div>
-            <span className="coc__info-value">{pedido.tipo_despacho}</span>
-            {pedido.tipo_despacho !== "Recogida" && (
-              <span className="coc__info-sub">
-                {pedido.direccion_envio} ({pedido.ciudad_envio})
-              </span>
-            )}
-          </div>
-
-          <div className="coc__info-block">
-            <span className="coc__label">REFERENCIA INTERNA</span>
-            <span className="coc__info-sub">
-              {pedido.referencia_interna || "--"}
-            </span>
-          </div>
-
-          {/* Subir comprobante (siempre visible en la fila si el estado lo permite) */}
-          {pedido.estado === "Aprobado" && (
-            <div className="coc__upload-inline">
-              <label className="coc__upload-file-label">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    onCambioArchivo(pedido.id, e.target.files[0])
-                  }
-                  className="coc__upload-file-input"
-                />
-                {archivoSeleccionado ? (
-                  <span className="coc__upload-file-name">
-                    {archivoSeleccionado.name}
-                  </span>
-                ) : (
-                  <span className="coc__upload-file-placeholder">
-                    Seleccionar archivo…
-                  </span>
-                )}
-              </label>
-              <button
-                className="coc__upload-btn"
-                onClick={() => onSubirComprobante(pedido.id)}
-                disabled={subiendoComprobante || !archivoSeleccionado}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                {subiendoComprobante ? "Enviando…" : "Subir comprobante"}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Admin notes */}
-        {pedido.comentarios_admin && (
-          <div className="coc__admin-notes">
-            <strong>Mensaje de Almacén:</strong> "{pedido.comentarios_admin}"
-          </div>
-        )}
-
-        {/* ── STEPPER ── */}
-        <div className="coc__stepper-wrap">
-          <span className="coc__label">ESTADO DEL PROCESO</span>
-          <div className="coc__stepper">
-            {STEPS.map((step, idx) => {
-              const isActive = idx === activeStep;
-              const isDone = idx < activeStep;
-              return (
-                <div key={idx} style={{ display: "contents" }}>
-                  {idx > 0 && (
-                    <div className={`coc__connector ${isDone ? "coc__connector--done" : ""}`} />
-                  )}
-                  <div className={`coc__step ${isActive ? "coc__step--active" : ""} ${isDone ? "coc__step--done" : ""}`}>
-                    <div className="coc__step-circle">
-                      {isDone ? (
-                        // Chulo verde para pasos completados
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                          strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      ) : isActive ? (
-                        // Reloj rojo para paso activo
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                          strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="10" />
-                          <polyline points="12 6 12 12 16 14" />
-                        </svg>
-                      ) : (
-                        // Ícono original para pasos futuros
-                        step.icon
-                      )}
-                    </div>
-                    <span className="coc__step-label">{step.label}</span>
-                  </div>
-                </div>
-              );
-            })}
+              Compactar todo el pedido
+            </button>
           </div>
         </div>
-
-        {/* ── EXPANDED DETAIL ── */}
-        {estaExpandido && <ClientOrderDetail pedido={pedido} />}
-
-        {/* Pending notice */}
-        {!pedido.preciosListos && (
-          <div className="coc__pending-notice coc__pending-notice--warning">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            <div>
-              <strong>Cotización pendiente de aprobación</strong>
-              <p>El total final se calculará cuando el asesor asigne los precios de los bultos/insumos.</p>
-            </div>
-          </div>
-        )}
-
-        {pedido.preciosListos && (
-          <div className="coc__pending-notice coc__pending-notice--success">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <div>
-              <strong>Cotización aprobada</strong>
-              <p>Los precios han sido asignados. Puedes proceder con el pago.</p>
-            </div>
-          </div>
-        )}
-
-        {/* Toggle detail */}
-        <div className="coc__footer">
-          <button
-            className="coc__toggle-btn"
-            onClick={() => onAlternarExpansion(pedido.id)}
-          >
-            {estaExpandido ? (
-              <>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="18 15 12 9 6 15" />
-                </svg>
-                Ocultar detalle
-              </>
-            ) : (
-              <>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-                Ver detalle
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
