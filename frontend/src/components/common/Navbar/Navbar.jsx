@@ -150,8 +150,8 @@ export const Navbar = () => {
         ) : (
           /* Guest — Iniciar sesión */
           <NavLink
-            className="main-navbar__cta"
-            to={esZonaAdmin ? "/admin/login" : "/login-cliente"}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white font-black text-xs uppercase tracking-wider rounded-full shadow-md shadow-red-600/10 hover:bg-red-700 active:scale-[0.99] transition-all cursor-pointer"
+            to={esZonaAdmin ? "/admin/login" : "/login"}
             onClick={() => setIsOpen(false)}
             aria-label="Iniciar Sesión"
           >
