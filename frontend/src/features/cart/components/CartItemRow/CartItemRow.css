@@ -6,7 +6,6 @@
   gap: clamp(16px, 3vw, 28px);
 }
 
-/* ⚠️ Estado condicional de conflicto B2B - Ajustado formato alfa en v4 */
 .cart-item-row--conflict {
   @apply border-disnal-red/[0.24] bg-red-50;
 }
@@ -31,7 +30,7 @@
   @apply inline-block mt-[0.38rem] text-disnal-red text-[0.6rem] font-black tracking-[0.08em] uppercase font-sans;
 }
 
-/* 🔢 El selector numérico de cantidades de Disnal */
+/* 🔢 Selector numérico */
 .cart-item-row__quantity {
   @apply grid grid-cols-[34px_52px_34px] min-h-[34px] overflow-hidden border-[1.5px] border-disnal-ink rounded-full bg-white;
 }
@@ -44,8 +43,22 @@
   @apply bg-disnal-ink text-white;
 }
 
-.cart-item-row__quantity span {
-  @apply grid place-items-center border-l-[1.5px] border-r-[1.5px] border-disnal-ink text-disnal-ink text-[0.78rem] font-black;
+.cart-item-row__quantity button:disabled {
+  @apply opacity-30 cursor-not-allowed;
+}
+
+/* Input reemplaza al span — mismos estilos visuales, sin flechas */
+.cart-item-row__quantity input {
+  @apply grid place-items-center border-l-[1.5px] border-r-[1.5px] border-disnal-ink text-disnal-ink text-[0.78rem] font-black text-center bg-transparent outline-none w-full p-0;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.cart-item-row__quantity input::-webkit-outer-spin-button,
+.cart-item-row__quantity input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 /* 🗑️ Botón de eliminación */
@@ -57,7 +70,7 @@
   @apply bg-disnal-red-dark;
 }
 
-/* 📱 CAPA RESPONSIVA NATIVA */
+/* 📱 RESPONSIVO */
 @media (max-width: 720px) {
   .cart-item-row {
     @apply grid-cols-1 gap-4;
