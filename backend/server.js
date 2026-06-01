@@ -44,6 +44,6 @@ app.use("/api/productos", productRoutes);
 inicializarChatSocket(io);
 
 server.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor backend corriendo en el puerto ${PORT}`);
   console.log(`💬 Servidor de WebSockets de soporte activo en el mismo puerto`);
 });
