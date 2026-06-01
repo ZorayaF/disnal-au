@@ -155,9 +155,9 @@ export const initDatabase = () => {
 
     // Array con las 3 URLs de imágenes solicitadas para rotar entre los productos
     const imagenes = [
-      "https://images.pexels.com/photos/7110136/pexels-photo-7110136.jpeg", // Harina/Masa
-      "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=500", // Panes/Horno
-      "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?q=80&w=500", // Pastelería/Ingredientes
+      "https://images.unsplash.com/photo-1627735483792-233bf632619b?q=80&w=1485&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Harina/Masa
+      "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Panes/Horno
+      "https://plus.unsplash.com/premium_photo-1713447395823-2e0b40b75a89?q=80&w=682&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Pastelería/Ingredientes
     ];
 
     const listaProductos = [
