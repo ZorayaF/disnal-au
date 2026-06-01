@@ -113,7 +113,7 @@ export const initDatabase = () => {
     .prepare("SELECT COUNT(*) as total FROM usuarios WHERE usuario = ?")
     .get("admin");
   if (existeAdmin.total === 0) {
-    console.log("🔐 Creando usuario administrador con hash de seguridad...");
+    console.log("Creando usuario administrador con hash de seguridad...");
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync("pasteleria2026", salt); // Encriptamos tu clave original
     db.prepare(
@@ -126,7 +126,7 @@ export const initDatabase = () => {
     .prepare("SELECT COUNT(*) as total FROM clientes")
     .get();
   if (numeroClientes.total === 0) {
-    console.log("🌱 Inyectando cliente corporativo de prueba (ID 1)...");
+    console.log("Inyectando cliente corporativo de prueba (ID 1)...");
     const hashCliente = bcrypt.hashSync("cliente2026", 10);
     db.prepare(
       `
@@ -155,7 +155,7 @@ export const initDatabase = () => {
 
     // Array con las 3 URLs de imágenes solicitadas para rotar entre los productos
     const imagenes = [
-      "https://images.unsplash.com/photo-1574085733277-851d9d856a3a?q=80&w=500", // Harina/Masa
+      "https://images.pexels.com/photos/7110136/pexels-photo-7110136.jpeg", // Harina/Masa
       "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=500", // Panes/Horno
       "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?q=80&w=500", // Pastelería/Ingredientes
     ];
